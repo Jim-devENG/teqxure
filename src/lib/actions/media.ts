@@ -10,6 +10,14 @@ export interface UploadMediaResult {
   error?: string;
 }
 
+const ALLOWED_IMAGE_TYPES = new Set([
+  "image/png",
+  "image/jpeg",
+  "image/webp",
+  "image/gif",
+  "image/avif",
+]);
+
 export async function uploadMediaAction(formData: FormData): Promise<UploadMediaResult> {
   const user = await requireAdmin();
   const file = formData.get("file");
@@ -20,6 +28,10 @@ export async function uploadMediaAction(formData: FormData): Promise<UploadMedia
 
   if (file.size > 10 * 1024 * 1024) {
     return { url: "", error: "File must be under 10MB." };
+  }
+
+  if (!ALLOWED_IMAGE_TYPES.has(file.type)) {
+    return { url: "", error: "Only PNG, JPEG, WebP, GIF, or AVIF images are allowed." };
   }
 
   const buffer = Buffer.from(await file.arrayBuffer());

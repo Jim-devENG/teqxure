@@ -47,19 +47,19 @@
   }
 }
 
+/* Scrollbar color inherits from each layout's <html> element (dark thumb
+   on light admin pages, light thumb on the dark marketing site) — see the
+   [scrollbar-color:...] classes on the two root layouts. */
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 }
 
-html {
-  background: var(--color-charcoal);
-  color-scheme: dark;
-}
-
+/* No global background/color-scheme here on purpose: the marketing site
+   (dark) and the admin panel (light) set these explicitly on their own
+   <html>/<body> via Tailwind classes. A plain, unlayered rule here would
+   win over Tailwind utilities regardless of specificity, since unlayered
+   CSS always beats anything inside Tailwind's utility @layer. */
 body {
-  background: var(--color-charcoal);
-  color: var(--color-paper);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }

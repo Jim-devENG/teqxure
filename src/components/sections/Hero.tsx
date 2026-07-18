@@ -38,10 +38,22 @@ export function Hero({ section, productNames }: HeroProps) {
               </span>
             </Reveal>
 
-            <h1 className="mt-6 max-w-2xl text-4xl font-medium leading-[1.08] tracking-tight sm:text-5xl md:text-6xl">
-              <RevealText text={section.headlineMuted} className="text-paper/35" />{" "}
-              <RevealText text={section.headlineEmphasis} delay={0.25} className="text-paper" />{" "}
-              <RevealText text={section.headlineAccent} delay={0.42} className="text-blue" />
+            <h1 className="mt-6 max-w-2xl text-5xl font-semibold leading-[1.05] tracking-tight sm:text-6xl md:text-7xl">
+              <RevealText text={section.headlineMuted} className="block text-paper" />
+              {section.headlineEmphasis && (
+                <RevealText text={section.headlineEmphasis} delay={0.2} className="block text-paper" />
+              )}
+              <span className="relative mt-1 block">
+                <RevealText text={section.headlineAccent} delay={0.38} className="text-blue" />
+                <motion.span
+                  aria-hidden
+                  initial={{ scaleX: 0 }}
+                  whileInView={{ scaleX: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                  className="absolute -bottom-2 left-0 h-[3px] w-full origin-left bg-blue sm:-bottom-3"
+                />
+              </span>
             </h1>
 
             <Reveal delay={0.55}>

@@ -50,8 +50,17 @@ export async function sendTemplatedEmail(
   await sendEmail(to, subject, html);
 }
 
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 export function formatFieldsAsHtml(data: Record<string, string>): string {
   return Object.entries(data)
-    .map(([label, value]) => `<p><strong>${label}:</strong> ${value}</p>`)
+    .map(([label, value]) => `<p><strong>${escapeHtml(label)}:</strong> ${escapeHtml(value)}</p>`)
     .join("");
 }

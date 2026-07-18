@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import {
   Bot,
@@ -48,6 +49,7 @@ interface ProductData {
   category: string;
   description: string;
   builtWith: string[];
+  screenshots: string[];
   accent: string;
   metricLabel: string;
   metricValue: string;
@@ -80,18 +82,29 @@ export function ProductShowcase({ section, products }: ProductShowcaseProps) {
                 >
                   <div
                     className={cn(
-                      "flex aspect-video items-center justify-center border-b border-white/10",
+                      "relative flex aspect-video items-center justify-center border-b border-white/10",
                       accentBg[product.accent] ?? accentBg.blue,
                     )}
                   >
-                    <div
-                      className={cn(
-                        "flex h-16 w-16 items-center justify-center rounded-2xl border",
-                        accentBorder[product.accent] ?? accentBorder.blue,
-                      )}
-                    >
-                      <Icon className={cn("h-7 w-7", accentText[product.accent] ?? accentText.blue)} strokeWidth={1.4} />
-                    </div>
+                    {product.screenshots[0] ? (
+                      <Image
+                        src={product.screenshots[0]}
+                        alt={`${product.name} product screenshot`}
+                        fill
+                        sizes="(min-width: 1024px) 380px, (min-width: 640px) 340px, 90vw"
+                        className="object-contain p-4"
+                        unoptimized
+                      />
+                    ) : (
+                      <div
+                        className={cn(
+                          "flex h-16 w-16 items-center justify-center rounded-2xl border",
+                          accentBorder[product.accent] ?? accentBorder.blue,
+                        )}
+                      >
+                        <Icon className={cn("h-7 w-7", accentText[product.accent] ?? accentText.blue)} strokeWidth={1.4} />
+                      </div>
+                    )}
                   </div>
 
                   <div className="flex flex-1 flex-col p-6">

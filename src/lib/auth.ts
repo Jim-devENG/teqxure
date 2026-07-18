@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs";
 import { db } from "@/lib/db";
 
 const SESSION_COOKIE = "teqxure_session";
-const SESSION_TTL_MS = 1000 * 60 * 60 * 24 * 30; // 30 days
+const SESSION_TTL_MS = 1000 * 60 * 60 * 24 * 7; // 7 days
 
 export async function hashPassword(password: string): Promise<string> {
   return bcrypt.hash(password, 12);
@@ -25,7 +25,7 @@ export async function createSession(userId: string): Promise<string> {
   cookieStore.set(SESSION_COOKIE, token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    sameSite: "strict",
     path: "/",
     expires: expiresAt,
   });

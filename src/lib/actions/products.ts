@@ -30,6 +30,13 @@ export interface ProductFormState {
   error?: string;
 }
 
+function getScreenshots(formData: FormData): string[] {
+  return formData
+    .getAll("screenshots")
+    .map((v) => String(v).trim())
+    .filter(Boolean);
+}
+
 function parseProductForm(formData: FormData) {
   return productSchema.safeParse({
     slug: formData.get("slug"),
@@ -64,7 +71,7 @@ export async function createProductAction(_prev: ProductFormState, formData: For
     data: {
       ...rest,
       builtWith: builtWith ? builtWith.split(",").map((t) => t.trim()).filter(Boolean) : [],
-      screenshots: [],
+      screenshots: getScreenshots(formData),
       order: count,
     },
   });
@@ -93,6 +100,7 @@ export async function updateProductAction(
     data: {
       ...rest,
       builtWith: builtWith ? builtWith.split(",").map((t) => t.trim()).filter(Boolean) : [],
+      screenshots: getScreenshots(formData),
     },
   });
 

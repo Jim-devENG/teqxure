@@ -15,6 +15,12 @@ export async function submitWaitlistAction(
   _prev: SubmitWaitlistState,
   formData: FormData,
 ): Promise<SubmitWaitlistState> {
+  // Honeypot: real visitors never see or fill this field. Bots that
+  // auto-fill every input do. Pretend success without doing any work.
+  if (String(formData.get("company_website") ?? "").trim()) {
+    return { success: true };
+  }
+
   const fields = await db.waitlistField.findMany({ where: { deletedAt: null, visible: true } });
 
   const data: Record<string, string> = {};
@@ -30,6 +36,16 @@ export async function submitWaitlistAction(
       if (field.fieldType === "EMAIL" && !registrantEmail) {
         registrantEmail = value;
       }
+    }
+  }
+
+  if (registrantEmail) {
+    const recentDuplicate = await db.waitlistSubmission.findFirst({
+      where: { createdAt: { gte: new Date(Date.now() - 60_000) } },
+      orderBy: { createdAt: "desc" },
+    });
+    if (recentDuplicate && JSON.stringify(recentDuplicate.data).includes(registrantEmail)) {
+      return { success: true };
     }
   }
 

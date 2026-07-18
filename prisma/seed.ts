@@ -51,9 +51,9 @@ async function seedHomepageSections() {
       order: 0,
       content: {
         badge: "Product Engineering Bootcamp",
-        headlineMuted: "Stop building tutorials.",
-        headlineEmphasis: "Start building products people",
-        headlineAccent: "actually use.",
+        headlineMuted: "Engineer Products.",
+        headlineEmphasis: "",
+        headlineAccent: "Build Businesses.",
         subhead:
           "Learn the exact Product Engineering system used to build production software across SaaS, marketplaces, education technology, cybersecurity, creator platforms, and AI products.",
         primaryCtaText: "Join the waitlist",

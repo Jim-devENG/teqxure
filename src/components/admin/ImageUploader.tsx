@@ -47,8 +47,8 @@ export function ImageUploader({ name, label, defaultValue }: ImageUploaderProps)
       <span className="font-mono text-[11px] uppercase tracking-[0.15em] text-slate">{label}</span>
       <div className="mt-2 flex items-center gap-4">
         {url ? (
-          <div className="relative h-16 w-16 overflow-hidden rounded-lg border border-light-gray bg-white">
-            <Image src={url} alt="" fill sizes="64px" className="object-cover" unoptimized />
+          <div className="relative h-16 w-16 overflow-hidden rounded-lg border border-light-gray bg-soft-white">
+            <Image src={url} alt="" fill sizes="64px" className="object-contain" unoptimized />
           </div>
         ) : (
           <div className="flex h-16 w-16 items-center justify-center rounded-lg border border-dashed border-light-gray text-slate">

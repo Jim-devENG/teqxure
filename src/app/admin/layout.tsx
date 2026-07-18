@@ -23,7 +23,10 @@ export default function AdminRootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+    <html
+      lang="en"
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased bg-soft-white [color-scheme:light] [scrollbar-color:rgba(27,31,41,0.25)_transparent]`}
+    >
       <body className="min-h-full bg-soft-white text-graphite">{children}</body>
     </html>
   );

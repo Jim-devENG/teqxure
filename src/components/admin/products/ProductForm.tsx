@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { createProductAction, updateProductAction, type ProductFormState } from "@/lib/actions/products";
 import { TextField, TextAreaField, CheckboxField } from "@/components/admin/Field";
 import { ImageUploader } from "@/components/admin/ImageUploader";
+import { MultiImageUploader } from "@/components/admin/MultiImageUploader";
 import { SubmitButton } from "@/components/admin/SubmitButton";
 
 interface ProductFormProps {
@@ -17,6 +18,7 @@ interface ProductFormProps {
     longDescription: string | null;
     logoUrl: string | null;
     builtWith: string[];
+    screenshots: string[];
     accent: string;
     metricLabel: string;
     metricValue: string;
@@ -55,6 +57,8 @@ export function ProductForm({ product }: ProductFormProps) {
       />
 
       <ImageUploader name="logoUrl" label="Logo" defaultValue={product?.logoUrl} />
+
+      <MultiImageUploader name="screenshots" label="Screenshots" defaultValues={product?.screenshots ?? []} />
 
       <TextField
         label="Built with (comma-separated)"

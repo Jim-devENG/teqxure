@@ -58,6 +58,15 @@ export function WaitlistForm({ fields }: { fields: WaitlistFieldData[] }) {
         <DynamicField key={field.id} field={field} />
       ))}
 
+      {/* Honeypot: hidden from real users, tabIndex/aria-hidden'd out, but a
+          plain form field bots tend to auto-fill. Never rendered visibly. */}
+      <div aria-hidden="true" className="absolute left-[-9999px] top-auto h-0 w-0 overflow-hidden">
+        <label>
+          Leave this field empty
+          <input type="text" name="company_website" tabIndex={-1} autoComplete="off" />
+        </label>
+      </div>
+
       {state.error && <p className="text-sm text-red-500">{state.error}</p>}
 
       <MagneticButton

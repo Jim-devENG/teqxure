@@ -17,15 +17,17 @@ enum Role {
 }
 
 model User {
-  id           String        @id @default(cuid())
-  email        String        @unique
-  passwordHash String
-  name         String?
-  role         Role          @default(ADMIN)
-  createdAt    DateTime      @default(now())
-  lastLoginAt  DateTime?
-  sessions     Session[]
-  activityLogs ActivityLog[]
+  id                  String        @id @default(cuid())
+  email               String        @unique
+  passwordHash        String
+  name                String?
+  role                Role          @default(ADMIN)
+  createdAt           DateTime      @default(now())
+  lastLoginAt         DateTime?
+  failedLoginAttempts Int           @default(0)
+  lockedUntil         DateTime?
+  sessions            Session[]
+  activityLogs        ActivityLog[]
 }
 
 model Session {
