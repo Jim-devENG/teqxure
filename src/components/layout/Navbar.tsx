@@ -41,15 +41,17 @@ export function Navbar() {
           href="#top"
           className="flex items-center gap-2.5 font-mono font-medium tracking-tight text-paper"
         >
-          <span className="relative aspect-square h-8 w-8 shrink-0 sm:h-12 sm:w-12 lg:h-20 lg:w-20">
-            <Image
-              src="/logo-icon.png"
-              alt="Teqxure"
-              fill
-              sizes="(min-width: 1024px) 80px, (min-width: 640px) 48px, 32px"
-              className="object-contain"
-              priority
-            />
+          <span className="flex shrink-0 items-center justify-center rounded-xl bg-white p-1.5 shadow-sm sm:rounded-2xl sm:p-2">
+            <span className="relative aspect-square h-6 w-6 sm:h-9 sm:w-9 lg:h-16 lg:w-16">
+              <Image
+                src="/logo-icon.png"
+                alt="Teqxure"
+                fill
+                sizes="(min-width: 1024px) 64px, (min-width: 640px) 36px, 24px"
+                className="object-contain"
+                priority
+              />
+            </span>
           </span>
           <span className="text-sm sm:text-base lg:text-lg">
             Teqxure<span className="text-blue">.</span>
