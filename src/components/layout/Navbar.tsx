@@ -36,10 +36,24 @@ export function Navbar() {
         isScrolled ? "border-b border-white/10 bg-charcoal/80 backdrop-blur-md" : "border-b border-transparent",
       )}
     >
-      <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-        <a href="#top" className="flex items-center gap-2 font-mono text-sm font-medium tracking-tight text-paper">
-          <Image src="/logo-icon.png" alt="" width={24} height={24} className="h-6 w-6" priority />
-          Teqxure<span className="text-blue">.</span>
+      <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3 lg:py-6">
+        <a
+          href="#top"
+          className="flex items-center gap-3 font-mono font-medium tracking-tight text-paper"
+        >
+          <span className="relative aspect-square h-10 w-10 shrink-0 sm:h-16 sm:w-16 lg:h-[150px] lg:w-[150px]">
+            <Image
+              src="/logo-icon.png"
+              alt="Teqxure"
+              fill
+              sizes="(min-width: 1024px) 150px, (min-width: 640px) 64px, 40px"
+              className="object-contain"
+              priority
+            />
+          </span>
+          <span className="text-sm sm:text-xl lg:text-3xl">
+            Teqxure<span className="text-blue">.</span>
+          </span>
         </a>
 
         <ul className="hidden items-center gap-8 md:flex">
