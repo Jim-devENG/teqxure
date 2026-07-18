@@ -22,7 +22,7 @@ export function Footer() {
         <div className="grid grid-cols-1 gap-12 md:grid-cols-[1.4fr_1fr_1fr]">
           <div>
             <span className="font-mono text-sm font-medium tracking-tight text-paper">
-              Teqxure<span className="text-cyan">.</span>
+              Teqxure<span className="text-blue">.</span>
             </span>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-paper/50">
               The Product Engineering Bootcamp for builders turning ideas into
@@ -35,7 +35,7 @@ export function Footer() {
             <ul className="mt-4 flex flex-col gap-3">
               {FOOTER_LINKS.map((link) => (
                 <li key={link.href}>
-                  <a href={link.href} className="text-sm text-paper/60 transition-colors hover:text-paper">
+                  <a href={link.href} className="text-sm text-paper/60 transition-colors hover:text-blue">
                     {link.label}
                   </a>
                 </li>
@@ -52,7 +52,7 @@ export function Footer() {
                     href={social.href}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-1 text-sm text-paper/60 transition-colors hover:text-paper"
+                    className="inline-flex items-center gap-1 text-sm text-paper/60 transition-colors hover:text-blue"
                   >
                     {social.label}
                     <ArrowUpRight className="h-3.5 w-3.5" strokeWidth={1.5} />
@@ -62,7 +62,7 @@ export function Footer() {
               <li>
                 <Link
                   href="mailto:hello@teqxure.com"
-                  className="text-sm text-paper/60 transition-colors hover:text-paper"
+                  className="text-sm text-paper/60 transition-colors hover:text-blue"
                 >
                   hello@teqxure.com
                 </Link>

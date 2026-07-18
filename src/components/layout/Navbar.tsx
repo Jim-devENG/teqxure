@@ -37,7 +37,7 @@ export function Navbar() {
     >
       <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
         <a href="#top" className="font-mono text-sm font-medium tracking-tight text-paper">
-          Teqxure<span className="text-cyan">.</span>
+          Teqxure<span className="text-blue">.</span>
         </a>
 
         <ul className="hidden items-center gap-8 md:flex">
@@ -45,7 +45,7 @@ export function Navbar() {
             <li key={link.href}>
               <a
                 href={link.href}
-                className="text-sm text-paper/60 transition-colors hover:text-paper"
+                className="text-sm text-paper/60 transition-colors hover:text-blue"
               >
                 {link.label}
               </a>
@@ -84,7 +84,7 @@ export function Navbar() {
                   <a
                     href={link.href}
                     onClick={() => setIsMenuOpen(false)}
-                    className="block py-2.5 text-base text-paper/70"
+                    className="block py-2.5 text-base text-paper/70 transition-colors hover:text-blue"
                   >
                     {link.label}
                   </a>

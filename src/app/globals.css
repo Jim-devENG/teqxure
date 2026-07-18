@@ -1,23 +1,34 @@
 @import "tailwindcss";
 
 :root {
-  --color-charcoal: #0b0b0c;
-  --color-charcoal-soft: #131316;
-  --color-paper: #fafaf9;
-  --color-paper-dim: #f0f0ee;
-  --color-blue: #2f6fed;
-  --color-cyan: #22d3ee;
-  --color-emerald: #10b981;
+  /* Teqxure brand palette */
+  --color-charcoal: #0d1117; /* dark sections, navigation, footer */
+  --color-graphite: #1b1f29; /* primary text, icons, dark surfaces (cards on dark) */
+  --color-charcoal-soft: #1b1f29; /* alias of graphite: card/panel fill within dark sections */
+  --color-paper: #ffffff; /* light backgrounds + text on dark surfaces */
+  --color-soft-white: #f8fafc; /* cards and light sections */
+  --color-paper-dim: #f8fafc;
+  --color-slate: #4a5568; /* secondary text */
+  --color-light-gray: #e9edf3; /* borders, dividers, subtle backgrounds */
+  --color-blue: #1764ff; /* primary accent: buttons, links, highlights */
+  --color-blue-dark: #1250cc; /* primary button hover */
+  --color-cyan: #00c8ff; /* optional accent, used sparingly */
+  --color-emerald: #00c784; /* optional accent / success, used sparingly */
   --color-line: rgba(255, 255, 255, 0.1);
-  --color-line-dark: rgba(11, 11, 12, 0.1);
+  --color-line-dark: rgba(27, 31, 41, 0.1);
 }
 
 @theme inline {
   --color-charcoal: var(--color-charcoal);
+  --color-graphite: var(--color-graphite);
   --color-charcoal-soft: var(--color-charcoal-soft);
   --color-paper: var(--color-paper);
+  --color-soft-white: var(--color-soft-white);
   --color-paper-dim: var(--color-paper-dim);
+  --color-slate: var(--color-slate);
+  --color-light-gray: var(--color-light-gray);
   --color-blue: var(--color-blue);
+  --color-blue-dark: var(--color-blue-dark);
   --color-cyan: var(--color-cyan);
   --color-emerald: var(--color-emerald);
 
@@ -59,7 +70,7 @@ body {
 }
 
 :focus-visible {
-  outline: 1.5px solid var(--color-cyan);
+  outline: 1.5px solid var(--color-blue);
   outline-offset: 3px;
 }
 
@@ -85,7 +96,7 @@ body {
 }
 
 .panel-glass-light {
-  background-color: rgba(250, 250, 249, 0.75);
+  background-color: rgba(248, 250, 252, 0.75);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--color-line-dark);

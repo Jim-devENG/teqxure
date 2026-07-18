@@ -42,7 +42,7 @@ export function Curriculum() {
                   className={cn(
                     "group flex flex-col items-start gap-2 rounded-xl border px-4 py-3.5 text-left transition-colors cursor-pointer",
                     activeWeek === i
-                      ? "border-white/20 bg-charcoal-soft"
+                      ? "border-blue/40 bg-charcoal-soft"
                       : "border-white/10 hover:border-white/15 hover:bg-charcoal-soft/50",
                   )}
                 >
@@ -74,7 +74,7 @@ export function Curriculum() {
                   transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                 >
                   <div className="flex items-center gap-3">
-                    <span className="font-mono text-sm text-cyan">
+                    <span className="font-mono text-sm text-blue">
                       Week {String(active.week).padStart(2, "0")}
                     </span>
                     <span className="h-1 w-1 rounded-full bg-paper/30" />

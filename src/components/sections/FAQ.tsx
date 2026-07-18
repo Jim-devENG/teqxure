@@ -35,7 +35,7 @@ export function FAQ() {
                     <Plus
                       className={cn(
                         "h-5 w-5 shrink-0 text-paper/40 transition-transform duration-300",
-                        openIndex === i && "rotate-45 text-cyan",
+                        openIndex === i && "rotate-45 text-blue",
                       )}
                       strokeWidth={1.5}
                     />

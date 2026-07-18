@@ -40,7 +40,7 @@ export function Hero() {
                 delay={0.25}
                 className="text-paper"
               />{" "}
-              <RevealText text="actually use." delay={0.42} className="text-cyan" />
+              <RevealText text="actually use." delay={0.42} className="text-blue" />
             </h1>
 
             <Reveal delay={0.55}>
@@ -142,7 +142,7 @@ function HeroMockup() {
 
           <div className="p-5">
             <div className="flex items-center gap-2 whitespace-nowrap font-mono text-[10px] uppercase tracking-widest text-paper/40">
-              <span className="text-cyan">Problem</span>
+              <span className="text-blue">Problem</span>
               <span className="h-px w-4 bg-white/15" />
               <span>Pattern</span>
               <span className="h-px w-4 bg-white/15" />

@@ -19,9 +19,9 @@ export function SectionHeading({
   className,
 }: SectionHeadingProps) {
   const isCenter = align === "center";
-  const accentColor = tone === "dark" ? "text-cyan" : "text-blue";
-  const titleColor = tone === "dark" ? "text-paper" : "text-charcoal";
-  const descColor = tone === "dark" ? "text-paper/60" : "text-charcoal/60";
+  const accentColor = "text-blue";
+  const titleColor = tone === "dark" ? "text-paper" : "text-graphite";
+  const descColor = tone === "dark" ? "text-paper/60" : "text-slate";
 
   return (
     <div className={cn(isCenter && "text-center mx-auto", className)}>

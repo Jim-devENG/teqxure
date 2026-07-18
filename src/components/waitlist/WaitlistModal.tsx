@@ -46,12 +46,12 @@ export function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 12, scale: 0.98 }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            className="relative w-full max-w-md rounded-2xl border border-charcoal/10 bg-paper p-8 shadow-2xl sm:p-10"
+            className="relative w-full max-w-md rounded-2xl border border-light-gray bg-paper p-8 shadow-2xl sm:p-10"
           >
             <button
               onClick={onClose}
               aria-label="Close waitlist form"
-              className="absolute right-5 top-5 text-charcoal/40 transition-colors hover:text-charcoal cursor-pointer"
+              className="absolute right-5 top-5 text-slate transition-colors hover:text-graphite cursor-pointer"
             >
               <X className="h-5 w-5" strokeWidth={1.5} />
             </button>
@@ -59,10 +59,10 @@ export function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
             <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-blue">
               Cohort applications
             </span>
-            <h2 id="waitlist-title" className="mt-3 text-2xl font-medium tracking-tight text-charcoal">
+            <h2 id="waitlist-title" className="mt-3 text-2xl font-medium tracking-tight text-graphite">
               Join the waitlist
             </h2>
-            <p className="mt-2 text-sm leading-relaxed text-charcoal/60">
+            <p className="mt-2 text-sm leading-relaxed text-slate">
               Leave your details and we&apos;ll reach out when the next cohort opens.
             </p>
 

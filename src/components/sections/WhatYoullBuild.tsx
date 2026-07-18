@@ -19,7 +19,7 @@ export function WhatYoullBuild() {
       <div className="mx-auto max-w-6xl px-6">
         <div className="grid grid-cols-1 gap-16 lg:grid-cols-[0.85fr_1fr] lg:gap-12">
           <Reveal className="relative order-2 lg:order-1">
-            <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-charcoal/10 lg:aspect-[4/5]">
+            <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-light-gray lg:aspect-[4/5]">
               <Image
                 src={curatedImages.overheadWorkspace.src}
                 alt={curatedImages.overheadWorkspace.alt}
@@ -41,7 +41,7 @@ export function WhatYoullBuild() {
             <ul className="mt-10 flex flex-col gap-4">
               {REQUIREMENTS.map((requirement, i) => (
                 <Reveal key={requirement} delay={0.1 + i * 0.05}>
-                  <li className="flex items-start gap-3 rounded-xl border border-charcoal/10 bg-charcoal/[0.02] px-5 py-4 text-sm text-charcoal/70 sm:text-base">
+                  <li className="flex items-start gap-3 rounded-xl border border-light-gray bg-soft-white px-5 py-4 text-sm text-graphite/80 sm:text-base">
                     <Check className="mt-0.5 h-4 w-4 shrink-0 text-blue" strokeWidth={1.5} />
                     {requirement}
                   </li>

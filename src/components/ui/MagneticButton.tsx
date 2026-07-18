@@ -13,9 +13,9 @@ interface MagneticButtonProps
 }
 
 const variantClasses: Record<Variant, string> = {
-  primary: "bg-paper text-charcoal hover:bg-white",
-  secondary: "border border-white/15 text-paper hover:border-white/40",
-  ghost: "text-paper/70 hover:text-paper",
+  primary: "bg-blue text-white hover:bg-blue-dark",
+  secondary: "border border-white/20 text-paper hover:border-blue hover:text-blue",
+  ghost: "text-paper/70 hover:text-blue",
 };
 
 export function MagneticButton({

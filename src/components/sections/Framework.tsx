@@ -29,12 +29,12 @@ export function Framework() {
           <div className="absolute left-4 top-0 h-full w-px -translate-x-1/2 bg-white/10 sm:left-1/2" />
           <motion.div
             style={{ scaleY: scrollYProgress }}
-            className="absolute left-4 top-0 h-full w-px origin-top -translate-x-1/2 bg-cyan sm:left-1/2"
+            className="absolute left-4 top-0 h-full w-px origin-top -translate-x-1/2 bg-blue sm:left-1/2"
           />
 
           {frameworkStages.map((stage, i) => (
             <li key={stage.index} className="relative">
-              <span className="absolute left-4 top-1.5 h-2.5 w-2.5 -translate-x-1/2 rounded-full border-2 border-cyan bg-charcoal sm:left-1/2" />
+              <span className="absolute left-4 top-1.5 h-2.5 w-2.5 -translate-x-1/2 rounded-full border-2 border-blue bg-charcoal sm:left-1/2" />
               <Reveal delay={i * 0.04}>
                 <div
                   className={cn(
@@ -42,7 +42,7 @@ export function Framework() {
                     i % 2 === 0 ? "sm:mr-auto sm:pr-14 sm:text-right" : "sm:ml-auto sm:pl-14",
                   )}
                 >
-                  <span className="font-mono text-sm text-cyan">{stage.index}</span>
+                  <span className="font-mono text-sm text-blue">{stage.index}</span>
                   <h3 className="mt-2 text-2xl font-medium tracking-tight text-paper">
                     {stage.name}
                   </h3>

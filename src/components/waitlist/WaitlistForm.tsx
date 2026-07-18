@@ -46,8 +46,8 @@ export function WaitlistForm() {
       >
         <CheckCircle2 className="h-10 w-10 text-emerald" strokeWidth={1.5} />
         <div>
-          <p className="text-lg font-medium text-charcoal">You&apos;re on the list</p>
-          <p className="mt-1 text-sm text-charcoal/60">
+          <p className="text-lg font-medium text-graphite">You&apos;re on the list</p>
+          <p className="mt-1 text-sm text-slate">
             We&apos;ll email {email} when the next cohort opens applications.
           </p>
         </div>
@@ -90,7 +90,7 @@ export function WaitlistForm() {
         type="submit"
         variant="primary"
         disabled={status === "submitting"}
-        className="mt-2 w-full bg-charcoal text-paper hover:bg-charcoal-soft disabled:opacity-60"
+        className="mt-2 w-full disabled:opacity-60"
       >
         {status === "submitting" ? "Joining…" : "Join the waitlist"}
         <ArrowRight className="h-4 w-4" strokeWidth={1.5} />
@@ -113,7 +113,7 @@ interface FieldProps {
 function Field({ label, name, type, value, onChange, placeholder, error, autoComplete }: FieldProps) {
   return (
     <label htmlFor={name} className="group block">
-      <span className="font-mono text-[11px] uppercase tracking-[0.15em] text-charcoal/45">
+      <span className="font-mono text-[11px] uppercase tracking-[0.15em] text-slate">
         {label}
       </span>
       <input
@@ -124,7 +124,7 @@ function Field({ label, name, type, value, onChange, placeholder, error, autoCom
         placeholder={placeholder}
         autoComplete={autoComplete}
         onChange={(e) => onChange(e.target.value)}
-        className="mt-2 w-full border-0 border-b border-charcoal/15 bg-transparent pb-2 text-base text-charcoal placeholder:text-charcoal/30 outline-none transition-colors focus:border-blue"
+        className="mt-2 w-full border-0 border-b border-light-gray bg-transparent pb-2 text-base text-graphite placeholder:text-slate/50 outline-none transition-colors focus:border-blue"
       />
       {error && <span className="mt-1.5 block text-xs text-red-500">{error}</span>}
     </label>

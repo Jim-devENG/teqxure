@@ -29,7 +29,7 @@ export function CursorFollower() {
     <motion.div
       style={{ x: springX, y: springY }}
       aria-hidden
-      className="pointer-events-none fixed left-0 top-0 z-[300] hidden h-6 w-6 -translate-x-1/2 -translate-y-1/2 rounded-full border border-cyan/60 md:block"
+      className="pointer-events-none fixed left-0 top-0 z-[300] hidden h-6 w-6 -translate-x-1/2 -translate-y-1/2 rounded-full border border-blue/60 md:block"
     />
   );
 }
