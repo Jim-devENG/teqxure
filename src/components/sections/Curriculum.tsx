@@ -6,10 +6,10 @@ import { Check } from "lucide-react";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
 import { Panel } from "@/components/ui/Panel";
-import { curriculum, type FrameworkPhaseName } from "@/content/curriculum";
+import type { SectionContent } from "@/lib/sectionSchemas";
 import { cn } from "@/lib/utils";
 
-const phaseColor: Record<FrameworkPhaseName, string> = {
+const phaseColor: Record<string, string> = {
   Problem: "bg-cyan",
   Pattern: "bg-blue",
   Architecture: "bg-blue",
@@ -19,23 +19,37 @@ const phaseColor: Record<FrameworkPhaseName, string> = {
   Iteration: "bg-emerald",
 };
 
-export function Curriculum() {
+interface CurriculumWeekData {
+  week: number;
+  phase: string;
+  title: string;
+  outcomes: { text: string }[];
+}
+
+interface CurriculumProps {
+  section: SectionContent<"CURRICULUM_INTRO">;
+  weeks: CurriculumWeekData[];
+}
+
+export function Curriculum({ section, weeks }: CurriculumProps) {
   const [activeWeek, setActiveWeek] = useState(0);
-  const active = curriculum[activeWeek];
+  const active = weeks[activeWeek];
+
+  if (!active) return null;
 
   return (
     <section id="curriculum" className="bg-charcoal py-24 sm:py-32">
       <div className="mx-auto max-w-6xl px-6">
         <SectionHeading
-          eyebrow="Twelve Weeks"
-          title="An interactive roadmap, not a syllabus PDF"
-          description="Every week maps to a stage of the framework. Select a week to see exactly what you'll ship."
+          eyebrow={section.eyebrow}
+          title={section.title}
+          description={section.description}
         />
 
         <div className="mt-14 grid grid-cols-1 gap-10 lg:grid-cols-[420px_1fr]">
           <Reveal delay={0.1}>
             <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-3">
-              {curriculum.map((week, i) => (
+              {weeks.map((week, i) => (
                 <button
                   key={week.week}
                   onClick={() => setActiveWeek(i)}
@@ -47,7 +61,7 @@ export function Curriculum() {
                   )}
                 >
                   <span className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-paper/40">
-                    <span className={cn("h-1.5 w-1.5 rounded-full", phaseColor[week.phase])} />
+                    <span className={cn("h-1.5 w-1.5 rounded-full", phaseColor[week.phase] ?? "bg-blue")} />
                     W{String(week.week).padStart(2, "0")}
                   </span>
                   <span
@@ -85,9 +99,9 @@ export function Curriculum() {
                   </h3>
                   <ul className="mt-7 flex flex-col gap-4">
                     {active.outcomes.map((outcome) => (
-                      <li key={outcome} className="flex items-start gap-3 text-sm text-paper/65 sm:text-base">
+                      <li key={outcome.text} className="flex items-start gap-3 text-sm text-paper/65 sm:text-base">
                         <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald" strokeWidth={1.5} />
-                        {outcome}
+                        {outcome.text}
                       </li>
                     ))}
                   </ul>

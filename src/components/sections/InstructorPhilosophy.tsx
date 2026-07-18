@@ -2,8 +2,11 @@ import Image from "next/image";
 import { Quote } from "lucide-react";
 import { Reveal } from "@/components/ui/Reveal";
 import { curatedImages } from "@/content/images";
+import { getHomepageSection } from "@/lib/content";
 
-export function InstructorPhilosophy() {
+export async function InstructorPhilosophy() {
+  const section = await getHomepageSection("INSTRUCTOR_PHILOSOPHY");
+
   return (
     <section className="bg-paper py-24 sm:py-32">
       <div className="mx-auto max-w-6xl px-6">
@@ -11,7 +14,7 @@ export function InstructorPhilosophy() {
           <div>
             <Reveal>
               <span className="font-mono text-xs uppercase tracking-[0.2em] text-blue">
-                Instructor Philosophy
+                {section.eyebrow}
               </span>
             </Reveal>
 
@@ -21,26 +24,19 @@ export function InstructorPhilosophy() {
 
             <Reveal delay={0.15}>
               <p className="mt-4 text-balance text-2xl font-medium leading-snug tracking-tight text-graphite sm:text-3xl md:text-4xl">
-                Software development asks how to build it. Product Engineering asks
-                whether it should exist, who it's for, and how you'll know it's
-                working.
+                {section.quote}
               </p>
             </Reveal>
 
             <Reveal delay={0.25}>
               <p className="mt-8 max-w-xl text-base leading-relaxed text-slate sm:text-lg">
-                Most engineering education optimizes for correctness — does the
-                function return the right value. Product Engineering optimizes for
-                consequence — does the decision behind that function hold up when a
-                stranger relies on it. That distinction is the entire curriculum.
+                {section.paragraph1}
               </p>
             </Reveal>
 
             <Reveal delay={0.35}>
               <p className="mt-6 max-w-xl text-base leading-relaxed text-slate sm:text-lg">
-                We teach engineers to sit with ambiguity long enough to make it
-                someone else's clarity — then to build fast enough, with AI as
-                leverage, that the clarity ships before it goes stale.
+                {section.paragraph2}
               </p>
             </Reveal>
           </div>

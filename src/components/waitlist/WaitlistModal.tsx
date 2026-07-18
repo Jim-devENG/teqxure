@@ -3,14 +3,15 @@
 import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
-import { WaitlistForm } from "@/components/waitlist/WaitlistForm";
+import { WaitlistForm, type WaitlistFieldData } from "@/components/waitlist/WaitlistForm";
 
 interface WaitlistModalProps {
   isOpen: boolean;
   onClose: () => void;
+  fields: WaitlistFieldData[];
 }
 
-export function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
+export function WaitlistModal({ isOpen, onClose, fields }: WaitlistModalProps) {
   useEffect(() => {
     if (!isOpen) return;
     function handleKey(e: KeyboardEvent) {
@@ -67,7 +68,7 @@ export function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
             </p>
 
             <div className="mt-8">
-              <WaitlistForm />
+              <WaitlistForm fields={fields} />
             </div>
           </motion.div>
         </motion.div>

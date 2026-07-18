@@ -3,22 +3,11 @@ import { Check, X } from "lucide-react";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { curatedImages } from "@/content/images";
+import { getHomepageSection } from "@/lib/content";
 
-const TUTORIAL_TRAITS = [
-  "Follows a script someone else already solved",
-  "Ends the moment the video ends",
-  "No real user ever touches it",
-  "Success means \"it compiled\"",
-];
+export async function WhyProductEngineering() {
+  const section = await getHomepageSection("WHY_PRODUCT_ENGINEERING");
 
-const PRODUCT_TRAITS = [
-  "Starts from a problem no one has solved for this user yet",
-  "Continues as long as people rely on it",
-  "Strangers use it without you standing behind them",
-  "Success means someone came back a second time",
-];
-
-export function WhyProductEngineering() {
   return (
     <section className="bg-paper py-24 sm:py-32">
       <div className="mx-auto max-w-6xl px-6">
@@ -26,9 +15,9 @@ export function WhyProductEngineering() {
           <div>
             <SectionHeading
               tone="light"
-              eyebrow="Why Product Engineering"
-              title="Tutorials teach syntax. Products teach judgment."
-              description="Following a tutorial proves you can type. Shipping a product proves you can decide — what to build, for whom, and when it's actually ready for a stranger to depend on."
+              eyebrow={section.eyebrow}
+              title={section.title}
+              description={section.description}
             />
 
             <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -38,7 +27,7 @@ export function WhyProductEngineering() {
                     Tutorials
                   </p>
                   <ul className="mt-4 flex flex-col gap-3">
-                    {TUTORIAL_TRAITS.map((trait) => (
+                    {section.tutorialTraits.map((trait) => (
                       <li key={trait} className="flex items-start gap-2.5 text-sm text-slate">
                         <X className="mt-0.5 h-4 w-4 shrink-0 text-slate/70" strokeWidth={1.5} />
                         {trait}
@@ -54,7 +43,7 @@ export function WhyProductEngineering() {
                     Product Engineering
                   </p>
                   <ul className="mt-4 flex flex-col gap-3">
-                    {PRODUCT_TRAITS.map((trait) => (
+                    {section.productTraits.map((trait) => (
                       <li key={trait} className="flex items-start gap-2.5 text-sm text-graphite/80">
                         <Check className="mt-0.5 h-4 w-4 shrink-0 text-blue" strokeWidth={1.5} />
                         {trait}
@@ -77,10 +66,8 @@ export function WhyProductEngineering() {
               />
             </div>
             <div className="panel-glass-light absolute -bottom-6 -right-6 max-w-[220px] rounded-xl px-5 py-4 shadow-xl">
-              <p className="text-sm font-medium text-graphite">Built in cohort teams</p>
-              <p className="mt-1 text-xs leading-relaxed text-slate">
-                Engineers reviewing real architecture decisions, not toy exercises.
-              </p>
+              <p className="text-sm font-medium text-graphite">{section.captionTitle}</p>
+              <p className="mt-1 text-xs leading-relaxed text-slate">{section.captionBody}</p>
             </div>
           </Reveal>
         </div>

@@ -2,6 +2,7 @@
 
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
 import { WaitlistModal } from "@/components/waitlist/WaitlistModal";
+import type { WaitlistFieldData } from "@/components/waitlist/WaitlistForm";
 
 interface WaitlistContextValue {
   isOpen: boolean;
@@ -11,7 +12,13 @@ interface WaitlistContextValue {
 
 const WaitlistContext = createContext<WaitlistContextValue | null>(null);
 
-export function WaitlistProvider({ children }: { children: ReactNode }) {
+export function WaitlistProvider({
+  children,
+  fields,
+}: {
+  children: ReactNode;
+  fields: WaitlistFieldData[];
+}) {
   const [isOpen, setIsOpen] = useState(false);
 
   const openWaitlist = useCallback(() => setIsOpen(true), []);
@@ -25,7 +32,7 @@ export function WaitlistProvider({ children }: { children: ReactNode }) {
   return (
     <WaitlistContext.Provider value={value}>
       {children}
-      <WaitlistModal isOpen={isOpen} onClose={closeWaitlist} />
+      <WaitlistModal isOpen={isOpen} onClose={closeWaitlist} fields={fields} />
     </WaitlistContext.Provider>
   );
 }

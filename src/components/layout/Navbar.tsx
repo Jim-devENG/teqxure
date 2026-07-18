@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { MagneticButton } from "@/components/ui/MagneticButton";
@@ -36,7 +37,8 @@ export function Navbar() {
       )}
     >
       <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-        <a href="#top" className="font-mono text-sm font-medium tracking-tight text-paper">
+        <a href="#top" className="flex items-center gap-2 font-mono text-sm font-medium tracking-tight text-paper">
+          <Image src="/logo-icon.png" alt="" width={24} height={24} className="h-6 w-6" priority />
           Teqxure<span className="text-blue">.</span>
         </a>
 

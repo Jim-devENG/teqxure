@@ -5,10 +5,21 @@ import { Plus } from "lucide-react";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
 import { AccordionItem } from "@/components/ui/Accordion";
-import { faqItems } from "@/content/faq";
+import type { SectionContent } from "@/lib/sectionSchemas";
 import { cn } from "@/lib/utils";
 
-export function FAQ() {
+interface FaqItemData {
+  id: string;
+  question: string;
+  answer: string;
+}
+
+interface FAQProps {
+  section: SectionContent<"FAQ_INTRO">;
+  items: FaqItemData[];
+}
+
+export function FAQ({ section, items }: FAQProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
@@ -16,14 +27,14 @@ export function FAQ() {
       <div className="mx-auto max-w-3xl px-6">
         <SectionHeading
           align="center"
-          eyebrow="Frequently Asked"
-          title="Questions builders actually ask"
+          eyebrow={section.eyebrow}
+          title={section.title}
           className="mx-auto"
         />
 
         <div className="mt-14 divide-y divide-white/10 border-y border-white/10">
-          {faqItems.map((item, i) => (
-            <Reveal key={item.question} delay={i * 0.03}>
+          {items.map((item, i) => (
+            <Reveal key={item.id} delay={i * 0.03}>
               <AccordionItem
                 isOpen={openIndex === i}
                 onToggle={() => setOpenIndex(openIndex === i ? null : i)}

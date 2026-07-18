@@ -9,10 +9,15 @@ import { MagneticButton } from "@/components/ui/MagneticButton";
 import { RevealText } from "@/components/ui/RevealText";
 import { Reveal } from "@/components/ui/Reveal";
 import { useWaitlist } from "@/components/waitlist/WaitlistProvider";
-import { products } from "@/content/products";
+import type { SectionContent } from "@/lib/sectionSchemas";
 import { cn } from "@/lib/utils";
 
-export function Hero() {
+interface HeroProps {
+  section: SectionContent<"HERO">;
+  productNames: string[];
+}
+
+export function Hero({ section, productNames }: HeroProps) {
   const { openWaitlist } = useWaitlist();
   const lenis = useLenis();
 
@@ -29,39 +34,33 @@ export function Hero() {
             <Reveal>
               <span className="inline-flex items-center gap-2 rounded-full border border-white/10 px-3 py-1 text-xs text-paper/60">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald" />
-                Product Engineering Bootcamp
+                {section.badge}
               </span>
             </Reveal>
 
             <h1 className="mt-6 max-w-2xl text-4xl font-medium leading-[1.08] tracking-tight sm:text-5xl md:text-6xl">
-              <RevealText text="Stop building tutorials." className="text-paper/35" />{" "}
-              <RevealText
-                text="Start building products people"
-                delay={0.25}
-                className="text-paper"
-              />{" "}
-              <RevealText text="actually use." delay={0.42} className="text-blue" />
+              <RevealText text={section.headlineMuted} className="text-paper/35" />{" "}
+              <RevealText text={section.headlineEmphasis} delay={0.25} className="text-paper" />{" "}
+              <RevealText text={section.headlineAccent} delay={0.42} className="text-blue" />
             </h1>
 
             <Reveal delay={0.55}>
               <p className="mt-6 max-w-xl text-base leading-relaxed text-paper/60 sm:text-lg">
-                Learn the exact Product Engineering system used to build production
-                software across SaaS, marketplaces, education technology,
-                cybersecurity, creator platforms, and AI products.
+                {section.subhead}
               </p>
             </Reveal>
 
             <Reveal delay={0.65}>
               <div className="mt-9 flex flex-wrap items-center gap-4">
                 <MagneticButton onClick={openWaitlist}>
-                  Join the waitlist
+                  {section.primaryCtaText}
                   <ArrowRight className="h-4 w-4" strokeWidth={1.5} />
                 </MagneticButton>
                 <MagneticButton
                   variant="ghost"
                   onClick={() => lenis?.scrollTo("#framework")}
                 >
-                  See the framework
+                  {section.secondaryCtaText}
                   <ArrowDown className="h-4 w-4" strokeWidth={1.5} />
                 </MagneticButton>
               </div>
@@ -70,12 +69,12 @@ export function Hero() {
             <Reveal delay={0.75}>
               <div className="mt-14">
                 <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-paper/35">
-                  Built by builders behind
+                  {section.trustLabel}
                 </p>
                 <div className="mt-4 flex flex-wrap gap-x-6 gap-y-3">
-                  {products.map((p) => (
-                    <span key={p.slug} className="text-sm text-paper/45">
-                      {p.name}
+                  {productNames.map((name) => (
+                    <span key={name} className="text-sm text-paper/45">
+                      {name}
                     </span>
                   ))}
                 </div>

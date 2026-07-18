@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
-import { products, type ProductAccent } from "@/content/products";
+import type { SectionContent } from "@/lib/sectionSchemas";
 import { cn } from "@/lib/utils";
 
 const categoryIcon: Record<string, LucideIcon> = {
@@ -24,32 +24,48 @@ const categoryIcon: Record<string, LucideIcon> = {
   "Artificial Intelligence": Bot,
 };
 
-const accentText: Record<ProductAccent, string> = {
+const accentText: Record<string, string> = {
   blue: "text-blue",
   cyan: "text-cyan",
   emerald: "text-emerald",
 };
 
-const accentBorder: Record<ProductAccent, string> = {
+const accentBorder: Record<string, string> = {
   blue: "border-blue/25",
   cyan: "border-cyan/25",
   emerald: "border-emerald/25",
 };
 
-const accentBg: Record<ProductAccent, string> = {
+const accentBg: Record<string, string> = {
   blue: "bg-blue/[0.06]",
   cyan: "bg-cyan/[0.06]",
   emerald: "bg-emerald/[0.06]",
 };
 
-export function ProductShowcase() {
+interface ProductData {
+  slug: string;
+  name: string;
+  category: string;
+  description: string;
+  builtWith: string[];
+  accent: string;
+  metricLabel: string;
+  metricValue: string;
+}
+
+interface ProductShowcaseProps {
+  section: SectionContent<"PRODUCT_SHOWCASE_INTRO">;
+  products: ProductData[];
+}
+
+export function ProductShowcase({ section, products }: ProductShowcaseProps) {
   return (
     <section id="products" className="bg-charcoal py-24 sm:py-32">
       <div className="mx-auto max-w-6xl px-6">
         <SectionHeading
-          eyebrow="Product Showcase"
-          title="Six problems. Six production products."
-          description="Each cohort ships real software into one of these categories — built end to end using the same seven-stage system."
+          eyebrow={section.eyebrow}
+          title={section.title}
+          description={section.description}
         />
 
         <div className="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -65,21 +81,26 @@ export function ProductShowcase() {
                   <div
                     className={cn(
                       "flex aspect-video items-center justify-center border-b border-white/10",
-                      accentBg[product.accent],
+                      accentBg[product.accent] ?? accentBg.blue,
                     )}
                   >
                     <div
                       className={cn(
                         "flex h-16 w-16 items-center justify-center rounded-2xl border",
-                        accentBorder[product.accent],
+                        accentBorder[product.accent] ?? accentBorder.blue,
                       )}
                     >
-                      <Icon className={cn("h-7 w-7", accentText[product.accent])} strokeWidth={1.4} />
+                      <Icon className={cn("h-7 w-7", accentText[product.accent] ?? accentText.blue)} strokeWidth={1.4} />
                     </div>
                   </div>
 
                   <div className="flex flex-1 flex-col p-6">
-                    <span className={cn("font-mono text-[11px] uppercase tracking-[0.15em]", accentText[product.accent])}>
+                    <span
+                      className={cn(
+                        "font-mono text-[11px] uppercase tracking-[0.15em]",
+                        accentText[product.accent] ?? accentText.blue,
+                      )}
+                    >
                       {product.category}
                     </span>
                     <h3 className="mt-3 text-xl font-medium tracking-tight text-paper">
@@ -101,8 +122,8 @@ export function ProductShowcase() {
                     </div>
 
                     <div className="mt-auto flex items-baseline gap-2 border-t border-white/10 pt-5 mt-6">
-                      <span className="text-lg font-medium text-paper">{product.metric.value}</span>
-                      <span className="text-xs text-paper/45">{product.metric.label}</span>
+                      <span className="text-lg font-medium text-paper">{product.metricValue}</span>
+                      <span className="text-xs text-paper/45">{product.metricLabel}</span>
                     </div>
                   </div>
                 </motion.article>

@@ -1,0 +1,210 @@
+// Teqxure Admin Platform — Phase 1 schema
+// See /Users/owner/.claude/plans/snazzy-watching-tide.md for the design rationale.
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------- Auth ----------
+
+enum Role {
+  ADMIN
+}
+
+model User {
+  id           String        @id @default(cuid())
+  email        String        @unique
+  passwordHash String
+  name         String?
+  role         Role          @default(ADMIN)
+  createdAt    DateTime      @default(now())
+  lastLoginAt  DateTime?
+  sessions     Session[]
+  activityLogs ActivityLog[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+// ---------- Site-wide settings ----------
+
+model SiteSettings {
+  id              String   @id @default(cuid())
+  siteName        String   @default("Teqxure")
+  tagline         String?
+  logoUrl         String?
+  faviconUrl      String?
+  contactEmail    String?
+  socialLinks     Json? // [{ label: string, href: string }]
+  seoTitle        String?
+  seoDescription  String?
+  seoImage        String?
+  analyticsId     String?
+  updatedAt       DateTime @updatedAt
+}
+
+// ---------- Homepage sections (generic content engine) ----------
+
+model HomepageSection {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  visible   Boolean  @default(true)
+  order     Int      @default(0)
+  content   Json
+  updatedAt DateTime @updatedAt
+}
+
+// ---------- Product showcase ----------
+
+model Product {
+  id              String    @id @default(cuid())
+  slug            String    @unique
+  name            String
+  category        String
+  oneLiner        String
+  description     String
+  longDescription String?
+  logoUrl         String?
+  builtWith       String[]
+  screenshots     String[]
+  accent          String    @default("blue")
+  metricLabel     String
+  metricValue     String
+  liveUrl         String?
+  caseStudyUrl    String?
+  status          String    @default("PUBLISHED")
+  featured        Boolean   @default(false)
+  visible         Boolean   @default(true)
+  order           Int       @default(0)
+  deletedAt       DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+// ---------- Framework (7-stage system diagram) ----------
+
+model FrameworkStage {
+  id          String  @id @default(cuid())
+  index       String
+  name        String
+  description String
+  order       Int     @default(0)
+  visible     Boolean @default(true)
+}
+
+// ---------- Curriculum ----------
+
+model CurriculumWeek {
+  id        String              @id @default(cuid())
+  week      Int
+  phase     String
+  title     String
+  order     Int                 @default(0)
+  visible   Boolean             @default(true)
+  deletedAt DateTime?
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+  outcomes  CurriculumOutcome[]
+}
+
+model CurriculumOutcome {
+  id     String         @id @default(cuid())
+  weekId String
+  week   CurriculumWeek @relation(fields: [weekId], references: [id], onDelete: Cascade)
+  text   String
+  order  Int            @default(0)
+}
+
+// ---------- FAQ ----------
+
+model FaqItem {
+  id        String    @id @default(cuid())
+  question  String
+  answer    String
+  order     Int       @default(0)
+  visible   Boolean   @default(true)
+  deletedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+// ---------- Testimonials ----------
+
+model Testimonial {
+  id             String    @id @default(cuid())
+  quote          String
+  authorName     String
+  authorRole     String?
+  authorCompany  String?
+  avatarUrl      String?
+  rating         Int?
+  pinned         Boolean   @default(false)
+  approved       Boolean   @default(true)
+  visible        Boolean   @default(true)
+  order          Int       @default(0)
+  deletedAt      DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+// ---------- Waitlist form builder (scoped to the live waitlist form) ----------
+
+model WaitlistField {
+  id          String    @id @default(cuid())
+  label       String
+  fieldType   String // TEXT | EMAIL | TEXTAREA | PHONE | SELECT | CHECKBOX | FILE | URL
+  placeholder String?
+  required    Boolean   @default(false)
+  options     Json? // string[] for SELECT / CHECKBOX
+  order       Int       @default(0)
+  visible     Boolean   @default(true)
+  deletedAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model WaitlistSubmission {
+  id        String   @id @default(cuid())
+  data      Json // { [fieldId]: value }
+  status    String   @default("NEW") // NEW | REVIEWED
+  createdAt DateTime @default(now())
+}
+
+// ---------- Media library (Phase 1: tracked uploads, not the full library UI) ----------
+
+model Media {
+  id        String   @id @default(cuid())
+  url       String
+  key       String   @unique
+  fileName  String
+  mimeType  String
+  size      Int
+  altText   String?
+  width     Int?
+  height    Int?
+  createdAt DateTime @default(now())
+}
+
+// ---------- Activity log (powers the dashboard) ----------
+
+model ActivityLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action     String // created | updated | deleted | reordered | published | unpublished
+  entityType String // Product | CurriculumWeek | FaqItem | Testimonial | HomepageSection | ...
+  entityId   String?
+  metadata   Json?
+  createdAt  DateTime @default(now())
+}

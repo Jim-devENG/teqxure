@@ -6,7 +6,8 @@ import { CursorFollower } from "@/components/motion/CursorFollower";
 import { WaitlistProvider } from "@/components/waitlist/WaitlistProvider";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import "./globals.css";
+import { getWaitlistFields } from "@/lib/content";
+import "../globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -63,14 +64,17 @@ const jsonLd = {
   description:
     "The Product Engineering Bootcamp — a twelve-week cohort program teaching builders to turn ideas into production software using AI.",
   url: siteUrl,
+  logo: `${siteUrl}/logo-icon.png`,
   sameAs: ["https://x.com", "https://linkedin.com", "https://github.com"],
 };
 
-export default function RootLayout({
+export default async function MarketingLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const fields = await getWaitlistFields();
+
   return (
     <html
       lang="en"
@@ -82,7 +86,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         <SmoothScroll>
-          <WaitlistProvider>
+          <WaitlistProvider fields={fields}>
             <ScrollProgress />
             <CursorFollower />
             <Navbar />

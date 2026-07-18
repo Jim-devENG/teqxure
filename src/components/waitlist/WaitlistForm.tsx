@@ -1,42 +1,26 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useActionState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { MagneticButton } from "@/components/ui/MagneticButton";
+import { submitWaitlistAction, type SubmitWaitlistState } from "@/lib/actions/waitlistSubmissions";
 
-type Status = "idle" | "submitting" | "success";
-
-interface Errors {
-  name?: string;
-  email?: string;
+export interface WaitlistFieldData {
+  id: string;
+  label: string;
+  fieldType: string;
+  placeholder: string | null;
+  required: boolean;
+  options: unknown;
 }
 
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const initialState: SubmitWaitlistState = {};
 
-export function WaitlistForm() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [role, setRole] = useState("");
-  const [errors, setErrors] = useState<Errors>({});
-  const [status, setStatus] = useState<Status>("idle");
+export function WaitlistForm({ fields }: { fields: WaitlistFieldData[] }) {
+  const [state, formAction, isPending] = useActionState(submitWaitlistAction, initialState);
 
-  function validate(): boolean {
-    const next: Errors = {};
-    if (name.trim().length < 2) next.name = "Enter your full name";
-    if (!EMAIL_PATTERN.test(email)) next.email = "Enter a valid email address";
-    setErrors(next);
-    return Object.keys(next).length === 0;
-  }
-
-  function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-    if (!validate()) return;
-    setStatus("submitting");
-    window.setTimeout(() => setStatus("success"), 700);
-  }
-
-  if (status === "success") {
+  if (state.success) {
     return (
       <motion.div
         initial={{ opacity: 0, y: 8 }}
@@ -47,86 +31,111 @@ export function WaitlistForm() {
         <CheckCircle2 className="h-10 w-10 text-emerald" strokeWidth={1.5} />
         <div>
           <p className="text-lg font-medium text-graphite">You&apos;re on the list</p>
-          <p className="mt-1 text-sm text-slate">
-            We&apos;ll email {email} when the next cohort opens applications.
-          </p>
+          <p className="mt-1 text-sm text-slate">We&apos;ll email you when the next cohort opens applications.</p>
         </div>
       </motion.div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-6">
-      <Field
-        label="Full name"
-        name="name"
-        type="text"
-        value={name}
-        onChange={setName}
-        placeholder="Ada Lovelace"
-        error={errors.name}
-        autoComplete="name"
-      />
-      <Field
-        label="Email address"
-        name="email"
-        type="email"
-        value={email}
-        onChange={setEmail}
-        placeholder="you@domain.com"
-        error={errors.email}
-        autoComplete="email"
-      />
-      <Field
-        label="What are you building? (optional)"
-        name="role"
-        type="text"
-        value={role}
-        onChange={setRole}
-        placeholder="SaaS, marketplace, AI product…"
-      />
+    <form action={formAction} className="flex flex-col gap-6">
+      {fields.map((field) => (
+        <DynamicField key={field.id} field={field} />
+      ))}
+
+      {state.error && <p className="text-sm text-red-500">{state.error}</p>}
 
       <MagneticButton
         type="submit"
         variant="primary"
-        disabled={status === "submitting"}
+        disabled={isPending}
         className="mt-2 w-full disabled:opacity-60"
       >
-        {status === "submitting" ? "Joining…" : "Join the waitlist"}
+        {isPending ? "Joining…" : "Join the waitlist"}
         <ArrowRight className="h-4 w-4" strokeWidth={1.5} />
       </MagneticButton>
     </form>
   );
 }
 
-interface FieldProps {
-  label: string;
-  name: string;
-  type: string;
-  value: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
-  error?: string;
-  autoComplete?: string;
-}
+function DynamicField({ field }: { field: WaitlistFieldData }) {
+  const options = Array.isArray(field.options) ? (field.options as string[]) : [];
+  const baseInputClasses =
+    "mt-2 w-full border-0 border-b border-light-gray bg-transparent pb-2 text-base text-graphite placeholder:text-slate/50 outline-none transition-colors focus:border-blue";
 
-function Field({ label, name, type, value, onChange, placeholder, error, autoComplete }: FieldProps) {
+  if (field.fieldType === "CHECKBOX" && options.length === 0) {
+    return (
+      <label className="flex items-center gap-2.5 text-sm text-graphite">
+        <input type="checkbox" name={field.id} required={field.required} className="h-4 w-4 rounded border-light-gray text-blue" />
+        {field.label}
+      </label>
+    );
+  }
+
   return (
-    <label htmlFor={name} className="group block">
+    <label htmlFor={field.id} className="group block">
       <span className="font-mono text-[11px] uppercase tracking-[0.15em] text-slate">
-        {label}
+        {field.label}
       </span>
-      <input
-        id={name}
-        name={name}
-        type={type}
-        value={value}
-        placeholder={placeholder}
-        autoComplete={autoComplete}
-        onChange={(e) => onChange(e.target.value)}
-        className="mt-2 w-full border-0 border-b border-light-gray bg-transparent pb-2 text-base text-graphite placeholder:text-slate/50 outline-none transition-colors focus:border-blue"
-      />
-      {error && <span className="mt-1.5 block text-xs text-red-500">{error}</span>}
+
+      {field.fieldType === "TEXTAREA" && (
+        <textarea
+          id={field.id}
+          name={field.id}
+          required={field.required}
+          placeholder={field.placeholder ?? undefined}
+          rows={3}
+          className={baseInputClasses}
+        />
+      )}
+
+      {field.fieldType === "SELECT" && (
+        <select id={field.id} name={field.id} required={field.required} className={baseInputClasses}>
+          <option value="">Select…</option>
+          {options.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+      )}
+
+      {field.fieldType === "CHECKBOX" && options.length > 0 && (
+        <div className="mt-2 flex flex-col gap-2">
+          {options.map((option) => (
+            <label key={option} className="flex items-center gap-2 text-sm text-graphite">
+              <input type="checkbox" name={field.id} value={option} className="h-4 w-4 rounded border-light-gray text-blue" />
+              {option}
+            </label>
+          ))}
+        </div>
+      )}
+
+      {!["TEXTAREA", "SELECT", "CHECKBOX"].includes(field.fieldType) && (
+        <input
+          id={field.id}
+          name={field.id}
+          type={fieldTypeToInputType(field.fieldType)}
+          required={field.required}
+          placeholder={field.placeholder ?? undefined}
+          className={baseInputClasses}
+        />
+      )}
     </label>
   );
+}
+
+function fieldTypeToInputType(fieldType: string): string {
+  switch (fieldType) {
+    case "EMAIL":
+      return "email";
+    case "PHONE":
+      return "tel";
+    case "URL":
+      return "url";
+    case "FILE":
+      return "file";
+    default:
+      return "text";
+  }
 }

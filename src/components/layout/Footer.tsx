@@ -1,5 +1,7 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import { getSiteSettings } from "@/lib/content";
 
 const FOOTER_LINKS = [
   { label: "Framework", href: "#framework" },
@@ -9,25 +11,30 @@ const FOOTER_LINKS = [
   { label: "FAQ", href: "#faq" },
 ];
 
-const SOCIALS = [
+const DEFAULT_SOCIALS = [
   { label: "X / Twitter", href: "https://x.com" },
   { label: "LinkedIn", href: "https://linkedin.com" },
   { label: "GitHub", href: "https://github.com" },
 ];
 
-export function Footer() {
+export async function Footer() {
+  const settings = await getSiteSettings();
+  const socials = (settings?.socialLinks as { label: string; href: string }[] | null) ?? DEFAULT_SOCIALS;
+  const tagline =
+    settings?.tagline ??
+    "The Product Engineering Bootcamp for builders turning ideas into software real people use.";
+  const contactEmail = settings?.contactEmail ?? "hello@teqxure.com";
+
   return (
     <footer className="border-t border-white/10 bg-charcoal">
       <div className="mx-auto max-w-6xl px-6 py-16">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-[1.4fr_1fr_1fr]">
           <div>
-            <span className="font-mono text-sm font-medium tracking-tight text-paper">
+            <span className="flex items-center gap-2 font-mono text-sm font-medium tracking-tight text-paper">
+              <Image src="/logo-icon.png" alt="" width={24} height={24} className="h-6 w-6" />
               Teqxure<span className="text-blue">.</span>
             </span>
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-paper/50">
-              The Product Engineering Bootcamp for builders turning ideas into
-              software real people use.
-            </p>
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-paper/50">{tagline}</p>
           </div>
 
           <div>
@@ -46,7 +53,7 @@ export function Footer() {
           <div>
             <p className="font-mono text-xs uppercase tracking-[0.15em] text-paper/40">Connect</p>
             <ul className="mt-4 flex flex-col gap-3">
-              {SOCIALS.map((social) => (
+              {socials.map((social) => (
                 <li key={social.href}>
                   <a
                     href={social.href}
@@ -61,10 +68,10 @@ export function Footer() {
               ))}
               <li>
                 <Link
-                  href="mailto:hello@teqxure.com"
+                  href={`mailto:${contactEmail}`}
                   className="text-sm text-paper/60 transition-colors hover:text-blue"
                 >
-                  hello@teqxure.com
+                  {contactEmail}
                 </Link>
               </li>
             </ul>

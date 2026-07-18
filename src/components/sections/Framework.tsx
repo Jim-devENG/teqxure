@@ -4,10 +4,21 @@ import { useRef } from "react";
 import { motion, useScroll } from "framer-motion";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
-import { frameworkStages } from "@/content/framework";
+import type { SectionContent } from "@/lib/sectionSchemas";
 import { cn } from "@/lib/utils";
 
-export function Framework() {
+interface FrameworkStageData {
+  index: string;
+  name: string;
+  description: string;
+}
+
+interface FrameworkProps {
+  section: SectionContent<"FRAMEWORK_INTRO">;
+  stages: FrameworkStageData[];
+}
+
+export function Framework({ section, stages }: FrameworkProps) {
   const containerRef = useRef<HTMLUListElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -19,9 +30,9 @@ export function Framework() {
       <div className="mx-auto max-w-5xl px-6">
         <SectionHeading
           align="center"
-          eyebrow="The Teqxure System"
-          title="Problem to production, on repeat"
-          description="Seven stages, applied to every product you build in the program — and every product you build after it."
+          eyebrow={section.eyebrow}
+          title={section.title}
+          description={section.description}
           className="mx-auto max-w-2xl"
         />
 
@@ -32,7 +43,7 @@ export function Framework() {
             className="absolute left-4 top-0 h-full w-px origin-top -translate-x-1/2 bg-blue sm:left-1/2"
           />
 
-          {frameworkStages.map((stage, i) => (
+          {stages.map((stage, i) => (
             <li key={stage.index} className="relative">
               <span className="absolute left-4 top-1.5 h-2.5 w-2.5 -translate-x-1/2 rounded-full border-2 border-blue bg-charcoal sm:left-1/2" />
               <Reveal delay={i * 0.04}>

@@ -2,22 +2,27 @@
 
 import { useLenis } from "lenis/react";
 import { Reveal } from "@/components/ui/Reveal";
-import { products, type ProductAccent } from "@/content/products";
+import type { SectionContent } from "@/lib/sectionSchemas";
 import { cn } from "@/lib/utils";
 
-const accentText: Record<ProductAccent, string> = {
+const accentText: Record<string, string> = {
   blue: "group-hover:text-blue",
   cyan: "group-hover:text-cyan",
   emerald: "group-hover:text-emerald",
 };
 
-const accentBg: Record<ProductAccent, string> = {
+const accentBg: Record<string, string> = {
   blue: "group-hover:bg-blue",
   cyan: "group-hover:bg-cyan",
   emerald: "group-hover:bg-emerald",
 };
 
-export function SocialProof() {
+interface SocialProofProps {
+  section: SectionContent<"SOCIAL_PROOF">;
+  products: { slug: string; name: string; accent: string }[];
+}
+
+export function SocialProof({ section, products }: SocialProofProps) {
   const lenis = useLenis();
 
   return (
@@ -25,7 +30,7 @@ export function SocialProof() {
       <div className="mx-auto max-w-6xl px-6">
         <Reveal>
           <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-paper/35">
-            Real products built with the system
+            {section.eyebrow}
           </p>
         </Reveal>
 
@@ -39,13 +44,13 @@ export function SocialProof() {
                 <span
                   className={cn(
                     "h-[3px] w-6 rounded-full bg-paper/15 transition-colors",
-                    accentBg[product.accent],
+                    accentBg[product.accent] ?? accentBg.blue,
                   )}
                 />
                 <span
                   className={cn(
                     "text-sm font-medium text-paper/70 transition-colors",
-                    accentText[product.accent],
+                    accentText[product.accent] ?? accentText.blue,
                   )}
                 >
                   {product.name}
