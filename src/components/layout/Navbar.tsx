@@ -9,11 +9,11 @@ import { useWaitlist } from "@/components/waitlist/WaitlistProvider";
 import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
-  { label: "Framework", href: "#framework" },
-  { label: "Curriculum", href: "#curriculum" },
-  { label: "Products", href: "#products" },
+  { label: "Framework", href: "/#framework" },
+  { label: "Curriculum", href: "/#curriculum" },
+  { label: "Products", href: "/#products" },
   { label: "Events", href: "/events" },
-  { label: "FAQ", href: "#faq" },
+  { label: "FAQ", href: "/#faq" },
 ];
 
 export function Navbar() {
@@ -39,7 +39,7 @@ export function Navbar() {
     >
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3 lg:py-4">
         <a
-          href="#top"
+          href="/"
           className="flex items-center gap-2.5 font-mono font-medium tracking-tight text-paper"
         >
           <span className="flex shrink-0 items-center justify-center rounded-md bg-white p-1 shadow-sm sm:rounded-lg">
