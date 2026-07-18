@@ -93,7 +93,6 @@ export function ProductShowcase({ section, products }: ProductShowcaseProps) {
                         fill
                         sizes="(min-width: 1024px) 380px, (min-width: 640px) 340px, 90vw"
                         className="object-contain p-4"
-                        unoptimized
                       />
                     ) : (
                       <div

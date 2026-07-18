@@ -56,7 +56,7 @@ export function MultiImageUploader({ name, label, defaultValues = [] }: MultiIma
       <div className="mt-2 flex flex-wrap gap-3">
         {urls.map((url, i) => (
           <div key={url + i} className="relative h-20 w-28 overflow-hidden rounded-lg border border-light-gray bg-soft-white">
-            <Image src={url} alt="" fill sizes="112px" className="object-contain" unoptimized />
+            <Image src={url} alt="" fill sizes="112px" className="object-contain" />
             <input type="hidden" name={name} value={url} />
             <button
               type="button"

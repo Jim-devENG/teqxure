@@ -45,7 +45,6 @@ export default async function EventsPage() {
                         fill
                         sizes="(min-width: 640px) 400px, 90vw"
                         className="object-contain p-4"
-                        unoptimized
                       />
                     </div>
                   )}

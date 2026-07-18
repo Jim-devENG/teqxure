@@ -1,5 +1,5 @@
 import "server-only";
-import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { randomBytes } from "crypto";
 
 const s3 = new S3Client({
@@ -21,9 +21,13 @@ export interface UploadResult {
 function publicUrlFor(key: string): string {
   const base = process.env.R2_PUBLIC_URL;
   if (base) return `${base.replace(/\/$/, "")}/${key}`;
-  // Falls back to the private R2 endpoint URL until public access / a custom
-  // domain is configured on the bucket in the Cloudflare dashboard.
-  return `${process.env.R2_ENDPOINT}/${BUCKET}/${key}`;
+  // Cloudflare R2's S3-API endpoint (*.r2.cloudflarestorage.com) always
+  // requires SigV4 authentication — it never serves objects to anonymous
+  // requests, regardless of any "public access" bucket setting. Rather than
+  // depend on a Cloudflare dashboard step (a public dev URL or custom
+  // domain) that may never get configured, default to our own authenticated
+  // proxy route, which works out of the box in every environment.
+  return `/api/media/${key}`;
 }
 
 export async function uploadToR2(
@@ -45,6 +49,22 @@ export async function uploadToR2(
   );
 
   return { key, url: publicUrlFor(key) };
+}
+
+export interface StoredObject {
+  body: Uint8Array;
+  contentType: string;
+}
+
+export async function getFromR2(key: string): Promise<StoredObject | null> {
+  try {
+    const result = await s3.send(new GetObjectCommand({ Bucket: BUCKET, Key: key }));
+    const body = await result.Body?.transformToByteArray();
+    if (!body) return null;
+    return { body, contentType: result.ContentType ?? "application/octet-stream" };
+  } catch {
+    return null;
+  }
 }
 
 export async function deleteFromR2(key: string): Promise<void> {

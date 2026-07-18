@@ -79,7 +79,6 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
                     fill
                     sizes="(min-width: 1024px) 560px, 90vw"
                     className="object-contain p-4"
-                    unoptimized
                   />
                 </div>
               </Reveal>
