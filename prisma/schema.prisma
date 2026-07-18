@@ -46,6 +46,7 @@ model SiteSettings {
   logoUrl         String?
   faviconUrl      String?
   contactEmail    String?
+  notificationEmail String?
   socialLinks     Json? // [{ label: string, href: string }]
   seoTitle        String?
   seoDescription  String?
@@ -179,6 +180,17 @@ model WaitlistSubmission {
   data      Json // { [fieldId]: value }
   status    String   @default("NEW") // NEW | REVIEWED
   createdAt DateTime @default(now())
+}
+
+// ---------- Email templates (every outbound email is admin-editable) ----------
+
+model EmailTemplate {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  name      String
+  subject   String
+  body      String
+  updatedAt DateTime @updatedAt
 }
 
 // ---------- Media library (Phase 1: tracked uploads, not the full library UI) ----------

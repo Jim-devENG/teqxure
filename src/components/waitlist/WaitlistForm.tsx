@@ -2,9 +2,15 @@
 
 import { useActionState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { ArrowRight, CheckCircle2, Mail, ClipboardCheck, PhoneCall } from "lucide-react";
 import { MagneticButton } from "@/components/ui/MagneticButton";
 import { submitWaitlistAction, type SubmitWaitlistState } from "@/lib/actions/waitlistSubmissions";
+
+const NEXT_STEPS = [
+  { icon: Mail, text: "Check your inbox — we just sent a confirmation email." },
+  { icon: ClipboardCheck, text: "We review every application by hand, no automated filtering." },
+  { icon: PhoneCall, text: "If it's a fit, we'll invite you to a short onboarding call before the cohort starts." },
+];
 
 export interface WaitlistFieldData {
   id: string;
@@ -26,13 +32,22 @@ export function WaitlistForm({ fields }: { fields: WaitlistFieldData[] }) {
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        className="flex flex-col items-center gap-4 py-10 text-center"
+        className="flex flex-col items-center gap-5 py-6 text-center"
       >
         <CheckCircle2 className="h-10 w-10 text-emerald" strokeWidth={1.5} />
         <div>
-          <p className="text-lg font-medium text-graphite">You&apos;re on the list</p>
-          <p className="mt-1 text-sm text-slate">We&apos;ll email you when the next cohort opens applications.</p>
+          <p className="text-lg font-medium text-graphite">You&apos;re registered</p>
+          <p className="mt-1 text-sm text-slate">Here&apos;s what happens next.</p>
         </div>
+
+        <ul className="flex w-full flex-col gap-3 text-left">
+          {NEXT_STEPS.map((step, i) => (
+            <li key={i} className="flex items-start gap-3 rounded-lg border border-light-gray bg-soft-white px-4 py-3">
+              <step.icon className="mt-0.5 h-4 w-4 shrink-0 text-blue" strokeWidth={1.5} />
+              <span className="text-sm text-graphite/80">{step.text}</span>
+            </li>
+          ))}
+        </ul>
       </motion.div>
     );
   }

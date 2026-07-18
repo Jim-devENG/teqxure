@@ -28,7 +28,8 @@ async function seedSiteSettings() {
     data: {
       siteName: "Teqxure",
       tagline: "The Product Engineering Bootcamp",
-      contactEmail: "hello@teqxure.com",
+      contactEmail: "teqxureglobal@gmail.com",
+      notificationEmail: "teqxureglobal@gmail.com",
       logoUrl: "/logo-icon.png",
       faviconUrl: "/app-icon-512.png",
       socialLinks: [
@@ -550,6 +551,57 @@ async function seedWaitlistFields() {
   }
 }
 
+async function seedEmailTemplates() {
+  const templates = [
+    {
+      key: "WAITLIST_CONFIRMATION",
+      name: "Waitlist confirmation (sent to the registrant)",
+      subject: "You're on the Teqxure waitlist",
+      body: `
+        <div style="font-family: -apple-system, Helvetica, Arial, sans-serif; max-width: 480px; margin: 0 auto; color: #1B1F29;">
+          <p style="font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: #1764FF; margin-bottom: 16px;">Cohort applications</p>
+          <h1 style="font-size: 22px; margin: 0 0 16px;">You're on the list.</h1>
+          <p style="font-size: 15px; line-height: 1.6; color: #4A5568;">
+            Thanks for registering for Teqxure — the Product Engineering Bootcamp. Here's what happens next:
+          </p>
+          <ol style="font-size: 15px; line-height: 1.8; color: #4A5568; padding-left: 20px;">
+            <li>We review every application by hand — no automated filtering.</li>
+            <li>You'll hear from us by email when the next cohort opens.</li>
+            <li>If it's a fit, we'll send a short onboarding call invite before the cohort starts.</li>
+          </ol>
+          <p style="font-size: 15px; line-height: 1.6; color: #4A5568;">Here's what you told us:</p>
+          <div style="font-size: 14px; line-height: 1.6; color: #1B1F29; background: #F8FAFC; border: 1px solid #E9EDF3; border-radius: 8px; padding: 16px;">
+            {{fields}}
+          </div>
+          <p style="font-size: 13px; color: #4A5568; margin-top: 24px;">— The Teqxure team</p>
+        </div>
+      `.trim(),
+    },
+    {
+      key: "WAITLIST_ADMIN_NOTIFICATION",
+      name: "New registration notification (sent to the admin)",
+      subject: "New Teqxure waitlist registration",
+      body: `
+        <div style="font-family: -apple-system, Helvetica, Arial, sans-serif; max-width: 480px; margin: 0 auto; color: #1B1F29;">
+          <h1 style="font-size: 18px; margin: 0 0 16px;">Someone just joined the waitlist</h1>
+          <div style="font-size: 14px; line-height: 1.6; color: #1B1F29; background: #F8FAFC; border: 1px solid #E9EDF3; border-radius: 8px; padding: 16px;">
+            {{fields}}
+          </div>
+          <p style="font-size: 13px; color: #4A5568; margin-top: 16px;">View all applications in the admin dashboard.</p>
+        </div>
+      `.trim(),
+    },
+  ];
+
+  for (const template of templates) {
+    await db.emailTemplate.upsert({
+      where: { key: template.key },
+      update: {},
+      create: template,
+    });
+  }
+}
+
 async function main() {
   await seedAdmin();
   await seedSiteSettings();
@@ -559,6 +611,7 @@ async function main() {
   await seedProducts();
   await seedFaq();
   await seedWaitlistFields();
+  await seedEmailTemplates();
   console.log("Seed complete.");
 }
 

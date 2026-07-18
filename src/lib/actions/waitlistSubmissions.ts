@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
 import { logActivity } from "@/lib/activity";
-import { sendNotificationEmail } from "@/lib/email";
+import { sendTemplatedEmail, formatFieldsAsHtml } from "@/lib/email";
 
 export interface SubmitWaitlistState {
   success?: boolean;
@@ -18,20 +18,35 @@ export async function submitWaitlistAction(
   const fields = await db.waitlistField.findMany({ where: { deletedAt: null, visible: true } });
 
   const data: Record<string, string> = {};
+  let registrantEmail = "";
+
   for (const field of fields) {
     const value = String(formData.get(field.id) ?? "").trim();
     if (field.required && !value) {
       return { error: `${field.label} is required.` };
     }
-    if (value) data[field.label] = value;
+    if (value) {
+      data[field.label] = value;
+      if (field.fieldType === "EMAIL" && !registrantEmail) {
+        registrantEmail = value;
+      }
+    }
   }
 
   await db.waitlistSubmission.create({ data: { data } });
 
-  const summary = Object.entries(data)
-    .map(([label, value]) => `<p><strong>${label}:</strong> ${value}</p>`)
-    .join("");
-  await sendNotificationEmail("New waitlist submission", summary);
+  const fieldsHtml = formatFieldsAsHtml(data);
+  const settings = await db.siteSettings.findFirst();
+  const notificationEmail = settings?.notificationEmail || process.env.ADMIN_EMAIL || "";
+
+  await Promise.all([
+    registrantEmail
+      ? sendTemplatedEmail("WAITLIST_CONFIRMATION", registrantEmail, { fields: fieldsHtml })
+      : Promise.resolve(),
+    notificationEmail
+      ? sendTemplatedEmail("WAITLIST_ADMIN_NOTIFICATION", notificationEmail, { fields: fieldsHtml })
+      : Promise.resolve(),
+  ]);
 
   return { success: true };
 }

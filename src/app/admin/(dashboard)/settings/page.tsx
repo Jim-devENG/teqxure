@@ -9,6 +9,7 @@ export default async function SettingsPage() {
     siteName: settings?.siteName ?? "Teqxure",
     tagline: settings?.tagline ?? "",
     contactEmail: settings?.contactEmail ?? "",
+    notificationEmail: settings?.notificationEmail ?? "",
     seoTitle: settings?.seoTitle ?? "",
     seoDescription: settings?.seoDescription ?? "",
     socialLinks: (settings?.socialLinks as { label: string; href: string }[] | null) ?? [],

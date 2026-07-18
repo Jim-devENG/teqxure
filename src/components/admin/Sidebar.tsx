@@ -13,6 +13,7 @@ import {
   ClipboardList,
   Inbox,
   ImageIcon,
+  Mail,
   Settings,
   LogOut,
 } from "lucide-react";
@@ -29,6 +30,7 @@ const NAV_ITEMS = [
   { href: "/admin/waitlist-form", label: "Waitlist Form", icon: ClipboardList },
   { href: "/admin/waitlist-submissions", label: "Submissions", icon: Inbox },
   { href: "/admin/media", label: "Media", icon: ImageIcon },
+  { href: "/admin/email-templates", label: "Email Templates", icon: Mail },
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 

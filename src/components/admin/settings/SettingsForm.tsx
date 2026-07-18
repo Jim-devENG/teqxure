@@ -15,6 +15,7 @@ interface SettingsFormProps {
     siteName: string;
     tagline: string;
     contactEmail: string;
+    notificationEmail: string;
     seoTitle: string;
     seoDescription: string;
     socialLinks: SocialLink[];
@@ -38,6 +39,13 @@ export function SettingsForm({ defaults }: SettingsFormProps) {
           <TextField label="Site name" name="siteName" defaultValue={defaults.siteName} required />
           <TextField label="Tagline" name="tagline" defaultValue={defaults.tagline} />
           <TextField label="Contact email" name="contactEmail" type="email" defaultValue={defaults.contactEmail} />
+          <TextField
+            label="Notification email"
+            name="notificationEmail"
+            type="email"
+            defaultValue={defaults.notificationEmail}
+            hint="Receives an email whenever someone joins the waitlist"
+          />
         </div>
       </section>
 

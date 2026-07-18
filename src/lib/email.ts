@@ -1,10 +1,11 @@
 import "server-only";
+import { db } from "@/lib/db";
 
 const RESEND_API_URL = "https://api.resend.com/emails";
+const FROM_ADDRESS = "Teqxure <notifications@teqxure.xyz>";
 
-export async function sendNotificationEmail(subject: string, html: string): Promise<void> {
+export async function sendEmail(to: string, subject: string, html: string): Promise<void> {
   const apiKey = process.env.RESEND_API;
-  const to = process.env.ADMIN_EMAIL;
   if (!apiKey || !to) return;
 
   try {
@@ -15,13 +16,42 @@ export async function sendNotificationEmail(subject: string, html: string): Prom
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "Teqxure <notifications@teqxure.com>",
+        from: FROM_ADDRESS,
         to,
         subject,
         html,
       }),
     });
   } catch {
-    // Notification failures shouldn't break the submission flow.
+    // Email delivery failures shouldn't break the calling flow.
   }
+}
+
+function renderTemplate(text: string, variables: Record<string, string>): string {
+  return Object.entries(variables).reduce(
+    (acc, [key, value]) => acc.split(`{{${key}}}`).join(value),
+    text,
+  );
+}
+
+export async function sendTemplatedEmail(
+  templateKey: string,
+  to: string,
+  variables: Record<string, string>,
+): Promise<void> {
+  if (!to) return;
+
+  const template = await db.emailTemplate.findUnique({ where: { key: templateKey } });
+  if (!template) return;
+
+  const subject = renderTemplate(template.subject, variables);
+  const html = renderTemplate(template.body, variables);
+
+  await sendEmail(to, subject, html);
+}
+
+export function formatFieldsAsHtml(data: Record<string, string>): string {
+  return Object.entries(data)
+    .map(([label, value]) => `<p><strong>${label}:</strong> ${value}</p>`)
+    .join("");
 }
