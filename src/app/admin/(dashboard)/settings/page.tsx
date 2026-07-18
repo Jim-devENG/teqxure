@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { SettingsForm } from "@/components/admin/settings/SettingsForm";
+import { normalizeSocialLinks } from "@/lib/socialPlatforms";
 
 export default async function SettingsPage() {
   const settings = await db.siteSettings.findFirst();
@@ -12,7 +13,7 @@ export default async function SettingsPage() {
     notificationEmail: settings?.notificationEmail ?? "",
     seoTitle: settings?.seoTitle ?? "",
     seoDescription: settings?.seoDescription ?? "",
-    socialLinks: (settings?.socialLinks as { label: string; href: string }[] | null) ?? [],
+    socialLinks: normalizeSocialLinks(settings?.socialLinks),
   };
 
   return (

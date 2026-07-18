@@ -3,12 +3,8 @@
 import { useActionState } from "react";
 import { updateSettingsAction, type SettingsState } from "@/lib/actions/settings";
 import { TextField, TextAreaField } from "@/components/admin/Field";
+import { SocialLinksEditor } from "@/components/admin/SocialLinksEditor";
 import { SubmitButton } from "@/components/admin/SubmitButton";
-
-interface SocialLink {
-  label: string;
-  href: string;
-}
 
 interface SettingsFormProps {
   defaults: {
@@ -18,7 +14,7 @@ interface SettingsFormProps {
     notificationEmail: string;
     seoTitle: string;
     seoDescription: string;
-    socialLinks: SocialLink[];
+    socialLinks: { platform: string; href: string }[];
   };
 }
 
@@ -26,10 +22,6 @@ const initialState: SettingsState = {};
 
 export function SettingsForm({ defaults }: SettingsFormProps) {
   const [state, formAction] = useActionState(updateSettingsAction, initialState);
-
-  const twitter = defaults.socialLinks.find((l) => l.label.includes("Twitter"))?.href ?? "";
-  const linkedin = defaults.socialLinks.find((l) => l.label.includes("LinkedIn"))?.href ?? "";
-  const github = defaults.socialLinks.find((l) => l.label.includes("GitHub"))?.href ?? "";
 
   return (
     <form action={formAction} className="flex max-w-2xl flex-col gap-6">
@@ -44,7 +36,7 @@ export function SettingsForm({ defaults }: SettingsFormProps) {
             name="notificationEmail"
             type="email"
             defaultValue={defaults.notificationEmail}
-            hint="Receives an email whenever someone joins the waitlist"
+            hint="Receives an email whenever someone joins the waitlist or registers for an event"
           />
         </div>
       </section>
@@ -58,12 +50,7 @@ export function SettingsForm({ defaults }: SettingsFormProps) {
       </section>
 
       <section className="rounded-xl border border-light-gray bg-white p-6">
-        <h2 className="mb-4 text-sm font-medium text-graphite">Social links</h2>
-        <div className="flex flex-col gap-4">
-          <TextField label="X / Twitter URL" name="socialTwitter" defaultValue={twitter} />
-          <TextField label="LinkedIn URL" name="socialLinkedin" defaultValue={linkedin} />
-          <TextField label="GitHub URL" name="socialGithub" defaultValue={github} />
-        </div>
+        <SocialLinksEditor defaultValues={defaults.socialLinks} />
       </section>
 
       <div className="flex items-center gap-3">

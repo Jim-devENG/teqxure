@@ -195,6 +195,55 @@ model EmailTemplate {
   updatedAt DateTime @updatedAt
 }
 
+// ---------- Events (each event has its own registration form or an external link) ----------
+
+model Event {
+  id               String               @id @default(cuid())
+  slug             String               @unique
+  title            String
+  description      String
+  startsAt         DateTime
+  endsAt           DateTime?
+  location         String?
+  isVirtual        Boolean              @default(false)
+  coverImageUrl    String?
+  status           String               @default("DRAFT") // DRAFT | PUBLISHED
+  registrationMode String               @default("INTERNAL") // INTERNAL | EXTERNAL
+  externalUrl      String?
+  order            Int                  @default(0)
+  visible          Boolean              @default(true)
+  deletedAt        DateTime?
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+  fields           EventFormField[]
+  registrations    EventRegistration[]
+}
+
+model EventFormField {
+  id          String    @id @default(cuid())
+  eventId     String
+  event       Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  label       String
+  fieldType   String // TEXT | EMAIL | TEXTAREA | PHONE | SELECT | CHECKBOX | FILE | URL
+  placeholder String?
+  required    Boolean   @default(false)
+  options     Json?
+  order       Int       @default(0)
+  visible     Boolean   @default(true)
+  deletedAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model EventRegistration {
+  id        String   @id @default(cuid())
+  eventId   String
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  data      Json
+  status    String   @default("NEW") // NEW | REVIEWED
+  createdAt DateTime @default(now())
+}
+
 // ---------- Media library (Phase 1: tracked uploads, not the full library UI) ----------
 
 model Media {

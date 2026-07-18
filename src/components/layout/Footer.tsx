@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
 import { getSiteSettings } from "@/lib/content";
+import { normalizeSocialLinks, socialPlatformIcons, getSocialLabel } from "@/lib/socialPlatforms";
+import { Globe } from "lucide-react";
 
 const FOOTER_LINKS = [
   { label: "Framework", href: "#framework" },
@@ -12,14 +13,15 @@ const FOOTER_LINKS = [
 ];
 
 const DEFAULT_SOCIALS = [
-  { label: "X / Twitter", href: "https://x.com" },
-  { label: "LinkedIn", href: "https://linkedin.com" },
-  { label: "GitHub", href: "https://github.com" },
+  { platform: "twitter", href: "https://x.com" },
+  { platform: "linkedin", href: "https://linkedin.com" },
+  { platform: "github", href: "https://github.com" },
 ];
 
 export async function Footer() {
   const settings = await getSiteSettings();
-  const socials = (settings?.socialLinks as { label: string; href: string }[] | null) ?? DEFAULT_SOCIALS;
+  const normalized = normalizeSocialLinks(settings?.socialLinks);
+  const socials = normalized.length > 0 ? normalized : DEFAULT_SOCIALS;
   const tagline =
     settings?.tagline ??
     "The Product Engineering Bootcamp for builders turning ideas into software real people use.";
@@ -31,13 +33,13 @@ export async function Footer() {
         <div className="grid grid-cols-1 gap-12 md:grid-cols-[1.4fr_1fr_1fr]">
           <div>
             <span className="flex items-center gap-2.5 font-mono font-medium tracking-tight text-paper">
-              <span className="flex shrink-0 items-center justify-center rounded-xl bg-white p-1.5 sm:rounded-2xl sm:p-2">
-                <span className="relative aspect-square h-6 w-6 sm:h-9 sm:w-9 lg:h-16 lg:w-16">
+              <span className="flex shrink-0 items-center justify-center rounded-md bg-white p-1 sm:rounded-lg">
+                <span className="relative aspect-square h-3 w-3 sm:h-[18px] sm:w-[18px] lg:h-8 lg:w-8">
                   <Image
                     src="/logo-icon.png"
                     alt="Teqxure"
                     fill
-                    sizes="(min-width: 1024px) 64px, (min-width: 640px) 36px, 24px"
+                    sizes="(min-width: 1024px) 32px, (min-width: 640px) 18px, 12px"
                     className="object-contain"
                   />
                 </span>
@@ -64,29 +66,29 @@ export async function Footer() {
 
           <div>
             <p className="font-mono text-xs uppercase tracking-[0.15em] text-paper/40">Connect</p>
-            <ul className="mt-4 flex flex-col gap-3">
-              {socials.map((social) => (
-                <li key={social.href}>
+            <div className="mt-4 flex flex-wrap items-center gap-2.5">
+              {socials.map((social) => {
+                const Icon = socialPlatformIcons[social.platform] ?? Globe;
+                return (
                   <a
+                    key={social.href}
                     href={social.href}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-1 text-sm text-paper/60 transition-colors hover:text-blue"
+                    aria-label={getSocialLabel(social.platform)}
+                    className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-paper/70 transition-colors hover:border-blue hover:text-blue"
                   >
-                    {social.label}
-                    <ArrowUpRight className="h-3.5 w-3.5" strokeWidth={1.5} />
+                    <Icon className="h-4 w-4" />
                   </a>
-                </li>
-              ))}
-              <li>
-                <Link
-                  href={`mailto:${contactEmail}`}
-                  className="text-sm text-paper/60 transition-colors hover:text-blue"
-                >
-                  {contactEmail}
-                </Link>
-              </li>
-            </ul>
+                );
+              })}
+            </div>
+            <Link
+              href={`mailto:${contactEmail}`}
+              className="mt-4 inline-block text-sm text-paper/60 transition-colors hover:text-blue"
+            >
+              {contactEmail}
+            </Link>
           </div>
         </div>
 

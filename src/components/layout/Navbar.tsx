@@ -12,6 +12,7 @@ const NAV_LINKS = [
   { label: "Framework", href: "#framework" },
   { label: "Curriculum", href: "#curriculum" },
   { label: "Products", href: "#products" },
+  { label: "Events", href: "/events" },
   { label: "FAQ", href: "#faq" },
 ];
 
@@ -41,13 +42,13 @@ export function Navbar() {
           href="#top"
           className="flex items-center gap-2.5 font-mono font-medium tracking-tight text-paper"
         >
-          <span className="flex shrink-0 items-center justify-center rounded-xl bg-white p-1.5 shadow-sm sm:rounded-2xl sm:p-2">
-            <span className="relative aspect-square h-6 w-6 sm:h-9 sm:w-9 lg:h-16 lg:w-16">
+          <span className="flex shrink-0 items-center justify-center rounded-md bg-white p-1 shadow-sm sm:rounded-lg">
+            <span className="relative aspect-square h-3 w-3 sm:h-[18px] sm:w-[18px] lg:h-8 lg:w-8">
               <Image
                 src="/logo-icon.png"
                 alt="Teqxure"
                 fill
-                sizes="(min-width: 1024px) 64px, (min-width: 640px) 36px, 24px"
+                sizes="(min-width: 1024px) 32px, (min-width: 640px) 18px, 12px"
                 className="object-contain"
                 priority
               />

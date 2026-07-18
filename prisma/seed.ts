@@ -591,6 +591,38 @@ async function seedEmailTemplates() {
         </div>
       `.trim(),
     },
+    {
+      key: "EVENT_REGISTRATION_CONFIRMATION",
+      name: "Event registration confirmation (sent to the registrant)",
+      subject: "You're registered for {{eventTitle}}",
+      body: `
+        <div style="font-family: -apple-system, Helvetica, Arial, sans-serif; max-width: 480px; margin: 0 auto; color: #1B1F29;">
+          <p style="font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: #1764FF; margin-bottom: 16px;">Event registration</p>
+          <h1 style="font-size: 22px; margin: 0 0 16px;">You're registered for {{eventTitle}}.</h1>
+          <p style="font-size: 15px; line-height: 1.6; color: #4A5568;">
+            We'll send you the details and any reminders as the event gets closer. Here's what you told us:
+          </p>
+          <div style="font-size: 14px; line-height: 1.6; color: #1B1F29; background: #F8FAFC; border: 1px solid #E9EDF3; border-radius: 8px; padding: 16px;">
+            {{fields}}
+          </div>
+          <p style="font-size: 13px; color: #4A5568; margin-top: 24px;">— The Teqxure team</p>
+        </div>
+      `.trim(),
+    },
+    {
+      key: "EVENT_REGISTRATION_ADMIN_NOTIFICATION",
+      name: "New event registration notification (sent to the admin)",
+      subject: "New registration for {{eventTitle}}",
+      body: `
+        <div style="font-family: -apple-system, Helvetica, Arial, sans-serif; max-width: 480px; margin: 0 auto; color: #1B1F29;">
+          <h1 style="font-size: 18px; margin: 0 0 16px;">New registration for {{eventTitle}}</h1>
+          <div style="font-size: 14px; line-height: 1.6; color: #1B1F29; background: #F8FAFC; border: 1px solid #E9EDF3; border-radius: 8px; padding: 16px;">
+            {{fields}}
+          </div>
+          <p style="font-size: 13px; color: #4A5568; margin-top: 16px;">View all registrations in the admin dashboard.</p>
+        </div>
+      `.trim(),
+    },
   ];
 
   for (const template of templates) {
