@@ -13,21 +13,51 @@ datasource db {
 // ---------- Auth ----------
 
 enum Role {
-  ADMIN
+  SUPER_ADMIN
+  PROGRAM_MANAGER
+  INSTRUCTOR
+  MENTOR
+  REVIEWER
+  STUDENT
 }
 
 model User {
-  id                  String        @id @default(cuid())
-  email               String        @unique
-  passwordHash        String
-  name                String?
-  role                Role          @default(ADMIN)
-  createdAt           DateTime      @default(now())
-  lastLoginAt         DateTime?
-  failedLoginAttempts Int           @default(0)
-  lockedUntil         DateTime?
-  sessions            Session[]
-  activityLogs        ActivityLog[]
+  id                     String        @id @default(cuid())
+  email                  String        @unique
+  passwordHash           String
+  name                   String?
+  role                   Role          @default(STUDENT)
+  createdAt              DateTime      @default(now())
+  lastLoginAt            DateTime?
+  failedLoginAttempts    Int           @default(0)
+  lockedUntil            DateTime?
+  sessions               Session[]
+  activityLogs           ActivityLog[]
+  invites                InviteToken[]
+  cohortEnrollments      CohortEnrollment[]       @relation("CohortEnrollmentStudent")
+  cohortStaffRoles       CohortStaffAssignment[]  @relation("CohortStaffUser")
+  sprintSubmissions      SprintSubmission[]       @relation("SprintSubmissionStudent")
+  reviewedSubmissions    SprintSubmission[]       @relation("SprintSubmissionReviewer")
+  studentProduct         StudentProduct?          @relation("StudentProductOwner")
+  communityMessages      CommunityMessage[]       @relation("CommunityMessageAuthor")
+  threadParticipations   ThreadParticipant[]      @relation("ThreadParticipantUser")
+  directMessages         DirectMessage[]          @relation("DirectMessageAuthor")
+  certificates           Certificate[]            @relation("CertificateStudent")
+  notifications          Notification[]           @relation("NotificationUser")
+  notificationPreference NotificationPreference?  @relation("NotificationPreferenceUser")
+  announcementsCreated   Announcement[]           @relation("AnnouncementCreatedBy")
+}
+
+// ---------- Invites (admin-provisioned account activation) ----------
+
+model InviteToken {
+  id        String    @id @default(cuid())
+  token     String    @unique
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
 }
 
 model Session {
@@ -270,4 +300,297 @@ model ActivityLog {
   entityId   String?
   metadata   Json?
   createdAt  DateTime @default(now())
+}
+
+// ============================================================
+// PLATFORM: Engineering Workspace (/platform)
+// ============================================================
+
+// ---------- Bootcamp curriculum (Bootcamp -> Week -> Sprint/LiveSession) ----------
+
+model Bootcamp {
+  id          String         @id @default(cuid())
+  slug        String         @unique
+  title       String
+  description String?
+  status      String         @default("DRAFT") // DRAFT | ACTIVE | ARCHIVED
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  weeks       PlatformWeek[]
+  cohorts     Cohort[]
+  resources   Resource[]
+}
+
+model PlatformWeek {
+  id           String        @id @default(cuid())
+  bootcampId   String
+  bootcamp     Bootcamp      @relation(fields: [bootcampId], references: [id], onDelete: Cascade)
+  weekNumber   Int
+  title        String
+  objectives   String
+  order        Int           @default(0)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  sprints      Sprint[]
+  liveSessions LiveSession[]
+  resources    Resource[]
+
+  @@unique([bootcampId, weekNumber])
+}
+
+// ---------- Cohorts (a timed run of a Bootcamp) ----------
+
+model Cohort {
+  id            String                  @id @default(cuid())
+  bootcampId    String
+  bootcamp      Bootcamp                @relation(fields: [bootcampId], references: [id], onDelete: Cascade)
+  name          String
+  startDate     DateTime
+  endDate       DateTime?
+  status        String                  @default("UPCOMING") // UPCOMING | ACTIVE | COMPLETED
+  createdAt     DateTime                @default(now())
+  updatedAt     DateTime                @updatedAt
+  enrollments   CohortEnrollment[]
+  staff         CohortStaffAssignment[]
+  sprints       Sprint[]
+  liveSessions  LiveSession[]
+  channels      CommunityChannel[]
+  announcements Announcement[]
+  certificates  Certificate[]
+}
+
+model CohortEnrollment {
+  id            String   @id @default(cuid())
+  cohortId      String
+  cohort        Cohort   @relation(fields: [cohortId], references: [id], onDelete: Cascade)
+  studentId     String
+  student       User     @relation("CohortEnrollmentStudent", fields: [studentId], references: [id], onDelete: Cascade)
+  status        String   @default("ACTIVE") // ACTIVE | COMPLETED | WITHDRAWN
+  paymentStatus String   @default("PENDING") // PENDING | VERIFIED
+  enrolledAt    DateTime @default(now())
+
+  @@unique([cohortId, studentId])
+}
+
+model CohortStaffAssignment {
+  id       String @id @default(cuid())
+  cohortId String
+  cohort   Cohort @relation(fields: [cohortId], references: [id], onDelete: Cascade)
+  userId   String
+  user     User   @relation("CohortStaffUser", fields: [userId], references: [id], onDelete: Cascade)
+  role     String // INSTRUCTOR | MENTOR | REVIEWER
+
+  @@unique([cohortId, userId, role])
+}
+
+// ---------- Sprints (the Sprint Room) ----------
+
+model Sprint {
+  id                   String             @id @default(cuid())
+  weekId               String
+  week                 PlatformWeek       @relation(fields: [weekId], references: [id], onDelete: Cascade)
+  cohortId             String
+  cohort               Cohort             @relation(fields: [cohortId], references: [id], onDelete: Cascade)
+  goal                 String
+  description          String
+  deliverables         String
+  referenceMaterials   String?
+  architectureNotes    String?
+  dueAt                DateTime?
+  deadlineReminderSent Boolean            @default(false)
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+  submissions          SprintSubmission[]
+
+  @@unique([weekId, cohortId])
+}
+
+model SprintSubmission {
+  id            String    @id @default(cuid())
+  sprintId      String
+  sprint        Sprint    @relation(fields: [sprintId], references: [id], onDelete: Cascade)
+  studentId     String
+  student       User      @relation("SprintSubmissionStudent", fields: [studentId], references: [id], onDelete: Cascade)
+  status        String    @default("NOT_STARTED") // NOT_STARTED | IN_PROGRESS | SUBMITTED | UNDER_REVIEW | APPROVED | COMPLETED
+  content       String?
+  submissionUrl String?
+  submittedAt   DateTime?
+  feedback      String?
+  reviewedById  String?
+  reviewedBy    User?     @relation("SprintSubmissionReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+  reviewedAt    DateTime?
+  updatedAt     DateTime  @updatedAt
+
+  @@unique([sprintId, studentId])
+}
+
+// ---------- Live sessions ----------
+
+model LiveSession {
+  id               String       @id @default(cuid())
+  weekId           String
+  week             PlatformWeek @relation(fields: [weekId], references: [id], onDelete: Cascade)
+  cohortId         String
+  cohort           Cohort       @relation(fields: [cohortId], references: [id], onDelete: Cascade)
+  title            String
+  description      String?
+  startsAt         DateTime
+  provider         String // GOOGLE_MEET | ZOOM | TEAMS | YOUTUBE_UNLISTED
+  meetingUrl       String
+  recordingUrl     String?
+  reminder24hSent  Boolean      @default(false)
+  reminder1hSent   Boolean      @default(false)
+  reminder10mSent  Boolean      @default(false)
+  startedNotifSent Boolean      @default(false)
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+}
+
+// ---------- My Product (student workspace) ----------
+
+model StudentProduct {
+  id               String   @id @default(cuid())
+  studentId        String   @unique
+  student          User     @relation("StudentProductOwner", fields: [studentId], references: [id], onDelete: Cascade)
+  name             String?
+  problemStatement String?
+  repositoryUrl    String?
+  designFilesUrl   String?
+  backendUrl       String?
+  frontendUrl      String?
+  deploymentUrl    String?
+  productionUrl    String?
+  currentMilestone String?
+  mentorNotes      String?
+  completionStatus String   @default("IN_PROGRESS") // IN_PROGRESS | COMPLETED
+  updatedAt        DateTime @updatedAt
+}
+
+// ---------- Resources (scoped to a Bootcamp or a specific Week) ----------
+
+model Resource {
+  id         String        @id @default(cuid())
+  bootcampId String?
+  bootcamp   Bootcamp?     @relation(fields: [bootcampId], references: [id], onDelete: Cascade)
+  weekId     String?
+  week       PlatformWeek? @relation(fields: [weekId], references: [id], onDelete: Cascade)
+  title      String
+  type       String // NOTES | SLIDES | PDF | REPO | PROMPT_PACK | ARCHITECTURE_DIAGRAM | DB_SCHEMA | API_DOC
+  url        String
+  order      Int           @default(0)
+  visible    Boolean       @default(true)
+  createdAt  DateTime      @default(now())
+}
+
+// ---------- Community (per-cohort channels) ----------
+
+model CommunityChannel {
+  id        String             @id @default(cuid())
+  cohortId  String
+  cohort    Cohort             @relation(fields: [cohortId], references: [id], onDelete: Cascade)
+  key       String // general | questions | architecture | showcase | help | announcements
+  name      String
+  order     Int                @default(0)
+  createdAt DateTime           @default(now())
+  messages  CommunityMessage[]
+
+  @@unique([cohortId, key])
+}
+
+model CommunityMessage {
+  id          String           @id @default(cuid())
+  channelId   String
+  channel     CommunityChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  authorId    String
+  author      User             @relation("CommunityMessageAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  body        String
+  attachments Json?
+  createdAt   DateTime         @default(now())
+}
+
+// ---------- Direct messages ----------
+
+model MessageThread {
+  id            String              @id @default(cuid())
+  createdAt     DateTime            @default(now())
+  lastMessageAt DateTime            @default(now())
+  participants  ThreadParticipant[]
+  messages      DirectMessage[]
+}
+
+model ThreadParticipant {
+  id         String        @id @default(cuid())
+  threadId   String
+  thread     MessageThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User          @relation("ThreadParticipantUser", fields: [userId], references: [id], onDelete: Cascade)
+  lastReadAt DateTime?
+
+  @@unique([threadId, userId])
+}
+
+model DirectMessage {
+  id          String        @id @default(cuid())
+  threadId    String
+  thread      MessageThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  authorId    String
+  author      User          @relation("DirectMessageAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  body        String
+  attachments Json?
+  createdAt   DateTime      @default(now())
+}
+
+// ---------- Certificates ----------
+
+model Certificate {
+  id               String   @id @default(cuid())
+  studentId        String
+  student          User     @relation("CertificateStudent", fields: [studentId], references: [id], onDelete: Cascade)
+  cohortId         String
+  cohort           Cohort   @relation(fields: [cohortId], references: [id], onDelete: Cascade)
+  verificationCode String   @unique
+  productName      String?
+  pdfUrl           String?
+  issuedAt         DateTime @default(now())
+
+  @@unique([studentId, cohortId])
+}
+
+// ---------- Notifications ----------
+
+model Notification {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation("NotificationUser", fields: [userId], references: [id], onDelete: Cascade)
+  type        String
+  title       String
+  body        String
+  actionLabel String?
+  actionUrl   String?
+  read        Boolean   @default(false)
+  readAt      DateTime?
+  createdAt   DateTime  @default(now())
+}
+
+model NotificationPreference {
+  id                     String  @id @default(cuid())
+  userId                 String  @unique
+  user                   User    @relation("NotificationPreferenceUser", fields: [userId], references: [id], onDelete: Cascade)
+  emailEnabled           Boolean @default(true)
+  inAppEnabled           Boolean @default(true)
+  reminderFrequency      String  @default("ALL") // ALL | IMPORTANT_ONLY | NONE
+  communityNotifications Boolean @default(true)
+}
+
+// ---------- Announcements ----------
+
+model Announcement {
+  id          String   @id @default(cuid())
+  cohortId    String?
+  cohort      Cohort?  @relation(fields: [cohortId], references: [id], onDelete: Cascade)
+  title       String
+  body        String
+  createdById String?
+  createdBy   User?    @relation("AnnouncementCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt   DateTime @default(now())
 }

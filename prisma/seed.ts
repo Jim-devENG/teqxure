@@ -551,6 +551,23 @@ async function seedWaitlistFields() {
   }
 }
 
+function platformEmail(
+  eyebrow: string,
+  heading: string,
+  paragraphs: string[],
+  cta?: { label: string; url: string },
+) {
+  return `
+    <div style="font-family: -apple-system, Helvetica, Arial, sans-serif; max-width: 480px; margin: 0 auto; color: #1B1F29;">
+      <p style="font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: #1764FF; margin-bottom: 16px;">${eyebrow}</p>
+      <h1 style="font-size: 22px; margin: 0 0 16px;">${heading}</h1>
+      ${paragraphs.map((p) => `<p style="font-size: 15px; line-height: 1.6; color: #4A5568;">${p}</p>`).join("\n      ")}
+      ${cta ? `<a href="${cta.url}" style="display: inline-block; margin-top: 8px; padding: 10px 20px; background: #1764FF; color: #FFFFFF; font-size: 14px; font-weight: 500; border-radius: 8px; text-decoration: none;">${cta.label}</a>` : ""}
+      <p style="font-size: 13px; color: #4A5568; margin-top: 24px;">— The Teqxure team</p>
+    </div>
+  `.trim();
+}
+
 async function seedEmailTemplates() {
   const templates = [
     {
@@ -622,6 +639,134 @@ async function seedEmailTemplates() {
           <p style="font-size: 13px; color: #4A5568; margin-top: 16px;">View all registrations in the admin dashboard.</p>
         </div>
       `.trim(),
+    },
+    {
+      key: "ACCOUNT_INVITE",
+      name: "Workspace invite (sent when a user is provisioned)",
+      subject: "You've been invited to the Teqxure workspace",
+      body: platformEmail(
+        "Workspace invite",
+        "You're invited to the Teqxure workspace.",
+        [
+          "Hi {{name}}, you've been added to the Teqxure Engineering Workspace as a {{role}}.",
+          "Set your password to activate your account and get started.",
+        ],
+        { label: "Set your password", url: "{{inviteUrl}}" },
+      ),
+    },
+    {
+      key: "WELCOME",
+      name: "Welcome (sent after a new account is activated)",
+      subject: "Welcome to Teqxure, {{name}}",
+      body: platformEmail("Welcome", "{{title}}", ["{{body}}"], { label: "{{actionLabel}}", url: "{{actionUrl}}" }),
+    },
+    {
+      key: "PAYMENT_CONFIRMED",
+      name: "Payment confirmed",
+      subject: "Your payment has been confirmed",
+      body: platformEmail("Billing", "{{title}}", ["{{body}}"], { label: "{{actionLabel}}", url: "{{actionUrl}}" }),
+    },
+    {
+      key: "COHORT_ASSIGNED",
+      name: "Cohort assigned",
+      subject: "You've been assigned to a cohort",
+      body: platformEmail("Cohort", "{{title}}", ["{{body}}"], { label: "{{actionLabel}}", url: "{{actionUrl}}" }),
+    },
+    {
+      key: "SESSION_SCHEDULED",
+      name: "Live session scheduled",
+      subject: "New live session scheduled",
+      body: platformEmail("Live session", "{{title}}", ["{{body}}"], { label: "{{actionLabel}}", url: "{{actionUrl}}" }),
+    },
+    {
+      key: "SESSION_REMINDER_24H",
+      name: "Live session reminder — 24 hours before",
+      subject: "Live session tomorrow: {{title}}",
+      body: platformEmail("Reminder", "{{title}}", ["{{body}}"], { label: "{{actionLabel}}", url: "{{actionUrl}}" }),
+    },
+    {
+      key: "SESSION_REMINDER_1H",
+      name: "Live session reminder — 1 hour before",
+      subject: "Live session in 1 hour: {{title}}",
+      body: platformEmail("Reminder", "{{title}}", ["{{body}}"], { label: "{{actionLabel}}", url: "{{actionUrl}}" }),
+    },
+    {
+      key: "SESSION_REMINDER_10M",
+      name: "Live session reminder — 10 minutes before",
+      subject: "Starting in 10 minutes: {{title}}",
+      body: platformEmail("Reminder", "{{title}}", ["{{body}}"], { label: "{{actionLabel}}", url: "{{actionUrl}}" }),
+    },
+    {
+      key: "SESSION_STARTED",
+      name: "Live session started",
+      subject: "Your live session has started",
+      body: platformEmail("Live now", "{{title}}", ["{{body}}"], { label: "{{actionLabel}}", url: "{{actionUrl}}" }),
+    },
+    {
+      key: "SPRINT_RELEASED",
+      name: "New sprint released",
+      subject: "New sprint: {{title}}",
+      body: platformEmail("Sprint Room", "{{title}}", ["{{body}}"], { label: "{{actionLabel}}", url: "{{actionUrl}}" }),
+    },
+    {
+      key: "SPRINT_DEADLINE_REMINDER",
+      name: "Sprint deadline reminder",
+      subject: "Sprint deadline approaching: {{title}}",
+      body: platformEmail("Sprint Room", "{{title}}", ["{{body}}"], { label: "{{actionLabel}}", url: "{{actionUrl}}" }),
+    },
+    {
+      key: "SUBMISSION_RECEIVED",
+      name: "Submission received",
+      subject: "We've received your submission",
+      body: platformEmail("Sprint Room", "{{title}}", ["{{body}}"], { label: "{{actionLabel}}", url: "{{actionUrl}}" }),
+    },
+    {
+      key: "FEEDBACK_RECEIVED",
+      name: "Mentor feedback received",
+      subject: "You've got mentor feedback",
+      body: platformEmail("Sprint Room", "{{title}}", ["{{body}}"], { label: "{{actionLabel}}", url: "{{actionUrl}}" }),
+    },
+    {
+      key: "SUBMISSION_APPROVED",
+      name: "Submission approved",
+      subject: "Your submission was approved",
+      body: platformEmail("Sprint Room", "{{title}}", ["{{body}}"], { label: "{{actionLabel}}", url: "{{actionUrl}}" }),
+    },
+    {
+      key: "SUBMISSION_NEEDS_REVISION",
+      name: "Submission needs revision",
+      subject: "Your submission needs a revision",
+      body: platformEmail("Sprint Room", "{{title}}", ["{{body}}"], { label: "{{actionLabel}}", url: "{{actionUrl}}" }),
+    },
+    {
+      key: "RESOURCE_UPLOADED",
+      name: "New resource uploaded",
+      subject: "New resource available: {{title}}",
+      body: platformEmail("Resources", "{{title}}", ["{{body}}"], { label: "{{actionLabel}}", url: "{{actionUrl}}" }),
+    },
+    {
+      key: "ANNOUNCEMENT_POSTED",
+      name: "New announcement",
+      subject: "{{title}}",
+      body: platformEmail("Announcement", "{{title}}", ["{{body}}"], { label: "{{actionLabel}}", url: "{{actionUrl}}" }),
+    },
+    {
+      key: "MESSAGE_RECEIVED",
+      name: "New direct message",
+      subject: "You have a new message on Teqxure",
+      body: platformEmail("Messages", "{{title}}", ["{{body}}"], { label: "{{actionLabel}}", url: "{{actionUrl}}" }),
+    },
+    {
+      key: "CERTIFICATE_AVAILABLE",
+      name: "Certificate available",
+      subject: "Your certificate is ready",
+      body: platformEmail("Certificate", "{{title}}", ["{{body}}"], { label: "{{actionLabel}}", url: "{{actionUrl}}" }),
+    },
+    {
+      key: "BOOTCAMP_COMPLETED",
+      name: "Bootcamp completed",
+      subject: "You completed the bootcamp",
+      body: platformEmail("Congratulations", "{{title}}", ["{{body}}"], { label: "{{actionLabel}}", url: "{{actionUrl}}" }),
     },
   ];
 
