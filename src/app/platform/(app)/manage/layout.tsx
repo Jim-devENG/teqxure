@@ -4,7 +4,8 @@ import { getCurrentUser } from "@/lib/auth";
 
 const MANAGE_NAV = [
   { href: "/platform/manage/users", label: "Users & invites" },
-  { href: "/platform/manage/cohorts", label: "Bootcamps & cohorts" },
+  { href: "/platform/manage/bootcamps", label: "Bootcamps" },
+  { href: "/platform/manage/cohorts", label: "Cohorts" },
   { href: "/platform/manage/submissions", label: "Submissions review" },
   { href: "/platform/manage/payments", label: "Payment verification" },
   { href: "/platform/manage/announcements", label: "Announcements" },

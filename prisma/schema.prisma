@@ -411,7 +411,7 @@ model SprintSubmission {
   sprint        Sprint    @relation(fields: [sprintId], references: [id], onDelete: Cascade)
   studentId     String
   student       User      @relation("SprintSubmissionStudent", fields: [studentId], references: [id], onDelete: Cascade)
-  status        String    @default("NOT_STARTED") // NOT_STARTED | IN_PROGRESS | SUBMITTED | UNDER_REVIEW | APPROVED | COMPLETED
+  status        String    @default("NOT_STARTED") // NOT_STARTED | IN_PROGRESS | SUBMITTED | UNDER_REVIEW | NEEDS_REVISION | APPROVED | COMPLETED
   content       String?
   submissionUrl String?
   submittedAt   DateTime?
