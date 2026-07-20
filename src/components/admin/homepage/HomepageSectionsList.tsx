@@ -14,7 +14,13 @@ interface SectionRow {
   visible: boolean;
 }
 
-export function HomepageSectionsList({ sections }: { sections: SectionRow[] }) {
+export function HomepageSectionsList({
+  sections,
+  basePath = "/homepage",
+}: {
+  sections: SectionRow[];
+  basePath?: string;
+}) {
   const [rows, setRows] = useState(sections);
   const [, startTransition] = useTransition();
 
@@ -57,7 +63,7 @@ export function HomepageSectionsList({ sections }: { sections: SectionRow[] }) {
                 {row.visible ? "Visible" : "Hidden"}
               </button>
               <Link
-                href={`/homepage/${row.key}`}
+                href={`${basePath}/${row.key}`}
                 className="flex items-center gap-1.5 rounded-lg border border-light-gray px-2.5 py-1.5 text-xs text-graphite transition-colors hover:border-blue hover:text-blue"
               >
                 <Pencil className="h-3.5 w-3.5" strokeWidth={1.5} />

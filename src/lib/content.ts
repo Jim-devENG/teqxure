@@ -65,3 +65,24 @@ export async function getWaitlistFields() {
 export async function getSiteSettings() {
   return db.siteSettings.findFirst();
 }
+
+export async function getCoreValues() {
+  return db.coreValue.findMany({
+    where: { deletedAt: null, visible: true },
+    orderBy: { order: "asc" },
+  });
+}
+
+export async function getDifferentiators() {
+  return db.differentiator.findMany({
+    where: { deletedAt: null, visible: true },
+    orderBy: { order: "asc" },
+  });
+}
+
+export async function getTeamMembers() {
+  return db.teamMember.findMany({
+    where: { deletedAt: null, visible: true },
+    orderBy: { order: "asc" },
+  });
+}

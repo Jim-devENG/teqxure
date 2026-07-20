@@ -67,8 +67,9 @@ export async function updateSectionAction(
   });
 
   await logActivity({ userId: user.id, action: "updated", entityType: "HomepageSection", entityId: key });
-  revalidatePath("/");
-  revalidatePath(`/admin/homepage/${key}`);
+  const isAbout = key.startsWith("ABOUT_");
+  revalidatePath(isAbout ? "/about" : "/");
+  revalidatePath(`/admin/${isAbout ? "about" : "homepage"}/${key}`);
 
   return { success: true };
 }
@@ -79,8 +80,9 @@ export async function reorderSectionsAction(orderedKeys: string[]): Promise<void
     orderedKeys.map((key, index) => db.homepageSection.update({ where: { key }, data: { order: index } })),
   );
   await logActivity({ userId: user.id, action: "reordered", entityType: "HomepageSection" });
-  revalidatePath("/");
-  revalidatePath("/admin/homepage");
+  const isAbout = orderedKeys[0]?.startsWith("ABOUT_");
+  revalidatePath(isAbout ? "/about" : "/");
+  revalidatePath(isAbout ? "/admin/about" : "/admin/homepage");
 }
 
 export async function toggleSectionVisibilityAction(key: string, visible: boolean): Promise<void> {
@@ -92,6 +94,7 @@ export async function toggleSectionVisibilityAction(key: string, visible: boolea
     entityType: "HomepageSection",
     entityId: key,
   });
-  revalidatePath("/");
-  revalidatePath("/admin/homepage");
+  const isAbout = key.startsWith("ABOUT_");
+  revalidatePath(isAbout ? "/about" : "/");
+  revalidatePath(isAbout ? "/admin/about" : "/admin/homepage");
 }

@@ -106,6 +106,63 @@ body {
   text-wrap: balance;
 }
 
+/* Rich text (TipTap editor surface + public rendering of its HTML output) */
+.prose-editor,
+.prose-content {
+  line-height: 1.75;
+}
+
+.prose-editor p,
+.prose-content p {
+  margin: 0 0 1em;
+}
+
+.prose-editor h2,
+.prose-content h2 {
+  font-size: 1.375em;
+  font-weight: 500;
+  margin: 1.2em 0 0.5em;
+  color: var(--color-graphite, #1b1f29);
+}
+
+.prose-editor h3,
+.prose-content h3 {
+  font-size: 1.125em;
+  font-weight: 500;
+  margin: 1.1em 0 0.4em;
+  color: var(--color-graphite, #1b1f29);
+}
+
+.prose-editor ul,
+.prose-content ul,
+.prose-editor ol,
+.prose-content ol {
+  margin: 0 0 1em;
+  padding-left: 1.4em;
+}
+
+.prose-editor li,
+.prose-content li {
+  margin: 0.3em 0;
+}
+
+.prose-editor a,
+.prose-content a {
+  color: var(--color-blue, #1764ff);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.prose-editor p:first-child,
+.prose-content p:first-child {
+  margin-top: 0;
+}
+
+.prose-editor p:last-child,
+.prose-content p:last-child {
+  margin-bottom: 0;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

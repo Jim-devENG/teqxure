@@ -1,5 +1,6 @@
 import type { ComponentType } from "react";
 import { FaXTwitter, FaLinkedin, FaGithub, FaInstagram, FaYoutube, FaTiktok, FaFacebook, FaDiscord } from "react-icons/fa6";
+import { SiMedium, SiSubstack } from "react-icons/si";
 import { Globe } from "lucide-react";
 
 export const SOCIAL_PLATFORMS = [
@@ -11,6 +12,8 @@ export const SOCIAL_PLATFORMS = [
   { value: "tiktok", label: "TikTok" },
   { value: "facebook", label: "Facebook" },
   { value: "discord", label: "Discord" },
+  { value: "medium", label: "Medium" },
+  { value: "substack", label: "Substack" },
   { value: "website", label: "Website / Other" },
 ] as const;
 
@@ -25,6 +28,8 @@ export const socialPlatformIcons: Record<string, ComponentType<{ className?: str
   tiktok: FaTiktok,
   facebook: FaFacebook,
   discord: FaDiscord,
+  medium: SiMedium,
+  substack: SiSubstack,
   website: Globe,
 };
 

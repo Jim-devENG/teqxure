@@ -7,6 +7,9 @@ import type { FieldMeta, SectionKey } from "@/lib/sectionSchemas";
 import { TextField, TextAreaField } from "@/components/admin/Field";
 import { ListEditor } from "@/components/admin/ListEditor";
 import { SubmitButton } from "@/components/admin/SubmitButton";
+import { ImageUploader } from "@/components/admin/ImageUploader";
+import { RichTextEditor } from "@/components/admin/RichTextEditor";
+import { SocialLinksEditor } from "@/components/admin/SocialLinksEditor";
 
 interface DynamicSectionFormProps {
   sectionKey: SectionKey;
@@ -39,6 +42,10 @@ function FieldRenderer({ field, value }: { field: FieldMeta; value: unknown }) {
   switch (field.type) {
     case "textarea":
       return <TextAreaField label={field.label} name={field.key} defaultValue={String(value ?? "")} />;
+    case "richtext":
+      return <RichTextEditor name={field.key} label={field.label} defaultValue={String(value ?? "")} />;
+    case "image":
+      return <ImageUploader name={field.key} label={field.label} defaultValue={String(value ?? "")} />;
     case "list-string":
       return (
         <ListEditor
@@ -48,6 +55,13 @@ function FieldRenderer({ field, value }: { field: FieldMeta; value: unknown }) {
         />
       );
     case "list-object":
+      if (field.key === "socialLinks") {
+        return (
+          <SocialLinksEditor
+            defaultValues={Array.isArray(value) ? (value as { platform: string; href: string }[]) : []}
+          />
+        );
+      }
       return (
         <ListObjectField
           field={field}

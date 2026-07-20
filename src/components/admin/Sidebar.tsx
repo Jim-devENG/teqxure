@@ -17,6 +17,10 @@ import {
   Settings,
   LogOut,
   CalendarDays,
+  Info,
+  Gem,
+  Sparkles,
+  Users,
 } from "lucide-react";
 import { logoutAction } from "@/lib/actions/auth";
 import { cn } from "@/lib/utils";
@@ -24,6 +28,10 @@ import { cn } from "@/lib/utils";
 const NAV_ITEMS = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { href: "/homepage", label: "Homepage", icon: FileText },
+  { href: "/about", label: "About Page", icon: Info },
+  { href: "/core-values", label: "Core Values", icon: Gem },
+  { href: "/differentiators", label: "Differentiators", icon: Sparkles },
+  { href: "/team", label: "Team", icon: Users },
   { href: "/products", label: "Products", icon: Package },
   { href: "/curriculum", label: "Curriculum", icon: BookOpen },
   { href: "/events", label: "Events", icon: CalendarDays },

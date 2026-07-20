@@ -191,6 +191,49 @@ model Testimonial {
   updatedAt      DateTime  @updatedAt
 }
 
+// ---------- About page: dedicated list collections ----------
+// (Singleton About sections — Hero, Story, Mission, Vision, Stats, Founder,
+// FAQ intro, SEO — live in HomepageSection under ABOUT_-prefixed keys and
+// reuse the generic sectionRegistry engine instead of new models.)
+
+model CoreValue {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  icon        String
+  order       Int       @default(0)
+  visible     Boolean   @default(true)
+  deletedAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Differentiator {
+  id          String    @id @default(cuid())
+  heading     String
+  description String
+  icon        String
+  order       Int       @default(0)
+  visible     Boolean   @default(true)
+  deletedAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model TeamMember {
+  id          String    @id @default(cuid())
+  name        String
+  role        String
+  bio         String?
+  photoUrl    String?
+  socialLinks Json? // [{ platform: string, href: string }]
+  order       Int       @default(0)
+  visible     Boolean   @default(true)
+  deletedAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
 // ---------- Waitlist form builder (scoped to the live waitlist form) ----------
 
 model WaitlistField {

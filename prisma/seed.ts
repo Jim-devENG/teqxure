@@ -203,6 +203,174 @@ async function seedHomepageSections() {
   }
 }
 
+async function seedAboutSections() {
+  const sections: { key: string; order: number; content: object }[] = [
+    {
+      key: "ABOUT_HERO",
+      order: 0,
+      content: {
+        pageTitle: "About Teqxure",
+        headline: "We build engineers who ship real products, not tutorials.",
+        description:
+          "Teqxure is a Product Engineering company and training organization — we build production software for real businesses, and we teach the exact system behind it.",
+        ctaText: "Join the waitlist",
+        ctaUrl: "/#waitlist",
+        backgroundImage: "",
+      },
+    },
+    {
+      key: "ABOUT_STORY",
+      order: 1,
+      content: {
+        title: "Our story",
+        content:
+          "<p>Teqxure started from a simple observation: most engineering education teaches syntax, not judgment. Tutorials end when the video ends. Real products don't.</p><p>So we built a different kind of program — one where every student ships a production system, end to end, under the same constraints a real engineering team faces: ambiguous requirements, real users, and a deadline.</p>",
+        image: "",
+      },
+    },
+    {
+      key: "ABOUT_MISSION",
+      order: 2,
+      content: {
+        title: "Our mission",
+        statement:
+          "To turn engineers into product builders — people who can take a problem from a blank page to something a stranger depends on.",
+        icon: "Target",
+      },
+    },
+    {
+      key: "ABOUT_VISION",
+      order: 3,
+      content: {
+        title: "Our vision",
+        statement: "A world where every engineer knows how to build the whole product, not just their part of it.",
+      },
+    },
+    {
+      key: "ABOUT_STATS",
+      order: 4,
+      content: {
+        eyebrow: "Teqxure by the numbers",
+        stats: [
+          { value: 12, suffix: "+", label: "Products Built" },
+          { value: 100, suffix: "+", label: "Students Trained" },
+          { value: 6, suffix: "", label: "Countries Reached" },
+          { value: 20000, suffix: "+", label: "Engineering Hours" },
+        ],
+      },
+    },
+    {
+      key: "ABOUT_FOUNDER",
+      order: 5,
+      content: {
+        fullName: "Your Name",
+        title: "Founder & CEO, Teqxure",
+        shortBio: "Add a short, one-paragraph biography here from the admin.",
+        longBio: "<p>Add the full founder biography here from the admin — this supports rich text formatting.</p>",
+        profilePhoto: "",
+        coverImage: "",
+        signatureImage: "",
+        quote: "",
+        email: "",
+        socialLinks: [],
+      },
+    },
+    {
+      key: "ABOUT_FAQ_INTRO",
+      order: 6,
+      content: {
+        eyebrow: "Frequently Asked",
+        title: "Questions about Teqxure",
+      },
+    },
+    {
+      key: "ABOUT_SEO",
+      order: 7,
+      content: {
+        pageTitle: "About",
+        metaDescription:
+          "Teqxure is a Product Engineering company and training organization. Learn our story, mission, values, and the team behind the system.",
+        ogImage: "",
+        canonicalUrl: "",
+        keywords: ["Teqxure", "Product Engineering", "about us"],
+      },
+    },
+  ];
+
+  for (const section of sections) {
+    await db.homepageSection.upsert({
+      where: { key: section.key },
+      update: {},
+      create: { key: section.key, order: section.order, content: section.content },
+    });
+  }
+}
+
+async function seedAboutCollections() {
+  const coreValueCount = await db.coreValue.count();
+  if (coreValueCount === 0) {
+    const coreValues = [
+      {
+        title: "Craftsmanship",
+        description: "We treat every product like it will be judged by a stranger who depends on it — because it will be.",
+        icon: "Hammer",
+      },
+      {
+        title: "Ownership",
+        description: "Engineers here own outcomes, not just tickets — from the first user interview to the last deploy.",
+        icon: "Flag",
+      },
+      {
+        title: "Transparency",
+        description: "Architecture decisions, trade-offs, and mistakes are discussed openly — nothing is hidden behind polish.",
+        icon: "Eye",
+      },
+      {
+        title: "Curiosity",
+        description: "We stay students of the craft — new tools, new patterns, new constraints are treated as material to learn from.",
+        icon: "Lightbulb",
+      },
+    ];
+    for (let i = 0; i < coreValues.length; i++) {
+      await db.coreValue.create({ data: { ...coreValues[i], order: i } });
+    }
+  }
+
+  const differentiatorCount = await db.differentiator.count();
+  if (differentiatorCount === 0) {
+    const differentiators = [
+      {
+        heading: "Product Engineering",
+        description: "We teach and practice the full discipline — problem, architecture, engineering, and shipping — not just code.",
+        icon: "Layers",
+      },
+      {
+        heading: "Architecture First",
+        description: "Every system starts on paper: data flow, boundaries, and failure modes, before a single line of implementation.",
+        icon: "Blocks",
+      },
+      {
+        heading: "Artificial Intelligence Driven",
+        description: "AI is used as a force multiplier for velocity — never a substitute for understanding what the code does.",
+        icon: "Sparkles",
+      },
+      {
+        heading: "Real Product Building",
+        description: "No toy exercises. Every engagement ships something a real user depends on, under real constraints.",
+        icon: "Rocket",
+      },
+      {
+        heading: "Engineering Excellence",
+        description: "Typed, tested, reviewed — the same bar we hold for client work is the bar every student is trained to.",
+        icon: "ShieldCheck",
+      },
+    ];
+    for (let i = 0; i < differentiators.length; i++) {
+      await db.differentiator.create({ data: { ...differentiators[i], order: i } });
+    }
+  }
+}
+
 async function seedFrameworkStages() {
   const count = await db.frameworkStage.count();
   if (count > 0) return;
@@ -783,6 +951,8 @@ async function main() {
   await seedAdmin();
   await seedSiteSettings();
   await seedHomepageSections();
+  await seedAboutSections();
+  await seedAboutCollections();
   await seedFrameworkStages();
   await seedCurriculum();
   await seedProducts();

@@ -9,6 +9,7 @@ import { useWaitlist } from "@/components/waitlist/WaitlistProvider";
 import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
+  { label: "About", href: "/about" },
   { label: "Framework", href: "/#framework" },
   { label: "Curriculum", href: "/#curriculum" },
   { label: "Products", href: "/#products" },
