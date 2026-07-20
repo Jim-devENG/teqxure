@@ -8,6 +8,11 @@ const nextConfig: NextConfig = {
       // check compares the request Origin against the host it was served
       // from, so every domain that can submit a form needs to be listed.
       allowedOrigins: ["teqxure.xyz", "*.teqxure.xyz", "*.vercel.app"],
+      // Media/screenshot uploads go through a Server Action and are
+      // validated up to 10MB in src/lib/actions/media.ts — Next's own
+      // default limit (1MB) is smaller than that and would silently reject
+      // the request before the action's own check ever runs.
+      bodySizeLimit: "10mb",
     },
   },
   images: {
