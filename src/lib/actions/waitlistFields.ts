@@ -6,8 +6,7 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
 import { logActivity } from "@/lib/activity";
-
-export const FIELD_TYPES = ["TEXT", "EMAIL", "TEXTAREA", "PHONE", "SELECT", "CHECKBOX", "FILE", "URL"] as const;
+import { FIELD_TYPES } from "@/lib/fieldTypes";
 
 const fieldSchema = z.object({
   label: z.string().min(1),

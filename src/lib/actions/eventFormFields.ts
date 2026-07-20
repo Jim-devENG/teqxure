@@ -6,7 +6,7 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
 import { logActivity } from "@/lib/activity";
-import { FIELD_TYPES } from "@/lib/actions/waitlistFields";
+import { FIELD_TYPES } from "@/lib/fieldTypes";
 
 const fieldSchema = z.object({
   label: z.string().min(1),

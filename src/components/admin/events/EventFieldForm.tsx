@@ -6,7 +6,7 @@ import {
   updateEventFieldAction,
   type EventFieldFormState,
 } from "@/lib/actions/eventFormFields";
-import { FIELD_TYPES } from "@/lib/actions/waitlistFields";
+import { FIELD_TYPES } from "@/lib/fieldTypes";
 import { TextField, CheckboxField } from "@/components/admin/Field";
 import { SubmitButton } from "@/components/admin/SubmitButton";
 

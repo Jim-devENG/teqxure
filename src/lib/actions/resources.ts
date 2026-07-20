@@ -6,14 +6,13 @@ import { db } from "@/lib/db";
 import { requireRole } from "@/lib/auth";
 import { logActivity } from "@/lib/activity";
 import { notifyCohortStudents } from "@/lib/notifications";
+import { RESOURCE_TYPES } from "@/lib/resourceTypes";
 
 const STAFF_ROLES = ["SUPER_ADMIN", "PROGRAM_MANAGER", "INSTRUCTOR"] as const;
 
 export interface ActionState {
   error?: string;
 }
-
-const RESOURCE_TYPES = ["NOTES", "SLIDES", "PDF", "REPO", "PROMPT_PACK", "ARCHITECTURE_DIAGRAM", "DB_SCHEMA", "API_DOC"] as const;
 
 const resourceSchema = z.object({
   title: z.string().min(1),
@@ -78,5 +77,3 @@ export async function toggleResourceVisibilityAction(resourceId: string, visible
   revalidatePath("/platform/manage/bootcamps");
   revalidatePath("/platform/resources");
 }
-
-export { RESOURCE_TYPES };

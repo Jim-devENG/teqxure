@@ -8,8 +8,8 @@ import { db } from "@/lib/db";
 import { requireRole, hashPassword } from "@/lib/auth";
 import { logActivity } from "@/lib/activity";
 import { sendTemplatedEmail } from "@/lib/email";
+import { ROLES } from "@/lib/roles";
 
-const ROLES = ["SUPER_ADMIN", "PROGRAM_MANAGER", "INSTRUCTOR", "MENTOR", "REVIEWER", "STUDENT"] as const;
 const INVITE_TTL_MS = 1000 * 60 * 60 * 24 * 7; // 7 days
 
 const inviteSchema = z.object({
@@ -111,5 +111,3 @@ function roleLabel(role: string): string {
     .map((w) => w[0].toUpperCase() + w.slice(1))
     .join(" ");
 }
-
-export { ROLES };

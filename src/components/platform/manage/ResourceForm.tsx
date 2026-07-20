@@ -1,7 +1,8 @@
 "use client";
 
 import { useActionState } from "react";
-import { createResourceAction, RESOURCE_TYPES, type ActionState } from "@/lib/actions/resources";
+import { createResourceAction, type ActionState } from "@/lib/actions/resources";
+import { RESOURCE_TYPES } from "@/lib/resourceTypes";
 import { TextField } from "@/components/admin/Field";
 import { SubmitButton } from "@/components/admin/SubmitButton";
 

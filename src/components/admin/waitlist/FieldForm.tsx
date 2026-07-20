@@ -1,7 +1,8 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { createFieldAction, updateFieldAction, FIELD_TYPES, type FieldFormState } from "@/lib/actions/waitlistFields";
+import { createFieldAction, updateFieldAction, type FieldFormState } from "@/lib/actions/waitlistFields";
+import { FIELD_TYPES } from "@/lib/fieldTypes";
 import { TextField, CheckboxField } from "@/components/admin/Field";
 import { SubmitButton } from "@/components/admin/SubmitButton";
 

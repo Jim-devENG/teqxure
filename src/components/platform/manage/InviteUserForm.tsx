@@ -1,7 +1,8 @@
 "use client";
 
 import { useActionState } from "react";
-import { inviteUserAction, ROLES, type InviteUserState } from "@/lib/actions/users";
+import { inviteUserAction, type InviteUserState } from "@/lib/actions/users";
+import { ROLES } from "@/lib/roles";
 import { TextField } from "@/components/admin/Field";
 import { SubmitButton } from "@/components/admin/SubmitButton";
 
