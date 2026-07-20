@@ -227,6 +227,9 @@ export async function assignStaffAction(cohortId: string, _prev: ActionState, fo
 
   const staffUser = await db.user.findUnique({ where: { email } });
   if (!staffUser) return { error: "No user with that email — invite them first from Users." };
+  if (!["INSTRUCTOR", "MENTOR", "REVIEWER", "PROGRAM_MANAGER", "SUPER_ADMIN"].includes(staffUser.role)) {
+    return { error: "That user's account role isn't a staff role — update their role first." };
+  }
 
   const existing = await db.cohortStaffAssignment.findUnique({
     where: { cohortId_userId_role: { cohortId, userId: staffUser.id, role } },
