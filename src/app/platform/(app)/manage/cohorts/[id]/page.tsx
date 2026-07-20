@@ -20,6 +20,7 @@ export default async function CohortDetailPage({ params }: { params: Promise<{ i
         staff: { include: { user: true } },
         sprints: true,
         liveSessions: { orderBy: { startsAt: "asc" } },
+        certificates: { select: { studentId: true } },
       },
     }),
     db.bootcamp.findMany({ orderBy: { title: "asc" }, select: { id: true, title: true } }),
@@ -27,6 +28,8 @@ export default async function CohortDetailPage({ params }: { params: Promise<{ i
   if (!cohort) notFound();
 
   const sprintByWeek = new Map(cohort.sprints.map((s) => [s.weekId, s]));
+  const certifiedStudentIds = new Set(cohort.certificates.map((c) => c.studentId));
+  const enrollmentRows = cohort.enrollments.map((e) => ({ ...e, hasCertificate: certifiedStudentIds.has(e.studentId) }));
 
   return (
     <div className="flex flex-col gap-10">
@@ -98,7 +101,7 @@ export default async function CohortDetailPage({ params }: { params: Promise<{ i
         <div className="mb-4 rounded-2xl border border-light-gray bg-white p-5 shadow-sm">
           <EnrollStudentForm cohortId={cohort.id} />
         </div>
-        <EnrollmentsList enrollments={cohort.enrollments} />
+        <EnrollmentsList cohortId={cohort.id} enrollments={enrollmentRows} />
       </div>
 
       <div>

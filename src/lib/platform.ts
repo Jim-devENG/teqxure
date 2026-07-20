@@ -39,3 +39,14 @@ export async function getRelevantCohorts(userId: string, role: string) {
   }
   return getStaffCohorts(userId);
 }
+
+/** Whether a user may read/post in a given cohort's community channels or DMs about it. */
+export async function canAccessCohort(userId: string, role: string, cohortId: string): Promise<boolean> {
+  if (role === "SUPER_ADMIN" || role === "PROGRAM_MANAGER") return true;
+  if (role === "STUDENT") {
+    const enrollment = await db.cohortEnrollment.findUnique({ where: { cohortId_studentId: { cohortId, studentId: userId } } });
+    return !!enrollment;
+  }
+  const assignment = await db.cohortStaffAssignment.findFirst({ where: { cohortId, userId } });
+  return !!assignment;
+}
