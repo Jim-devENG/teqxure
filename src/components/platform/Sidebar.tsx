@@ -27,21 +27,21 @@ type NavItem = {
 };
 
 const NAV_ITEMS: NavItem[] = [
-  { href: "/platform/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/platform/bootcamp", label: "Bootcamp", icon: BookOpen },
-  { href: "/platform/sprint-room", label: "Sprint Room", icon: Rocket },
-  { href: "/platform/my-product", label: "My Product", icon: Package, roles: ["STUDENT"] },
-  { href: "/platform/resources", label: "Resources", icon: FolderOpen },
-  { href: "/platform/community", label: "Community", icon: MessagesSquare },
-  { href: "/platform/messages", label: "Messages", icon: Mail },
-  { href: "/platform/certificates", label: "Certificates", icon: Award, roles: ["STUDENT"] },
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/bootcamp", label: "Bootcamp", icon: BookOpen },
+  { href: "/sprint-room", label: "Sprint Room", icon: Rocket },
+  { href: "/my-product", label: "My Product", icon: Package, roles: ["STUDENT"] },
+  { href: "/resources", label: "Resources", icon: FolderOpen },
+  { href: "/community", label: "Community", icon: MessagesSquare },
+  { href: "/messages", label: "Messages", icon: Mail },
+  { href: "/certificates", label: "Certificates", icon: Award, roles: ["STUDENT"] },
   {
-    href: "/platform/manage",
+    href: "/manage",
     label: "Manage",
     icon: ShieldCheck,
     roles: ["SUPER_ADMIN", "PROGRAM_MANAGER"],
   },
-  { href: "/platform/profile", label: "Profile", icon: Settings },
+  { href: "/profile", label: "Profile", icon: Settings },
 ];
 
 export function Sidebar({ userEmail, role }: { userEmail: string; role: string }) {

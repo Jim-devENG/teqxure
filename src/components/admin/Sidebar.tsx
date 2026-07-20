@@ -22,18 +22,18 @@ import { logoutAction } from "@/lib/actions/auth";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
-  { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
-  { href: "/admin/homepage", label: "Homepage", icon: FileText },
-  { href: "/admin/products", label: "Products", icon: Package },
-  { href: "/admin/curriculum", label: "Curriculum", icon: BookOpen },
-  { href: "/admin/events", label: "Events", icon: CalendarDays },
-  { href: "/admin/faq", label: "FAQ", icon: HelpCircle },
-  { href: "/admin/testimonials", label: "Testimonials", icon: MessageSquareQuote },
-  { href: "/admin/waitlist-form", label: "Waitlist Form", icon: ClipboardList },
-  { href: "/admin/waitlist-submissions", label: "Submissions", icon: Inbox },
-  { href: "/admin/media", label: "Media", icon: ImageIcon },
-  { href: "/admin/email-templates", label: "Email Templates", icon: Mail },
-  { href: "/admin/settings", label: "Settings", icon: Settings },
+  { href: "/", label: "Dashboard", icon: LayoutDashboard, exact: true },
+  { href: "/homepage", label: "Homepage", icon: FileText },
+  { href: "/products", label: "Products", icon: Package },
+  { href: "/curriculum", label: "Curriculum", icon: BookOpen },
+  { href: "/events", label: "Events", icon: CalendarDays },
+  { href: "/faq", label: "FAQ", icon: HelpCircle },
+  { href: "/testimonials", label: "Testimonials", icon: MessageSquareQuote },
+  { href: "/waitlist-form", label: "Waitlist Form", icon: ClipboardList },
+  { href: "/waitlist-submissions", label: "Submissions", icon: Inbox },
+  { href: "/media", label: "Media", icon: ImageIcon },
+  { href: "/email-templates", label: "Email Templates", icon: Mail },
+  { href: "/settings", label: "Settings", icon: Settings },
 ];
 
 export function Sidebar({ userEmail }: { userEmail: string }) {

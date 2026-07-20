@@ -32,7 +32,7 @@ export function WeeksList({ weeks }: { weeks: WeekRow[] }) {
           </p>
           <div className="flex items-center gap-2">
             <Link
-              href={`/platform/manage/bootcamps/${week.bootcampId}/weeks/${week.id}`}
+              href={`/manage/bootcamps/${week.bootcampId}/weeks/${week.id}`}
               className="rounded-lg border border-light-gray p-1.5 text-slate transition-colors hover:text-blue"
               aria-label="Edit"
             >

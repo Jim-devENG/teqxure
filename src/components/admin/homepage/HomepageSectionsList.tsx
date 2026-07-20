@@ -57,7 +57,7 @@ export function HomepageSectionsList({ sections }: { sections: SectionRow[] }) {
                 {row.visible ? "Visible" : "Hidden"}
               </button>
               <Link
-                href={`/admin/homepage/${row.key}`}
+                href={`/homepage/${row.key}`}
                 className="flex items-center gap-1.5 rounded-lg border border-light-gray px-2.5 py-1.5 text-xs text-graphite transition-colors hover:border-blue hover:text-blue"
               >
                 <Pencil className="h-3.5 w-3.5" strokeWidth={1.5} />

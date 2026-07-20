@@ -6,7 +6,7 @@ import { StudentProductForm } from "@/components/platform/StudentProductForm";
 
 export default async function MyProductPage() {
   const user = await getCurrentUser();
-  if (user!.role !== "STUDENT") redirect("/platform/dashboard");
+  if (user!.role !== "STUDENT") redirect("/dashboard");
 
   const product = await db.studentProduct.findUnique({ where: { studentId: user!.id } });
 

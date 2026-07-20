@@ -31,7 +31,7 @@ export async function startThreadAction(_prev: ActionState, formData: FormData):
       data: { participants: { create: [{ userId: user.id }, { userId: recipient.id }] } },
     }));
 
-  redirect(`/platform/messages/${thread.id}`);
+  redirect(`/messages/${thread.id}`);
 }
 
 export async function postDirectMessageAction(threadId: string, _prev: ActionState, formData: FormData): Promise<ActionState> {
@@ -57,7 +57,7 @@ export async function postDirectMessageAction(threadId: string, _prev: ActionSta
         title: `New message from ${user.name ?? user.email}`,
         body,
         actionLabel: "Open conversation",
-        actionUrl: `/platform/messages/${threadId}`,
+        actionUrl: `/messages/${threadId}`,
       }),
     ),
   );

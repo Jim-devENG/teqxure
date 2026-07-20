@@ -57,8 +57,8 @@ export async function inviteUserAction(_prev: InviteUserState, formData: FormDat
     data: { token, userId: user.id, expiresAt: new Date(Date.now() + INVITE_TTL_MS) },
   });
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.teqxure.xyz";
-  const inviteUrl = `${siteUrl}/platform/set-password?token=${token}`;
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://app.teqxure.xyz";
+  const inviteUrl = `${appUrl}/set-password?token=${token}`;
 
   await sendTemplatedEmail("ACCOUNT_INVITE", user.email, {
     name: user.name ?? "there",
@@ -68,7 +68,7 @@ export async function inviteUserAction(_prev: InviteUserState, formData: FormDat
 
   await logActivity({ userId: admin.id, action: "created", entityType: "User", entityId: user.id });
   revalidatePath("/platform/manage/users");
-  redirect("/platform/manage/users");
+  redirect("/manage/users");
 }
 
 export async function resendInviteAction(userId: string): Promise<void> {
@@ -84,8 +84,8 @@ export async function resendInviteAction(userId: string): Promise<void> {
     data: { token, userId, expiresAt: new Date(Date.now() + INVITE_TTL_MS) },
   });
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.teqxure.xyz";
-  const inviteUrl = `${siteUrl}/platform/set-password?token=${token}`;
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://app.teqxure.xyz";
+  const inviteUrl = `${appUrl}/set-password?token=${token}`;
 
   await sendTemplatedEmail("ACCOUNT_INVITE", user.email, {
     name: user.name ?? "there",

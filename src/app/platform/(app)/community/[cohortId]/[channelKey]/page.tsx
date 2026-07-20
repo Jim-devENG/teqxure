@@ -37,7 +37,7 @@ export default async function ChannelPage({ params }: { params: Promise<{ cohort
         {channels.map((c) => (
           <Link
             key={c.id}
-            href={`/platform/community/${cohortId}/${c.key}`}
+            href={`/community/${cohortId}/${c.key}`}
             className={cn(
               "rounded-lg px-3 py-1.5 text-sm transition-colors",
               c.key === channelKey ? "bg-blue/10 text-blue" : "text-slate hover:bg-soft-white hover:text-graphite",

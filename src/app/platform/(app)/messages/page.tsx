@@ -35,7 +35,7 @@ export default async function MessagesIndexPage() {
           return (
             <Link
               key={p.threadId}
-              href={`/platform/messages/${p.threadId}`}
+              href={`/messages/${p.threadId}`}
               className="flex items-center justify-between rounded-2xl border border-light-gray bg-white p-5 shadow-sm transition-colors hover:border-blue"
             >
               <div>

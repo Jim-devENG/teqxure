@@ -53,7 +53,7 @@ export async function createEventFieldAction(
 
   await logActivity({ userId: user.id, action: "created", entityType: "EventFormField", entityId: created.id });
   revalidatePath(`/admin/events/${eventId}/form`);
-  redirect(`/admin/events/${eventId}/form`);
+  redirect(`/events/${eventId}/form`);
 }
 
 export async function updateEventFieldAction(
@@ -77,7 +77,7 @@ export async function updateEventFieldAction(
 
   await logActivity({ userId: user.id, action: "updated", entityType: "EventFormField", entityId: fieldId });
   revalidatePath(`/admin/events/${eventId}/form`);
-  redirect(`/admin/events/${eventId}/form`);
+  redirect(`/events/${eventId}/form`);
 }
 
 export async function deleteEventFieldAction(eventId: string, fieldId: string): Promise<void> {

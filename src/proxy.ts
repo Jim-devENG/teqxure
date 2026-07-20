@@ -2,58 +2,68 @@ import { NextRequest, NextResponse } from "next/server";
 
 const SESSION_COOKIE = "teqxure_session";
 
-const PUBLIC_PLATFORM_PATHS = ["/platform/login", "/platform/set-password"];
-
 // Dedicated subdomains: admin.teqxure.xyz is the Super Admin CMS,
-// app.teqxure.xyz is the student/staff Engineering Workspace. Both are the
-// same Next.js deployment as www.teqxure.xyz — only the bare root needs
-// rewriting so each subdomain lands on its section instead of the marketing
-// homepage; every other path already works identically on any host.
+// app.teqxure.xyz is the student/staff Engineering Workspace. Both live in
+// the same Next.js deployment as www.teqxure.xyz, under the real /admin and
+// /platform route trees — but every link, redirect, and email generated for
+// these sections uses clean, host-relative paths (e.g. "/dashboard", not
+// "/platform/dashboard"). This middleware is what makes that work: it
+// transparently prefixes incoming requests on the dedicated host with the
+// real internal route, and redirects anyone hitting the old /admin or
+// /platform paths on another host over to the correct subdomain.
 const ADMIN_HOST = "admin.teqxure.xyz";
 const APP_HOST = "app.teqxure.xyz";
 
+const PUBLIC_ADMIN_PATHS = ["/login"];
+const PUBLIC_APP_PATHS = ["/login", "/set-password"];
+
+function isAsset(pathname: string): boolean {
+  return pathname.startsWith("/_next") || pathname.startsWith("/api") || /\.[a-zA-Z0-9]+$/.test(pathname);
+}
+
 export function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const { pathname, search } = request.nextUrl;
   const host = request.headers.get("host")?.split(":")[0].toLowerCase() ?? "";
 
-  if (pathname === "/") {
-    if (host === ADMIN_HOST) {
-      return NextResponse.rewrite(new URL("/admin", request.url));
-    }
-    if (host === APP_HOST) {
-      return NextResponse.rewrite(new URL("/platform", request.url));
-    }
-  }
-
-  if (pathname.startsWith("/admin/login")) {
+  if (isAsset(pathname)) {
     return NextResponse.next();
   }
 
-  if (pathname.startsWith("/admin")) {
+  // Legacy /admin and /platform paths on any other host (old bookmarks,
+  // already-sent invite emails, etc.) redirect to the dedicated subdomain
+  // with the prefix stripped, so nothing breaks.
+  if (host !== ADMIN_HOST && pathname.startsWith("/admin")) {
+    const url = new URL((pathname.slice("/admin".length) || "/") + search, `https://${ADMIN_HOST}`);
+    return NextResponse.redirect(url);
+  }
+  if (host !== APP_HOST && pathname.startsWith("/platform")) {
+    const url = new URL((pathname.slice("/platform".length) || "/") + search, `https://${APP_HOST}`);
+    return NextResponse.redirect(url);
+  }
+
+  if (host === ADMIN_HOST) {
     const hasSession = request.cookies.has(SESSION_COOKIE);
-    if (!hasSession) {
-      const loginUrl = new URL("/admin/login", request.url);
+    if (!PUBLIC_ADMIN_PATHS.includes(pathname) && !hasSession) {
+      const loginUrl = new URL("/login", request.url);
       loginUrl.searchParams.set("from", pathname);
       return NextResponse.redirect(loginUrl);
     }
+    return NextResponse.rewrite(new URL(`/admin${pathname === "/" ? "" : pathname}`, request.url));
   }
 
-  if (PUBLIC_PLATFORM_PATHS.some((path) => pathname.startsWith(path))) {
-    return NextResponse.next();
-  }
-
-  if (pathname.startsWith("/platform")) {
+  if (host === APP_HOST) {
     const hasSession = request.cookies.has(SESSION_COOKIE);
-    if (!hasSession) {
-      const loginUrl = new URL("/platform/login", request.url);
+    if (!PUBLIC_APP_PATHS.includes(pathname) && !hasSession) {
+      const loginUrl = new URL("/login", request.url);
       loginUrl.searchParams.set("from", pathname);
       return NextResponse.redirect(loginUrl);
     }
+    return NextResponse.rewrite(new URL(`/platform${pathname === "/" ? "" : pathname}`, request.url));
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/", "/admin/:path*", "/platform/:path*"],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 };

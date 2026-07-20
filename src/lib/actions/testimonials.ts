@@ -52,7 +52,7 @@ export async function createTestimonialAction(
   await logActivity({ userId: user.id, action: "created", entityType: "Testimonial", entityId: created.id });
   revalidatePath("/");
   revalidatePath("/admin/testimonials");
-  redirect("/admin/testimonials");
+  redirect("/testimonials");
 }
 
 export async function updateTestimonialAction(
@@ -69,7 +69,7 @@ export async function updateTestimonialAction(
   await logActivity({ userId: user.id, action: "updated", entityType: "Testimonial", entityId: id });
   revalidatePath("/");
   revalidatePath("/admin/testimonials");
-  redirect("/admin/testimonials");
+  redirect("/testimonials");
 }
 
 export async function deleteTestimonialAction(id: string): Promise<void> {

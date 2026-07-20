@@ -79,7 +79,7 @@ export async function createProductAction(_prev: ProductFormState, formData: For
   await logActivity({ userId: user.id, action: "created", entityType: "Product", entityId: product.id });
   revalidatePath("/");
   revalidatePath("/admin/products");
-  redirect("/admin/products");
+  redirect("/products");
 }
 
 export async function updateProductAction(
@@ -107,7 +107,7 @@ export async function updateProductAction(
   await logActivity({ userId: user.id, action: "updated", entityType: "Product", entityId: id });
   revalidatePath("/");
   revalidatePath("/admin/products");
-  redirect("/admin/products");
+  redirect("/products");
 }
 
 export async function deleteProductAction(id: string): Promise<void> {

@@ -40,7 +40,7 @@ export async function createAnnouncementAction(_prev: ActionState, formData: For
       title: announcement.title,
       body: announcement.body,
       actionLabel: "View announcement",
-      actionUrl: "/platform/dashboard",
+      actionUrl: "/dashboard",
     });
   } else {
     const students = await db.user.findMany({ where: { role: "STUDENT" }, select: { id: true } });
@@ -52,7 +52,7 @@ export async function createAnnouncementAction(_prev: ActionState, formData: For
           title: announcement.title,
           body: announcement.body,
           actionLabel: "View announcement",
-          actionUrl: "/platform/dashboard",
+          actionUrl: "/dashboard",
         }),
       ),
     );

@@ -22,7 +22,7 @@ export default async function BootcampIndexPage() {
   }
 
   if (cohorts.length === 1) {
-    redirect(`/platform/bootcamp/${cohorts[0].id}`);
+    redirect(`/bootcamp/${cohorts[0].id}`);
   }
 
   return (
@@ -32,7 +32,7 @@ export default async function BootcampIndexPage() {
         {cohorts.map((c) => (
           <Link
             key={c.id}
-            href={`/platform/bootcamp/${c.id}`}
+            href={`/bootcamp/${c.id}`}
             className="flex items-center justify-between rounded-2xl border border-light-gray bg-white p-5 shadow-sm transition-colors hover:border-blue"
           >
             <p className="text-sm font-medium text-graphite">{c.name}</p>

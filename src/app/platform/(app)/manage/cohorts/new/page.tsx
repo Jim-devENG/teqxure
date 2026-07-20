@@ -12,7 +12,7 @@ export default async function NewCohortPage() {
         <PageHeader title="New cohort" />
         <p className="text-sm text-slate">
           You need a bootcamp before you can create a cohort.{" "}
-          <Link href="/platform/manage/bootcamps/new" className="text-blue hover:underline">
+          <Link href="/manage/bootcamps/new" className="text-blue hover:underline">
             Create one first
           </Link>
           .

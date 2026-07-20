@@ -43,11 +43,11 @@ export async function createLiveSessionAction(cohortId: string, _prev: ActionSta
     title: `New live session: ${session.title}`,
     body: `Scheduled for ${session.startsAt.toLocaleString()}.`,
     actionLabel: "View in Bootcamp",
-    actionUrl: `/platform/bootcamp/${cohortId}/${session.weekId}`,
+    actionUrl: `/bootcamp/${cohortId}/${session.weekId}`,
   });
 
   revalidatePath(`/platform/manage/cohorts/${cohortId}`);
-  redirect(`/platform/manage/cohorts/${cohortId}`);
+  redirect(`/manage/cohorts/${cohortId}`);
 }
 
 export async function updateLiveSessionAction(sessionId: string, _prev: ActionState, formData: FormData): Promise<ActionState> {

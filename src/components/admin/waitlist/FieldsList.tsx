@@ -39,7 +39,7 @@ export function FieldsList({ fields }: { fields: FieldRow[] }) {
           </div>
           <div className="flex items-center gap-2">
             <Link
-              href={`/admin/waitlist-form/${row.id}`}
+              href={`/waitlist-form/${row.id}`}
               className="rounded-lg border border-light-gray p-1.5 text-slate transition-colors hover:text-blue"
               aria-label="Edit"
             >

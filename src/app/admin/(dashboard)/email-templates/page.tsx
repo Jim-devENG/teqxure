@@ -24,7 +24,7 @@ export default async function EmailTemplatesPage() {
               <p className="text-xs text-slate">{template.subject}</p>
             </div>
             <Link
-              href={`/admin/email-templates/${template.key}`}
+              href={`/email-templates/${template.key}`}
               className="flex items-center gap-1.5 rounded-lg border border-light-gray px-2.5 py-1.5 text-xs text-graphite transition-colors hover:border-blue hover:text-blue"
             >
               <Pencil className="h-3.5 w-3.5" strokeWidth={1.5} />

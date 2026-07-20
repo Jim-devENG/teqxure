@@ -51,7 +51,7 @@ export async function createFieldAction(_prev: FieldFormState, formData: FormDat
   await logActivity({ userId: user.id, action: "created", entityType: "WaitlistField", entityId: created.id });
   revalidatePath("/");
   revalidatePath("/admin/waitlist-form");
-  redirect("/admin/waitlist-form");
+  redirect("/waitlist-form");
 }
 
 export async function updateFieldAction(
@@ -75,7 +75,7 @@ export async function updateFieldAction(
   await logActivity({ userId: user.id, action: "updated", entityType: "WaitlistField", entityId: id });
   revalidatePath("/");
   revalidatePath("/admin/waitlist-form");
-  redirect("/admin/waitlist-form");
+  redirect("/waitlist-form");
 }
 
 export async function deleteFieldAction(id: string): Promise<void> {

@@ -3,18 +3,18 @@ import Link from "next/link";
 import { getCurrentUser } from "@/lib/auth";
 
 const MANAGE_NAV = [
-  { href: "/platform/manage/users", label: "Users & invites" },
-  { href: "/platform/manage/bootcamps", label: "Bootcamps" },
-  { href: "/platform/manage/cohorts", label: "Cohorts" },
-  { href: "/platform/manage/submissions", label: "Submissions review" },
-  { href: "/platform/manage/payments", label: "Payment verification" },
-  { href: "/platform/manage/announcements", label: "Announcements" },
+  { href: "/manage/users", label: "Users & invites" },
+  { href: "/manage/bootcamps", label: "Bootcamps" },
+  { href: "/manage/cohorts", label: "Cohorts" },
+  { href: "/manage/submissions", label: "Submissions review" },
+  { href: "/manage/payments", label: "Payment verification" },
+  { href: "/manage/announcements", label: "Announcements" },
 ];
 
 export default async function ManageLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const user = await getCurrentUser();
   if (!user || (user.role !== "SUPER_ADMIN" && user.role !== "PROGRAM_MANAGER")) {
-    redirect("/platform/dashboard");
+    redirect("/dashboard");
   }
 
   return (

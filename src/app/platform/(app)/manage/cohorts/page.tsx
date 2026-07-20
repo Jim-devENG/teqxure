@@ -16,7 +16,7 @@ export default async function ManageCohortsPage() {
         description="Timed runs of a bootcamp — enroll students, assign staff, and release sprints per cohort."
         action={
           <Link
-            href="/platform/manage/cohorts/new"
+            href="/manage/cohorts/new"
             className="flex items-center gap-1.5 rounded-lg bg-blue px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-dark"
           >
             <Plus className="h-4 w-4" strokeWidth={1.5} />
@@ -32,7 +32,7 @@ export default async function ManageCohortsPage() {
           {cohorts.map((c) => (
             <Link
               key={c.id}
-              href={`/platform/manage/cohorts/${c.id}`}
+              href={`/manage/cohorts/${c.id}`}
               className="flex items-center justify-between rounded-2xl border border-light-gray bg-white p-5 shadow-sm transition-colors hover:border-blue"
             >
               <div>

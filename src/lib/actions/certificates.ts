@@ -62,7 +62,7 @@ export async function issueCertificateAction(cohortId: string, studentId: string
     title: "Your certificate is ready",
     body: `Congratulations on completing ${cohort.bootcamp.title}!`,
     actionLabel: "View certificate",
-    actionUrl: "/platform/certificates",
+    actionUrl: "/certificates",
   });
   await notifyUser({
     userId: studentId,
@@ -70,7 +70,7 @@ export async function issueCertificateAction(cohortId: string, studentId: string
     title: `You completed ${cohort.bootcamp.title}`,
     body: "You've shipped a real product from problem statement to deployment. Well done.",
     actionLabel: "View your product",
-    actionUrl: "/platform/my-product",
+    actionUrl: "/my-product",
   });
 
   revalidatePath(`/platform/manage/cohorts/${cohortId}`);

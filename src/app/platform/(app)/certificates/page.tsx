@@ -5,7 +5,7 @@ import { PageHeader } from "@/components/admin/PageHeader";
 
 export default async function CertificatesPage() {
   const user = await getCurrentUser();
-  if (user!.role !== "STUDENT") redirect("/platform/dashboard");
+  if (user!.role !== "STUDENT") redirect("/dashboard");
 
   const certificates = await db.certificate.findMany({
     where: { studentId: user!.id },

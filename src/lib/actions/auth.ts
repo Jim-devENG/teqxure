@@ -33,10 +33,10 @@ export async function loginAction(_prevState: LoginState, formData: FormData): P
   }
 
   await createSession(result.user.id);
-  redirect("/admin");
+  redirect("/");
 }
 
 export async function logoutAction(): Promise<void> {
   await destroySession();
-  redirect("/admin/login");
+  redirect("/login");
 }

@@ -17,7 +17,7 @@ export default async function EventsPage() {
         description="Manage events, their registration forms, and sign-ups."
         action={
           <Link
-            href="/admin/events/new"
+            href="/events/new"
             className="flex items-center gap-1.5 rounded-lg bg-blue px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-dark"
           >
             <Plus className="h-4 w-4" strokeWidth={1.5} />

@@ -66,7 +66,7 @@ export function ProductsList({ products }: { products: ProductRow[] }) {
               {row.visible ? <Eye className="h-3.5 w-3.5" strokeWidth={1.5} /> : <EyeOff className="h-3.5 w-3.5" strokeWidth={1.5} />}
             </button>
             <Link
-              href={`/admin/products/${row.id}`}
+              href={`/products/${row.id}`}
               className="rounded-lg border border-light-gray p-1.5 text-slate transition-colors hover:text-blue"
               aria-label="Edit"
             >

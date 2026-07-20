@@ -43,7 +43,7 @@ export function EventFieldsList({ eventId, fields }: { eventId: string; fields: 
           </div>
           <div className="flex items-center gap-2">
             <Link
-              href={`/admin/events/${eventId}/form/${row.id}`}
+              href={`/events/${eventId}/form/${row.id}`}
               className="rounded-lg border border-light-gray p-1.5 text-slate transition-colors hover:text-blue"
               aria-label="Edit"
             >

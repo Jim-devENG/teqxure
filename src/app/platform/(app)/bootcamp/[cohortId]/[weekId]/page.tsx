@@ -96,7 +96,7 @@ export default async function WeekDetailPage({ params }: { params: Promise<{ coh
 
       {sprint && (
         <Link
-          href={`/platform/sprint-room/${sprint.id}`}
+          href={`/sprint-room/${sprint.id}`}
           className="rounded-2xl border border-light-gray bg-white p-6 shadow-sm transition-colors hover:border-blue"
         >
           <h2 className="text-sm font-medium text-graphite">This week's sprint</h2>

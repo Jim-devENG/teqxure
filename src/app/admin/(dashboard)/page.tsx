@@ -24,17 +24,17 @@ export default async function AdminDashboardPage() {
   ]);
 
   const stats = [
-    { label: "Products", value: productCount, href: "/admin/products" },
-    { label: "Curriculum weeks", value: weekCount, href: "/admin/curriculum" },
-    { label: "Testimonials", value: testimonialCount, href: "/admin/testimonials" },
-    { label: "New applications", value: pendingSubmissions, href: "/admin/waitlist-submissions" },
+    { label: "Products", value: productCount, href: "/products" },
+    { label: "Curriculum weeks", value: weekCount, href: "/curriculum" },
+    { label: "Testimonials", value: testimonialCount, href: "/testimonials" },
+    { label: "New applications", value: pendingSubmissions, href: "/waitlist-submissions" },
   ];
 
   const quickLinks = [
-    { label: "Edit homepage", href: "/admin/homepage" },
-    { label: "Add a product", href: "/admin/products/new" },
-    { label: "Add a testimonial", href: "/admin/testimonials/new" },
-    { label: "Edit waitlist form", href: "/admin/waitlist-form" },
+    { label: "Edit homepage", href: "/homepage" },
+    { label: "Add a product", href: "/products/new" },
+    { label: "Add a testimonial", href: "/testimonials/new" },
+    { label: "Edit waitlist form", href: "/waitlist-form" },
   ];
 
   return (
@@ -76,7 +76,7 @@ export default async function AdminDashboardPage() {
         <div className="rounded-xl border border-light-gray bg-white p-6">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-medium text-graphite">Latest applications</h2>
-            <Link href="/admin/waitlist-submissions" className="text-xs text-blue">
+            <Link href="/waitlist-submissions" className="text-xs text-blue">
               View all
             </Link>
           </div>

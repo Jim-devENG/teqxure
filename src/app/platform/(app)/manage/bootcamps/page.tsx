@@ -16,7 +16,7 @@ export default async function ManageBootcampsPage() {
         description="Curriculum containers — weeks, objectives, and the resources shared across every cohort that runs them."
         action={
           <Link
-            href="/platform/manage/bootcamps/new"
+            href="/manage/bootcamps/new"
             className="flex items-center gap-1.5 rounded-lg bg-blue px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-dark"
           >
             <Plus className="h-4 w-4" strokeWidth={1.5} />
@@ -32,7 +32,7 @@ export default async function ManageBootcampsPage() {
           {bootcamps.map((b) => (
             <Link
               key={b.id}
-              href={`/platform/manage/bootcamps/${b.id}`}
+              href={`/manage/bootcamps/${b.id}`}
               className="flex items-center justify-between rounded-2xl border border-light-gray bg-white p-5 shadow-sm transition-colors hover:border-blue"
             >
               <div>

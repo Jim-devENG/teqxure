@@ -54,7 +54,7 @@ export async function createResourceAction(bootcampId: string, _prev: ActionStat
         title: `New resource: ${resource.title}`,
         body: "A new resource was just added to your bootcamp.",
         actionLabel: "View resources",
-        actionUrl: "/platform/resources",
+        actionUrl: "/resources",
       }),
     ),
   );

@@ -72,12 +72,15 @@ export async function notifyUser({
   if (isReminder && reminderFrequency === "IMPORTANT_ONLY" && type !== "SESSION_REMINDER_1H") return;
 
   if (user) {
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://app.teqxure.xyz";
+    const absoluteActionUrl = actionUrl?.startsWith("/") ? `${appUrl}${actionUrl}` : (actionUrl ?? "");
+
     await sendTemplatedEmail(type, user.email, {
       name: user.name ?? "there",
       title,
       body,
       actionLabel: actionLabel ?? "",
-      actionUrl: actionUrl ?? "",
+      actionUrl: absoluteActionUrl,
       ...emailVariables,
     });
   }

@@ -33,7 +33,7 @@ export default async function ManageSprintPage({ params }: { params: Promise<{ i
               {sprint.submissions.map((sub) => (
                 <Link
                   key={sub.id}
-                  href={`/platform/manage/submissions/${sub.id}`}
+                  href={`/manage/submissions/${sub.id}`}
                   className="flex items-center justify-between rounded-xl border border-light-gray bg-white px-4 py-3 transition-colors hover:border-blue"
                 >
                   <p className="text-sm text-graphite">{sub.student.name ?? sub.student.email}</p>

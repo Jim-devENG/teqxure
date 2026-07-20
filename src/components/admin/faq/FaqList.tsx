@@ -32,7 +32,7 @@ export function FaqList({ items }: { items: FaqRow[] }) {
           <p className="text-sm font-medium text-graphite">{row.question}</p>
           <div className="flex items-center gap-2">
             <Link
-              href={`/admin/faq/${row.id}`}
+              href={`/faq/${row.id}`}
               className="rounded-lg border border-light-gray p-1.5 text-slate transition-colors hover:text-blue"
               aria-label="Edit"
             >

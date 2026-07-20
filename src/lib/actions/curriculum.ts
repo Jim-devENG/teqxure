@@ -52,7 +52,7 @@ export async function createWeekAction(_prev: WeekFormState, formData: FormData)
   await logActivity({ userId: user.id, action: "created", entityType: "CurriculumWeek", entityId: created.id });
   revalidatePath("/");
   revalidatePath("/admin/curriculum");
-  redirect("/admin/curriculum");
+  redirect("/curriculum");
 }
 
 export async function updateWeekAction(
@@ -83,7 +83,7 @@ export async function updateWeekAction(
   await logActivity({ userId: user.id, action: "updated", entityType: "CurriculumWeek", entityId: id });
   revalidatePath("/");
   revalidatePath("/admin/curriculum");
-  redirect("/admin/curriculum");
+  redirect("/curriculum");
 }
 
 export async function deleteWeekAction(id: string): Promise<void> {

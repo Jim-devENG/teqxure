@@ -40,7 +40,7 @@ export async function createBootcampAction(_prev: ActionState, formData: FormDat
   const bootcamp = await db.bootcamp.create({ data: parsed.data });
   await logActivity({ userId: user.id, action: "created", entityType: "Bootcamp", entityId: bootcamp.id });
   revalidatePath("/platform/manage/bootcamps");
-  redirect(`/platform/manage/bootcamps/${bootcamp.id}`);
+  redirect(`/manage/bootcamps/${bootcamp.id}`);
 }
 
 export async function updateBootcampAction(bootcampId: string, _prev: ActionState, formData: FormData): Promise<ActionState> {
@@ -148,7 +148,7 @@ export async function createCohortAction(_prev: ActionState, formData: FormData)
 
   await logActivity({ userId: user.id, action: "created", entityType: "Cohort", entityId: cohort.id });
   revalidatePath("/platform/manage/cohorts");
-  redirect(`/platform/manage/cohorts/${cohort.id}`);
+  redirect(`/manage/cohorts/${cohort.id}`);
 }
 
 export async function updateCohortAction(cohortId: string, _prev: ActionState, formData: FormData): Promise<ActionState> {
@@ -190,7 +190,7 @@ export async function enrollStudentAction(cohortId: string, _prev: ActionState, 
     title: `You've been assigned to ${cohort?.name ?? "a cohort"}`,
     body: "Head to your dashboard to see this week's objectives and sprint.",
     actionLabel: "Go to dashboard",
-    actionUrl: "/platform/dashboard",
+    actionUrl: "/dashboard",
   });
   revalidatePath(`/platform/manage/cohorts/${cohortId}`);
   return {};
@@ -211,7 +211,7 @@ export async function updateEnrollmentAction(
       title: "Your payment has been confirmed",
       body: "You're all set — your cohort access is fully active.",
       actionLabel: "Go to dashboard",
-      actionUrl: "/platform/dashboard",
+      actionUrl: "/dashboard",
     });
   }
 

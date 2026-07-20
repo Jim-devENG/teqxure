@@ -29,7 +29,7 @@ export default async function BootcampDetailPage({ params }: { params: Promise<{
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-sm font-medium text-graphite">Weeks</h2>
           <Link
-            href={`/platform/manage/bootcamps/${bootcamp.id}/weeks/new`}
+            href={`/manage/bootcamps/${bootcamp.id}/weeks/new`}
             className="flex items-center gap-1.5 rounded-lg border border-light-gray px-3 py-1.5 text-xs text-slate transition-colors hover:border-blue hover:text-blue"
           >
             <Plus className="h-3.5 w-3.5" strokeWidth={1.5} />

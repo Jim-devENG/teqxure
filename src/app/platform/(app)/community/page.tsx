@@ -18,7 +18,7 @@ export default async function CommunityIndexPage() {
   }
 
   if (cohorts.length === 1) {
-    redirect(`/platform/community/${cohorts[0].id}/general`);
+    redirect(`/community/${cohorts[0].id}/general`);
   }
 
   return (
@@ -28,7 +28,7 @@ export default async function CommunityIndexPage() {
         {cohorts.map((c) => (
           <Link
             key={c.id}
-            href={`/platform/community/${c.id}/general`}
+            href={`/community/${c.id}/general`}
             className="flex items-center justify-between rounded-2xl border border-light-gray bg-white p-5 shadow-sm transition-colors hover:border-blue"
           >
             <p className="text-sm font-medium text-graphite">{c.name}</p>

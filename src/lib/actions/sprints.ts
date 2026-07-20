@@ -62,7 +62,7 @@ export async function upsertSprintAction(
       title: `New sprint: ${sprint.goal}`,
       body: sprint.description,
       actionLabel: "Open Sprint Room",
-      actionUrl: `/platform/sprint-room/${sprint.id}`,
+      actionUrl: `/sprint-room/${sprint.id}`,
     });
   }
 
@@ -119,7 +119,7 @@ export async function submitSprintAction(sprintId: string, _prev: ActionState, f
         title: `Submission received: ${sprint.goal}`,
         body: `${student.name ?? student.email} submitted their sprint deliverable.`,
         actionLabel: "Review submission",
-        actionUrl: `/platform/sprint-room/${sprintId}`,
+        actionUrl: `/sprint-room/${sprintId}`,
       }),
     ),
   );
@@ -183,7 +183,7 @@ export async function reviewSubmissionAction(
     title: `Feedback on: ${submission.sprint.goal}`,
     body: parsed.data.feedback || "Your mentor left feedback on your submission.",
     actionLabel: "View feedback",
-    actionUrl: `/platform/sprint-room/${submission.sprintId}`,
+    actionUrl: `/sprint-room/${submission.sprintId}`,
   });
 
   revalidatePath(`/platform/sprint-room/${submission.sprintId}`);

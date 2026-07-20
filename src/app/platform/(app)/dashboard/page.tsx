@@ -66,15 +66,15 @@ async function StudentDashboard({ userId, name }: { userId: string; name: string
       <PageHeader title={`Welcome, ${name}`} description={cohort.name} />
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <StatCard label="Current week" value={currentWeek ? `Week ${currentWeek.weekNumber}` : "—"} href={`/platform/bootcamp/${cohort.id}`} />
-        <StatCard label="Sprint status" value={activeSubmission?.status.replace("_", " ") ?? "Not started"} href="/platform/sprint-room" />
+        <StatCard label="Current week" value={currentWeek ? `Week ${currentWeek.weekNumber}` : "—"} href={`/bootcamp/${cohort.id}`} />
+        <StatCard label="Sprint status" value={activeSubmission?.status.replace("_", " ") ?? "Not started"} href="/sprint-room" />
         <StatCard label="Unread notifications" value={unreadCount} />
         <StatCard label="Next live session" value={upcomingSession ? timeUntil(upcomingSession.startsAt) : "None scheduled"} />
       </div>
 
       {activeSubmission && (
         <Link
-          href={`/platform/sprint-room/${activeSubmission.sprintId}`}
+          href={`/sprint-room/${activeSubmission.sprintId}`}
           className="mt-8 block rounded-2xl border border-light-gray bg-white p-6 shadow-sm transition-colors hover:border-blue"
         >
           <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-blue">What to build today</p>
@@ -123,7 +123,7 @@ async function StaffDashboard({ userId }: { userId: string }) {
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
         <StatCard label="Cohorts" value={cohortIds.length} />
-        <StatCard label="Submissions to review" value={pendingSubmissions.length} href="/platform/sprint-room" />
+        <StatCard label="Submissions to review" value={pendingSubmissions.length} href="/sprint-room" />
         <StatCard label="Upcoming sessions" value={upcomingSessions.length} />
       </div>
 
@@ -133,7 +133,7 @@ async function StaffDashboard({ userId }: { userId: string }) {
           {pendingSubmissions.length === 0 && <p className="text-sm text-slate">Nothing waiting on review.</p>}
           {pendingSubmissions.map((s) => (
             <li key={s.id}>
-              <Link href={`/platform/sprint-room/${s.sprintId}`} className="flex items-center justify-between text-sm">
+              <Link href={`/sprint-room/${s.sprintId}`} className="flex items-center justify-between text-sm">
                 <span className="text-graphite">
                   {s.student.name ?? s.student.email} — {s.sprint.goal}
                 </span>
@@ -170,10 +170,10 @@ async function AdminDashboard() {
   ]);
 
   const quickLinks = [
-    { label: "Invite a user", href: "/platform/manage/users" },
-    { label: "New bootcamp", href: "/platform/manage/bootcamps/new" },
-    { label: "New cohort", href: "/platform/manage/cohorts/new" },
-    { label: "Verify payments", href: "/platform/manage/payments" },
+    { label: "Invite a user", href: "/manage/users" },
+    { label: "New bootcamp", href: "/manage/bootcamps/new" },
+    { label: "New cohort", href: "/manage/cohorts/new" },
+    { label: "Verify payments", href: "/manage/payments" },
   ];
 
   return (
@@ -181,10 +181,10 @@ async function AdminDashboard() {
       <PageHeader title="Dashboard" description="Program overview." />
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <StatCard label="Students" value={studentCount} href="/platform/manage/users" />
-        <StatCard label="Active cohorts" value={cohortCount} href="/platform/manage/cohorts" />
-        <StatCard label="Pending payments" value={pendingPayments} href="/platform/manage/payments" />
-        <StatCard label="Pending invites" value={pendingInvites} href="/platform/manage/users" />
+        <StatCard label="Students" value={studentCount} href="/manage/users" />
+        <StatCard label="Active cohorts" value={cohortCount} href="/manage/cohorts" />
+        <StatCard label="Pending payments" value={pendingPayments} href="/manage/payments" />
+        <StatCard label="Pending invites" value={pendingInvites} href="/manage/users" />
       </div>
 
       <div className="mt-8 rounded-xl border border-light-gray bg-white p-6">

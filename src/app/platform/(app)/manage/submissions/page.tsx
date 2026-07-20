@@ -19,7 +19,7 @@ export default async function ManageSubmissionsPage() {
           {submissions.map((s) => (
             <Link
               key={s.id}
-              href={`/platform/sprint-room/${s.sprintId}`}
+              href={`/sprint-room/${s.sprintId}`}
               className="flex items-center justify-between rounded-2xl border border-light-gray bg-white p-5 shadow-sm transition-colors hover:border-blue"
             >
               <div>

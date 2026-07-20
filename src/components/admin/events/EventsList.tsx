@@ -54,7 +54,7 @@ export function EventsList({ events }: { events: EventRow[] }) {
           <div className="flex items-center gap-2">
             {row.registrationMode === "INTERNAL" && (
               <Link
-                href={`/admin/events/${row.id}/form`}
+                href={`/events/${row.id}/form`}
                 className="flex items-center gap-1.5 rounded-lg border border-light-gray px-2.5 py-1.5 text-xs text-graphite transition-colors hover:border-blue hover:text-blue"
               >
                 <ClipboardList className="h-3.5 w-3.5" strokeWidth={1.5} />
@@ -62,14 +62,14 @@ export function EventsList({ events }: { events: EventRow[] }) {
               </Link>
             )}
             <Link
-              href={`/admin/events/${row.id}/registrations`}
+              href={`/events/${row.id}/registrations`}
               className="flex items-center gap-1.5 rounded-lg border border-light-gray px-2.5 py-1.5 text-xs text-graphite transition-colors hover:border-blue hover:text-blue"
             >
               <Inbox className="h-3.5 w-3.5" strokeWidth={1.5} />
               Registrations
             </Link>
             <Link
-              href={`/admin/events/${row.id}`}
+              href={`/events/${row.id}`}
               className="rounded-lg border border-light-gray p-1.5 text-slate transition-colors hover:text-blue"
               aria-label="Edit"
             >

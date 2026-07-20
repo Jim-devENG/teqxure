@@ -28,7 +28,7 @@ export async function createFaqAction(_prev: FaqFormState, formData: FormData): 
   await logActivity({ userId: user.id, action: "created", entityType: "FaqItem", entityId: item.id });
   revalidatePath("/");
   revalidatePath("/admin/faq");
-  redirect("/admin/faq");
+  redirect("/faq");
 }
 
 export async function updateFaqAction(
@@ -45,7 +45,7 @@ export async function updateFaqAction(
   await logActivity({ userId: user.id, action: "updated", entityType: "FaqItem", entityId: id });
   revalidatePath("/");
   revalidatePath("/admin/faq");
-  redirect("/admin/faq");
+  redirect("/faq");
 }
 
 export async function deleteFaqAction(id: string): Promise<void> {

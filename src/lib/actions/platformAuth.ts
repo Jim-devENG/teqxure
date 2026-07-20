@@ -30,12 +30,12 @@ export async function platformLoginAction(_prevState: LoginState, formData: Form
   }
 
   await createSession(result.user.id);
-  redirect("/platform/dashboard");
+  redirect("/dashboard");
 }
 
 export async function platformLogoutAction(): Promise<void> {
   await destroySession();
-  redirect("/platform/login");
+  redirect("/login");
 }
 
 const acceptInviteSchema = z.object({
@@ -73,5 +73,5 @@ export async function acceptInviteAction(
   ]);
 
   await createSession(invite.userId);
-  redirect("/platform/dashboard");
+  redirect("/dashboard");
 }

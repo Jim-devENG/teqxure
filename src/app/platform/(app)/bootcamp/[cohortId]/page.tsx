@@ -48,7 +48,7 @@ export default async function CohortBootcampPage({ params }: { params: Promise<{
           return (
             <Link
               key={week.id}
-              href={`/platform/bootcamp/${cohortId}/${week.id}`}
+              href={`/bootcamp/${cohortId}/${week.id}`}
               className="flex items-center justify-between rounded-2xl border border-light-gray bg-white p-5 shadow-sm transition-colors hover:border-blue"
             >
               <div>

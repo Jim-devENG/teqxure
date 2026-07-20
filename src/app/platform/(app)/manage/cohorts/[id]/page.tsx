@@ -46,7 +46,7 @@ export default async function CohortDetailPage({ params }: { params: Promise<{ i
             return (
               <Link
                 key={week.id}
-                href={`/platform/manage/cohorts/${cohort.id}/sprints/${week.id}`}
+                href={`/manage/cohorts/${cohort.id}/sprints/${week.id}`}
                 className="flex items-center justify-between rounded-xl border border-light-gray bg-white px-4 py-3 transition-colors hover:border-blue"
               >
                 <p className="text-sm text-graphite">
@@ -59,7 +59,7 @@ export default async function CohortDetailPage({ params }: { params: Promise<{ i
           {cohort.bootcamp.weeks.length === 0 && (
             <p className="text-sm text-slate">
               This bootcamp has no weeks yet.{" "}
-              <Link href={`/platform/manage/bootcamps/${cohort.bootcampId}`} className="text-blue hover:underline">
+              <Link href={`/manage/bootcamps/${cohort.bootcampId}`} className="text-blue hover:underline">
                 Add weeks
               </Link>
               .
@@ -72,7 +72,7 @@ export default async function CohortDetailPage({ params }: { params: Promise<{ i
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-sm font-medium text-graphite">Live sessions</h2>
           <Link
-            href={`/platform/manage/cohorts/${cohort.id}/sessions/new`}
+            href={`/manage/cohorts/${cohort.id}/sessions/new`}
             className="rounded-lg border border-light-gray px-3 py-1.5 text-xs text-slate transition-colors hover:border-blue hover:text-blue"
           >
             Schedule session
@@ -85,7 +85,7 @@ export default async function CohortDetailPage({ params }: { params: Promise<{ i
             {cohort.liveSessions.map((session) => (
               <Link
                 key={session.id}
-                href={`/platform/manage/cohorts/${cohort.id}/sessions/${session.id}`}
+                href={`/manage/cohorts/${cohort.id}/sessions/${session.id}`}
                 className="flex items-center justify-between rounded-xl border border-light-gray bg-white px-4 py-3 transition-colors hover:border-blue"
               >
                 <p className="text-sm text-graphite">{session.title}</p>

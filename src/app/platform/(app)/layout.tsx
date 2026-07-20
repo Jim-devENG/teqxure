@@ -9,7 +9,7 @@ export default async function PlatformAppLayout({
 }>) {
   const user = await getCurrentUser();
   if (!user) {
-    redirect("/platform/login");
+    redirect("/login");
   }
 
   return (

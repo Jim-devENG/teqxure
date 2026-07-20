@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
         title: `Starting in 10 minutes: ${session.title}`,
         body: `Your live session starts at ${session.startsAt.toLocaleString()}.`,
         actionLabel: "Join session",
-        actionUrl: `/platform/bootcamp/${session.cohortId}/${session.weekId}`,
+        actionUrl: `/bootcamp/${session.cohortId}/${session.weekId}`,
       });
       await db.liveSession.update({ where: { id: session.id }, data: { reminder10mSent: true } });
       results.sessionReminders++;
@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
         title: `Live session in 1 hour: ${session.title}`,
         body: `Your live session starts at ${session.startsAt.toLocaleString()}.`,
         actionLabel: "View details",
-        actionUrl: `/platform/bootcamp/${session.cohortId}/${session.weekId}`,
+        actionUrl: `/bootcamp/${session.cohortId}/${session.weekId}`,
       });
       await db.liveSession.update({ where: { id: session.id }, data: { reminder1hSent: true } });
       results.sessionReminders++;
@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
         title: `Live session tomorrow: ${session.title}`,
         body: `Your live session starts at ${session.startsAt.toLocaleString()}.`,
         actionLabel: "View details",
-        actionUrl: `/platform/bootcamp/${session.cohortId}/${session.weekId}`,
+        actionUrl: `/bootcamp/${session.cohortId}/${session.weekId}`,
       });
       await db.liveSession.update({ where: { id: session.id }, data: { reminder24hSent: true } });
       results.sessionReminders++;
@@ -68,7 +68,7 @@ export async function GET(request: NextRequest) {
       title: `Live now: ${session.title}`,
       body: "Your live session has started.",
       actionLabel: "Join now",
-      actionUrl: `/platform/bootcamp/${session.cohortId}/${session.weekId}`,
+      actionUrl: `/bootcamp/${session.cohortId}/${session.weekId}`,
     });
     await db.liveSession.update({ where: { id: session.id }, data: { startedNotifSent: true } });
     results.sessionStarted++;
@@ -96,7 +96,7 @@ export async function GET(request: NextRequest) {
           title: `Sprint deadline approaching: ${sprint.goal}`,
           body: `This sprint is due ${sprint.dueAt!.toLocaleString()}.`,
           actionLabel: "Open Sprint Room",
-          actionUrl: `/platform/sprint-room/${sprint.id}`,
+          actionUrl: `/sprint-room/${sprint.id}`,
         }),
       ),
     );

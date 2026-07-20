@@ -67,7 +67,7 @@ export function TestimonialsList({ testimonials }: { testimonials: TestimonialRo
               <Pin className="h-3.5 w-3.5" strokeWidth={1.5} fill={row.pinned ? "currentColor" : "none"} />
             </button>
             <Link
-              href={`/admin/testimonials/${row.id}`}
+              href={`/testimonials/${row.id}`}
               className="rounded-lg border border-light-gray p-1.5 text-slate transition-colors hover:text-blue"
               aria-label="Edit"
             >

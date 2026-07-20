@@ -67,7 +67,7 @@ export async function createEventAction(_prev: EventFormState, formData: FormDat
   revalidatePath("/");
   revalidatePath("/events");
   revalidatePath("/admin/events");
-  redirect("/admin/events");
+  redirect("/events");
 }
 
 export async function updateEventAction(
@@ -88,7 +88,7 @@ export async function updateEventAction(
   revalidatePath("/events");
   revalidatePath(`/events/${parsed.data.slug}`);
   revalidatePath("/admin/events");
-  redirect("/admin/events");
+  redirect("/events");
 }
 
 export async function deleteEventAction(id: string): Promise<void> {

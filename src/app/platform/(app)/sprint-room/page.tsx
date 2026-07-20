@@ -43,7 +43,7 @@ export default async function SprintRoomIndexPage() {
             return (
               <Link
                 key={sprint.id}
-                href={`/platform/sprint-room/${sprint.id}`}
+                href={`/sprint-room/${sprint.id}`}
                 className="flex items-center justify-between rounded-2xl border border-light-gray bg-white p-5 shadow-sm transition-colors hover:border-blue"
               >
                 <div>
