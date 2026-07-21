@@ -50,7 +50,7 @@ function parseEventForm(formData: FormData) {
     coverImageUrl: formData.get("coverImageUrl"),
     status: formData.get("status"),
     registrationMode: formData.get("registrationMode"),
-    externalUrl: formData.get("externalUrl"),
+    externalUrl: formData.get("externalUrl") || undefined,
     capacity: capacityRaw ? capacityRaw : undefined,
     visible: formData.get("visible") === "on",
   });
