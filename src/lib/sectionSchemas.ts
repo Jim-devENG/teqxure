@@ -9,13 +9,19 @@ export type FieldType =
   | "list-string"
   | "list-object"
   | "image"
-  | "richtext";
+  | "richtext"
+  | "image-list"
+  | "reference-list";
+
+/** For "reference-list" fields: which model's rows populate the picker. */
+export type RefModel = "Speaker" | "Sponsor" | "Testimonial" | "Event";
 
 export interface FieldMeta {
   key: string;
   label: string;
   type: FieldType;
   subFields?: FieldMeta[];
+  refModel?: RefModel;
 }
 
 export interface SectionDefinition {
@@ -25,7 +31,7 @@ export interface SectionDefinition {
   fields: FieldMeta[];
 }
 
-const statSchema = z.object({
+export const statSchema = z.object({
   value: z.coerce.number(),
   suffix: z.string(),
   label: z.string(),

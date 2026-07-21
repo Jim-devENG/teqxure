@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
 import { logActivity } from "@/lib/activity";
 import { sendTemplatedEmail, formatFieldsAsHtml } from "@/lib/email";
+import { generateEventIcs } from "@/lib/calendarInvite";
 
 export interface SubmitEventRegistrationState {
   success?: boolean;
@@ -24,6 +25,13 @@ export async function submitEventRegistrationAction(
   const event = await db.event.findUnique({ where: { id: eventId } });
   if (!event || event.deletedAt || !event.visible || event.status !== "PUBLISHED") {
     return { error: "This event is not accepting registrations." };
+  }
+
+  if (event.capacity) {
+    const registrationCount = await db.eventRegistration.count({ where: { eventId } });
+    if (registrationCount >= event.capacity) {
+      return { error: "This event is full." };
+    }
   }
 
   const fields = await db.eventFormField.findMany({ where: { eventId, deletedAt: null, visible: true } });
@@ -54,18 +62,23 @@ export async function submitEventRegistrationAction(
     }
   }
 
-  await db.eventRegistration.create({ data: { eventId, data } });
+  await db.eventRegistration.create({ data: { eventId, data, registrantEmail: registrantEmail || null } });
 
   const fieldsHtml = formatFieldsAsHtml({ Event: event.title, ...data });
   const settings = await db.siteSettings.findFirst();
   const notificationEmail = settings?.notificationEmail || process.env.ADMIN_EMAIL || "";
 
+  const ics = generateEventIcs(event);
+  const icsAttachment = ics ? [{ filename: `${event.slug}.ics`, content: ics }] : undefined;
+
   await Promise.all([
     registrantEmail
-      ? sendTemplatedEmail("EVENT_REGISTRATION_CONFIRMATION", registrantEmail, {
-          fields: fieldsHtml,
-          eventTitle: event.title,
-        })
+      ? sendTemplatedEmail(
+          "EVENT_REGISTRATION_CONFIRMATION",
+          registrantEmail,
+          { fields: fieldsHtml, eventTitle: event.title },
+          icsAttachment,
+        )
       : Promise.resolve(),
     notificationEmail
       ? sendTemplatedEmail("EVENT_REGISTRATION_ADMIN_NOTIFICATION", notificationEmail, {

@@ -86,3 +86,24 @@ export async function getTeamMembers() {
     orderBy: { order: "asc" },
   });
 }
+
+export async function getSpeakers() {
+  return db.speaker.findMany({
+    where: { deletedAt: null, visible: true },
+    orderBy: { order: "asc" },
+  });
+}
+
+export async function getCategories() {
+  return db.category.findMany({
+    where: { deletedAt: null, visible: true },
+    orderBy: { order: "asc" },
+  });
+}
+
+export async function getSponsors() {
+  return db.sponsor.findMany({
+    where: { deletedAt: null, visible: true },
+    orderBy: { order: "asc" },
+  });
+}

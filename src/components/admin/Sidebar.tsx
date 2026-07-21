@@ -21,6 +21,10 @@ import {
   Gem,
   Sparkles,
   Users,
+  Mic,
+  Tag,
+  Handshake,
+  Blocks,
 } from "lucide-react";
 import { logoutAction } from "@/lib/actions/auth";
 import { cn } from "@/lib/utils";
@@ -35,6 +39,10 @@ const NAV_ITEMS = [
   { href: "/products", label: "Products", icon: Package },
   { href: "/curriculum", label: "Curriculum", icon: BookOpen },
   { href: "/events", label: "Events", icon: CalendarDays },
+  { href: "/speakers", label: "Speakers", icon: Mic },
+  { href: "/categories", label: "Event Categories", icon: Tag },
+  { href: "/sponsors", label: "Sponsors", icon: Handshake },
+  { href: "/block-templates", label: "Block Templates", icon: Blocks },
   { href: "/faq", label: "FAQ", icon: HelpCircle },
   { href: "/testimonials", label: "Testimonials", icon: MessageSquareQuote },
   { href: "/waitlist-form", label: "Waitlist Form", icon: ClipboardList },

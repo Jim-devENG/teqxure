@@ -283,6 +283,9 @@ model Event {
   status           String               @default("DRAFT") // DRAFT | PUBLISHED
   registrationMode String               @default("INTERNAL") // INTERNAL | EXTERNAL
   externalUrl      String?
+  capacity         Int?
+  reminder24hSent  Boolean              @default(false)
+  reminder1hSent   Boolean              @default(false)
   order            Int                  @default(0)
   visible          Boolean              @default(true)
   deletedAt        DateTime?
@@ -290,6 +293,8 @@ model Event {
   updatedAt        DateTime             @updatedAt
   fields           EventFormField[]
   registrations    EventRegistration[]
+  blocks           EventBlock[]
+  categories       Category[]
 }
 
 model EventFormField {
@@ -309,12 +314,78 @@ model EventFormField {
 }
 
 model EventRegistration {
+  id             String   @id @default(cuid())
+  eventId        String
+  event          Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  data           Json
+  registrantEmail String?
+  status         String   @default("NEW") // NEW | REVIEWED
+  createdAt      DateTime @default(now())
+}
+
+// ---------- Events: reusable entities (Speaker/Sponsor referenced through blocks;
+// Category referenced directly on Event for homepage browsing/filtering) ----------
+
+model Speaker {
+  id          String    @id @default(cuid())
+  name        String
+  title       String
+  company     String?
+  bio         String?
+  photoUrl    String?
+  socialLinks Json? // [{ platform: string, href: string }]
+  order       Int       @default(0)
+  visible     Boolean   @default(true)
+  deletedAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Category {
+  id        String    @id @default(cuid())
+  name      String
+  slug      String    @unique
+  order     Int       @default(0)
+  visible   Boolean   @default(true)
+  deletedAt DateTime?
+  createdAt DateTime  @default(now())
+  events    Event[]
+}
+
+model Sponsor {
+  id        String    @id @default(cuid())
+  name      String
+  logoUrl   String?
+  url       String?
+  order     Int       @default(0)
+  visible   Boolean   @default(true)
+  deletedAt DateTime?
+  createdAt DateTime  @default(now())
+}
+
+// ---------- Events: block-based page builder ----------
+
+model EventBlock {
   id        String   @id @default(cuid())
   eventId   String
   event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  data      Json
-  status    String   @default("NEW") // NEW | REVIEWED
+  type      String   // HERO | RICH_TEXT | IMAGE | VIDEO | AGENDA | TIMELINE | LEARNING_OUTCOMES |
+                      // WHO_SHOULD_ATTEND | CTA | FAQ | SPEAKERS | SPONSORS | TESTIMONIALS |
+                      // STATISTICS | GALLERY | DIVIDER | NEWSLETTER | RELATED_EVENTS
+  content   Json
+  order     Int      @default(0)
+  visible   Boolean  @default(true)
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model BlockTemplate {
+  id        String   @id @default(cuid())
+  name      String
+  type      String
+  content   Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // ---------- Media library (Phase 1: tracked uploads, not the full library UI) ----------

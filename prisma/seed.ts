@@ -809,6 +809,22 @@ async function seedEmailTemplates() {
       `.trim(),
     },
     {
+      key: "EVENT_REMINDER_24H",
+      name: "Event reminder — 24 hours before (sent to registrants)",
+      subject: "Tomorrow: {{eventTitle}}",
+      body: platformEmail("Reminder", "{{eventTitle}} is tomorrow", [
+        "Your event starts at {{eventDate}}. We've attached a calendar invite when you registered — see you there.",
+      ]),
+    },
+    {
+      key: "EVENT_REMINDER_1H",
+      name: "Event reminder — 1 hour before (sent to registrants)",
+      subject: "Starting in 1 hour: {{eventTitle}}",
+      body: platformEmail("Reminder", "{{eventTitle}} starts in 1 hour", [
+        "Your event starts at {{eventDate}}. See you there.",
+      ]),
+    },
+    {
       key: "ACCOUNT_INVITE",
       name: "Workspace invite (sent when a user is provisioned)",
       subject: "You've been invited to the Teqxure workspace",

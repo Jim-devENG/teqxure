@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import { Blocks } from "lucide-react";
 import { useActionState, useState } from "react";
 import { createEventAction, updateEventAction, type EventFormState } from "@/lib/actions/events";
 import { TextField, TextAreaField, CheckboxField } from "@/components/admin/Field";
@@ -28,13 +30,16 @@ interface EventFormProps {
     status: string;
     registrationMode: string;
     externalUrl: string | null;
+    capacity: number | null;
     visible: boolean;
+    categoryIds?: string[];
   };
+  categories: { id: string; name: string }[];
 }
 
 const initialState: EventFormState = {};
 
-export function EventForm({ event }: EventFormProps) {
+export function EventForm({ event, categories }: EventFormProps) {
   const action = event ? updateEventAction.bind(null, event.id) : createEventAction;
   const [state, formAction] = useActionState(action, initialState);
   const [registrationMode, setRegistrationMode] = useState(event?.registrationMode ?? "INTERNAL");
@@ -89,6 +94,35 @@ export function EventForm({ event }: EventFormProps) {
 
       <CheckboxField label="This is a virtual / online event" name="isVirtual" defaultChecked={event?.isVirtual ?? false} />
 
+      <TextField
+        label="Capacity (optional)"
+        name="capacity"
+        type="number"
+        min={1}
+        defaultValue={event?.capacity ?? ""}
+        hint="Leave blank for unlimited. Once full, the Register button shows the event is sold out."
+      />
+
+      {categories.length > 0 && (
+        <div>
+          <span className="font-mono text-[11px] uppercase tracking-[0.15em] text-slate">Categories</span>
+          <div className="mt-2 flex flex-wrap gap-3">
+            {categories.map((c) => (
+              <label key={c.id} className="flex items-center gap-2 text-sm text-graphite">
+                <input
+                  type="checkbox"
+                  name="categoryIds"
+                  value={c.id}
+                  defaultChecked={event?.categoryIds?.includes(c.id) ?? false}
+                  className="h-4 w-4 rounded border-light-gray text-blue"
+                />
+                {c.name}
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
+
       <label className="block">
         <span className="font-mono text-[11px] uppercase tracking-[0.15em] text-slate">Registration</span>
         <select
@@ -119,6 +153,16 @@ export function EventForm({ event }: EventFormProps) {
         <SubmitButton>{event ? "Save changes" : "Create event"}</SubmitButton>
         {state.error && <span className="text-sm text-red-500">{state.error}</span>}
       </div>
+
+      {event && (
+        <Link
+          href={`/events/${event.id}/blocks`}
+          className="flex w-fit items-center gap-1.5 text-sm text-blue hover:underline"
+        >
+          <Blocks className="h-4 w-4" strokeWidth={1.5} />
+          Manage this event's content blocks
+        </Link>
+      )}
     </form>
   );
 }

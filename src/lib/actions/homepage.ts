@@ -5,45 +5,11 @@ import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
 import { logActivity } from "@/lib/activity";
 import { sectionRegistry, type SectionKey, type FieldMeta } from "@/lib/sectionSchemas";
+import { formDataToContent } from "@/lib/formDataToContent";
 
 export interface SectionFormState {
   success?: boolean;
   error?: string;
-}
-
-function formDataToSectionContent(key: SectionKey, formData: FormData): unknown {
-  const definition = sectionRegistry[key];
-  const fields = definition.fields as unknown as FieldMeta[];
-  const result: Record<string, unknown> = {};
-
-  for (const field of fields) {
-    if (field.type === "list-string") {
-      result[field.key] = formData
-        .getAll(field.key)
-        .map((v) => String(v).trim())
-        .filter(Boolean);
-    } else if (field.type === "list-object" && field.subFields) {
-      const groupCount = Number(formData.get(`${field.key}__count`) ?? 0);
-      const list = [];
-      for (let i = 0; i < groupCount; i++) {
-        const item: Record<string, unknown> = {};
-        for (const sub of field.subFields) {
-          const raw = formData.get(`${field.key}.${i}.${sub.key}`);
-          item[sub.key] = sub.type === "number" ? Number(raw ?? 0) : String(raw ?? "");
-        }
-        list.push(item);
-      }
-      result[field.key] = list;
-    } else if (field.type === "number") {
-      result[field.key] = Number(formData.get(field.key) ?? 0);
-    } else if (field.type === "boolean") {
-      result[field.key] = formData.get(field.key) === "on";
-    } else {
-      result[field.key] = String(formData.get(field.key) ?? "");
-    }
-  }
-
-  return result;
 }
 
 export async function updateSectionAction(
@@ -55,7 +21,7 @@ export async function updateSectionAction(
   const definition = sectionRegistry[key];
   if (!definition) return { error: "Unknown section." };
 
-  const content = formDataToSectionContent(key, formData);
+  const content = formDataToContent(definition.fields as unknown as FieldMeta[], formData);
   const parsed = definition.schema.safeParse(content);
   if (!parsed.success) {
     return { error: "Please check the form for errors." };

@@ -4,7 +4,18 @@ import { db } from "@/lib/db";
 const RESEND_API_URL = "https://api.resend.com/emails";
 const FROM_ADDRESS = "Teqxure <notifications@teqxure.xyz>";
 
-export async function sendEmail(to: string, subject: string, html: string): Promise<void> {
+export interface EmailAttachment {
+  filename: string;
+  /** Base64-encoded file content (Resend's expected format). */
+  content: string;
+}
+
+export async function sendEmail(
+  to: string,
+  subject: string,
+  html: string,
+  attachments?: EmailAttachment[],
+): Promise<void> {
   const apiKey = process.env.RESEND_API;
   if (!apiKey || !to) return;
 
@@ -20,6 +31,7 @@ export async function sendEmail(to: string, subject: string, html: string): Prom
         to,
         subject,
         html,
+        ...(attachments && attachments.length > 0 ? { attachments } : {}),
       }),
     });
   } catch {
@@ -38,6 +50,7 @@ export async function sendTemplatedEmail(
   templateKey: string,
   to: string,
   variables: Record<string, string>,
+  attachments?: EmailAttachment[],
 ): Promise<void> {
   if (!to) return;
 
@@ -47,7 +60,7 @@ export async function sendTemplatedEmail(
   const subject = renderTemplate(template.subject, variables);
   const html = renderTemplate(template.body, variables);
 
-  await sendEmail(to, subject, html);
+  await sendEmail(to, subject, html, attachments);
 }
 
 function escapeHtml(value: string): string {

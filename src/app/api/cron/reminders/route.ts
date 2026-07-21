@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { notifyCohortStudents, notifyUser } from "@/lib/notifications";
+import { sendTemplatedEmail } from "@/lib/email";
 
 function isAuthorized(request: NextRequest): boolean {
   const secret = process.env.CRON_SECRET;
@@ -14,7 +15,7 @@ export async function GET(request: NextRequest) {
   }
 
   const now = new Date();
-  const results = { sessionReminders: 0, sessionStarted: 0, sprintDeadlines: 0 };
+  const results = { sessionReminders: 0, sessionStarted: 0, sprintDeadlines: 0, eventReminders: 0 };
 
   const upcomingSessions = await db.liveSession.findMany({
     where: {
@@ -102,6 +103,46 @@ export async function GET(request: NextRequest) {
     );
     await db.sprint.update({ where: { id: sprint.id }, data: { deadlineReminderSent: true } });
     results.sprintDeadlines++;
+  }
+
+  const upcomingEvents = await db.event.findMany({
+    where: {
+      deletedAt: null,
+      status: "PUBLISHED",
+      startsAt: { gt: now },
+      OR: [{ reminder24hSent: false }, { reminder1hSent: false }],
+    },
+  });
+
+  for (const event of upcomingEvents) {
+    const msUntil = event.startsAt.getTime() - now.getTime();
+    const templateKey = !event.reminder1hSent && msUntil <= 60 * 60 * 1000
+      ? "EVENT_REMINDER_1H"
+      : !event.reminder24hSent && msUntil <= 24 * 60 * 60 * 1000
+        ? "EVENT_REMINDER_24H"
+        : null;
+    if (!templateKey) continue;
+
+    const registrations = await db.eventRegistration.findMany({
+      where: { eventId: event.id, registrantEmail: { not: null } },
+      select: { registrantEmail: true },
+      distinct: ["registrantEmail"],
+    });
+
+    await Promise.all(
+      registrations.map((r) =>
+        sendTemplatedEmail(templateKey, r.registrantEmail!, {
+          eventTitle: event.title,
+          eventDate: event.startsAt.toLocaleString(),
+        }),
+      ),
+    );
+
+    await db.event.update({
+      where: { id: event.id },
+      data: templateKey === "EVENT_REMINDER_1H" ? { reminder1hSent: true } : { reminder24hSent: true },
+    });
+    results.eventReminders++;
   }
 
   return NextResponse.json({ ok: true, ...results });

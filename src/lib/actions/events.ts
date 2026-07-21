@@ -19,6 +19,7 @@ const eventSchema = z.object({
   status: z.enum(["DRAFT", "PUBLISHED"]),
   registrationMode: z.enum(["INTERNAL", "EXTERNAL"]),
   externalUrl: z.string().optional(),
+  capacity: z.coerce.number().int().positive().optional(),
   visible: z.coerce.boolean().optional(),
 });
 
@@ -27,7 +28,17 @@ export interface EventFormState {
   error?: string;
 }
 
+const DEFAULT_REGISTRATION_FIELDS = [
+  { label: "Full Name", fieldType: "TEXT", required: true },
+  { label: "Email Address", fieldType: "EMAIL", required: true },
+  { label: "Phone Number", fieldType: "PHONE", required: false },
+  { label: "Country", fieldType: "TEXT", required: false },
+  { label: "Profession", fieldType: "TEXT", required: false },
+  { label: "How did you hear about Teqxure?", fieldType: "TEXT", required: false },
+];
+
 function parseEventForm(formData: FormData) {
+  const capacityRaw = formData.get("capacity");
   return eventSchema.safeParse({
     slug: formData.get("slug"),
     title: formData.get("title"),
@@ -40,6 +51,7 @@ function parseEventForm(formData: FormData) {
     status: formData.get("status"),
     registrationMode: formData.get("registrationMode"),
     externalUrl: formData.get("externalUrl"),
+    capacity: capacityRaw ? capacityRaw : undefined,
     visible: formData.get("visible") === "on",
   });
 }
@@ -53,6 +65,10 @@ function toEventData(parsed: z.infer<typeof eventSchema>) {
   };
 }
 
+function getCategoryIds(formData: FormData): string[] {
+  return formData.getAll("categoryIds").map(String).filter(Boolean);
+}
+
 export async function createEventAction(_prev: EventFormState, formData: FormData): Promise<EventFormState> {
   const user = await requireAdmin();
   const parsed = parseEventForm(formData);
@@ -61,7 +77,19 @@ export async function createEventAction(_prev: EventFormState, formData: FormDat
   }
 
   const count = await db.event.count();
-  const event = await db.event.create({ data: { ...toEventData(parsed.data), order: count } });
+  const categoryIds = getCategoryIds(formData);
+
+  const event = await db.event.create({
+    data: {
+      ...toEventData(parsed.data),
+      order: count,
+      categories: { connect: categoryIds.map((id) => ({ id })) },
+    },
+  });
+
+  await db.eventFormField.createMany({
+    data: DEFAULT_REGISTRATION_FIELDS.map((field, i) => ({ ...field, eventId: event.id, order: i })),
+  });
 
   await logActivity({ userId: user.id, action: "created", entityType: "Event", entityId: event.id });
   revalidatePath("/");
@@ -81,7 +109,15 @@ export async function updateEventAction(
     return { error: parsed.error.issues[0]?.message ?? "Please check the form for errors." };
   }
 
-  await db.event.update({ where: { id }, data: toEventData(parsed.data) });
+  const categoryIds = getCategoryIds(formData);
+
+  await db.event.update({
+    where: { id },
+    data: {
+      ...toEventData(parsed.data),
+      categories: { set: categoryIds.map((cid) => ({ id: cid })) },
+    },
+  });
 
   await logActivity({ userId: user.id, action: "updated", entityType: "Event", entityId: id });
   revalidatePath("/");
