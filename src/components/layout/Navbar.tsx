@@ -13,7 +13,7 @@ const NAV_LINKS = [
   { label: "Framework", href: "/#framework" },
   { label: "Curriculum", href: "/#curriculum" },
   { label: "Products", href: "/#products" },
-  { label: "Events", href: "/events" },
+  { label: "Events", href: "https://events.teqxure.xyz" },
   { label: "FAQ", href: "/#faq" },
 ];
 

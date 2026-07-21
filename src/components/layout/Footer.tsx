@@ -10,7 +10,7 @@ const FOOTER_LINKS = [
   { label: "Products", href: "/#products" },
   { label: "Outcomes", href: "/#outcomes" },
   { label: "FAQ", href: "/#faq" },
-  { label: "Events", href: "/events" },
+  { label: "Events", href: "https://events.teqxure.xyz" },
 ];
 
 const DEFAULT_SOCIALS = [

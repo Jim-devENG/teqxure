@@ -34,7 +34,7 @@ export default async function EventsPage() {
             {events.map((event, i) => (
               <Reveal key={event.id} delay={i * 0.05}>
                 <Link
-                  href={`/events/${event.slug}`}
+                  href={`/${event.slug}`}
                   className="group flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-charcoal-soft transition-colors hover:border-blue/40"
                 >
                   {event.coverImageUrl && (

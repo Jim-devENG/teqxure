@@ -13,6 +13,12 @@ const SESSION_COOKIE = "teqxure_session";
 // /platform paths on another host over to the correct subdomain.
 const ADMIN_HOST = "admin.teqxure.xyz";
 const APP_HOST = "app.teqxure.xyz";
+// events.teqxure.xyz is public (no auth guard) and maps onto the real
+// /events route tree, exactly like the pattern above — except its legacy
+// path (the old /events on the main site) must NOT be redirected away from
+// admin.teqxure.xyz, since /events there is a completely different feature
+// (the CMS's event management pages), not the public events site.
+const EVENTS_HOST = "events.teqxure.xyz";
 
 const PUBLIC_ADMIN_PATHS = ["/login"];
 const PUBLIC_APP_PATHS = ["/login", "/set-password"];
@@ -40,6 +46,12 @@ export function proxy(request: NextRequest) {
     const url = new URL((pathname.slice("/platform".length) || "/") + search, `https://${APP_HOST}`);
     return NextResponse.redirect(url);
   }
+  // Deliberately excludes ADMIN_HOST/APP_HOST — /events under those hosts is
+  // an unrelated feature (event management, not the public events site).
+  if (host !== EVENTS_HOST && host !== ADMIN_HOST && host !== APP_HOST && pathname.startsWith("/events")) {
+    const url = new URL((pathname.slice("/events".length) || "/") + search, `https://${EVENTS_HOST}`);
+    return NextResponse.redirect(url);
+  }
 
   if (host === ADMIN_HOST) {
     const hasSession = request.cookies.has(SESSION_COOKIE);
@@ -59,6 +71,10 @@ export function proxy(request: NextRequest) {
       return NextResponse.redirect(loginUrl);
     }
     return NextResponse.rewrite(new URL(`/platform${pathname === "/" ? "" : pathname}`, request.url));
+  }
+
+  if (host === EVENTS_HOST) {
+    return NextResponse.rewrite(new URL(`/events${pathname === "/" ? "" : pathname}`, request.url));
   }
 
   return NextResponse.next();
