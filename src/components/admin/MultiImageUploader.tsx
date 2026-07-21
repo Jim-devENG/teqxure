@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useId, useEffect } from "react";
 import Image from "next/image";
 import { Upload, X } from "lucide-react";
 import { uploadMediaAction } from "@/lib/actions/media";
+import { useUploadStatus } from "@/components/admin/UploadStatusContext";
 
 interface MultiImageUploaderProps {
   name: string;
@@ -16,6 +17,14 @@ export function MultiImageUploader({ name, label, defaultValues = [] }: MultiIma
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const id = useId();
+  const uploadStatus = useUploadStatus();
+
+  useEffect(() => {
+    uploadStatus?.registerUploading(id, isUploading);
+    return () => uploadStatus?.registerUploading(id, false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isUploading, id]);
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files ?? []);

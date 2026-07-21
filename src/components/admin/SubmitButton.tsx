@@ -3,6 +3,7 @@
 import { useFormStatus } from "react-dom";
 import type { ButtonHTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
+import { useUploadStatus } from "@/components/admin/UploadStatusContext";
 
 interface SubmitButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   pendingLabel?: string;
@@ -20,14 +21,18 @@ export function SubmitButton({
   pendingLabel = "Saving…",
   variant = "primary",
   className,
+  disabled,
   ...props
 }: SubmitButtonProps) {
   const { pending } = useFormStatus();
+  const uploadStatus = useUploadStatus();
+  const waitingForUploads = Boolean(uploadStatus?.isAnyUploading);
 
   return (
     <button
       type="submit"
-      disabled={pending}
+      disabled={pending || waitingForUploads || disabled}
+      title={waitingForUploads ? "Waiting for image uploads to finish…" : undefined}
       className={cn(
         "inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-colors disabled:opacity-60 cursor-pointer",
         variantClasses[variant],
@@ -35,7 +40,7 @@ export function SubmitButton({
       )}
       {...props}
     >
-      {pending ? pendingLabel : children}
+      {pending ? pendingLabel : waitingForUploads ? "Waiting for upload…" : children}
     </button>
   );
 }
