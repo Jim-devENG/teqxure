@@ -163,6 +163,16 @@ body {
   margin-bottom: 0;
 }
 
+/* Dark-surface variant (events.teqxure.xyz runs on the dark theme) */
+.prose-content.prose-dark h2,
+.prose-content.prose-dark h3 {
+  color: var(--color-paper, #ffffff);
+}
+
+.prose-content.prose-dark a {
+  color: var(--color-blue, #1764ff);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
