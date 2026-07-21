@@ -9,6 +9,7 @@ import { EventRegistrationForm } from "@/components/events/EventRegistrationForm
 import { EventDateTime } from "@/components/events/EventDateTime";
 import { Countdown } from "@/components/events/Countdown";
 import { BlockRenderer } from "@/components/events/blocks/BlockRenderer";
+import { ShareButton } from "@/components/events/ShareButton";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -73,18 +74,21 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
           <div className="grid grid-cols-1 gap-16 lg:grid-cols-[1.1fr_0.9fr]">
             <div>
               <Reveal>
-                <div className="flex flex-wrap items-center gap-3">
-                  <span className="font-mono text-xs uppercase tracking-[0.2em] text-blue">
-                    {isPast ? "Past event" : "Teqxure Event"}
-                  </span>
-                  <span className="rounded-full border border-emerald/30 bg-emerald/10 px-2.5 py-0.5 text-[11px] font-medium text-emerald">
-                    Free
-                  </span>
-                  {isFull && (
-                    <span className="rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[11px] font-medium text-paper/60">
-                      Sold out
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <span className="font-mono text-xs uppercase tracking-[0.2em] text-blue">
+                      {isPast ? "Past event" : "Teqxure Event"}
                     </span>
-                  )}
+                    <span className="rounded-full border border-emerald/30 bg-emerald/10 px-2.5 py-0.5 text-[11px] font-medium text-emerald">
+                      Free
+                    </span>
+                    {isFull && (
+                      <span className="rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[11px] font-medium text-paper/60">
+                        Sold out
+                      </span>
+                    )}
+                  </div>
+                  <ShareButton title={event.title} url={`https://events.teqxure.xyz/${event.slug}`} />
                 </div>
               </Reveal>
 
