@@ -7,13 +7,11 @@ import { createEventAction, updateEventAction, type EventFormState } from "@/lib
 import { TextField, TextAreaField, CheckboxField } from "@/components/admin/Field";
 import { ImageUploader } from "@/components/admin/ImageUploader";
 import { SubmitButton } from "@/components/admin/SubmitButton";
+import { utcToWatInputValue } from "@/lib/eventTimezone";
 
 function toLocalInputValue(date: Date | string | null | undefined): string {
   if (!date) return "";
-  const d = new Date(date);
-  const offset = d.getTimezoneOffset();
-  const local = new Date(d.getTime() - offset * 60000);
-  return local.toISOString().slice(0, 16);
+  return utcToWatInputValue(new Date(date));
 }
 
 interface EventFormProps {
@@ -67,6 +65,7 @@ export function EventForm({ event, categories }: EventFormProps) {
           name="startsAt"
           type="datetime-local"
           defaultValue={toLocalInputValue(event?.startsAt)}
+          hint="West Africa Time (UTC+1)"
           required
         />
         <TextField
@@ -74,6 +73,7 @@ export function EventForm({ event, categories }: EventFormProps) {
           name="endsAt"
           type="datetime-local"
           defaultValue={toLocalInputValue(event?.endsAt)}
+          hint="West Africa Time (UTC+1)"
         />
       </div>
 

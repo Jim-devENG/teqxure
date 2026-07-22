@@ -6,6 +6,7 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
 import { logActivity } from "@/lib/activity";
+import { watInputToUtc } from "@/lib/eventTimezone";
 
 const eventSchema = z.object({
   slug: z.string().min(1).regex(/^[a-z0-9-]+$/, "Lowercase letters, numbers, and hyphens only"),
@@ -60,8 +61,8 @@ function toEventData(parsed: z.infer<typeof eventSchema>) {
   const { startsAt, endsAt, ...rest } = parsed;
   return {
     ...rest,
-    startsAt: new Date(startsAt),
-    endsAt: endsAt ? new Date(endsAt) : null,
+    startsAt: watInputToUtc(startsAt),
+    endsAt: endsAt ? watInputToUtc(endsAt) : null,
   };
 }
 
