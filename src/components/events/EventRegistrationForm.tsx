@@ -34,8 +34,8 @@ export function EventRegistrationForm({ eventId, fields }: { eventId: string; fi
       >
         <CheckCircle2 className="h-10 w-10 text-emerald" strokeWidth={1.5} />
         <div>
-          <p className="text-lg font-medium text-graphite">You&apos;re registered</p>
-          <p className="mt-1 text-sm text-slate">Check your inbox — we just sent a confirmation email.</p>
+          <p className="text-lg font-medium text-paper">You&apos;re registered</p>
+          <p className="mt-1 text-sm text-paper/60">Check your inbox — we just sent a confirmation email.</p>
         </div>
       </motion.div>
     );
@@ -67,12 +67,12 @@ export function EventRegistrationForm({ eventId, fields }: { eventId: string; fi
 function DynamicField({ field }: { field: EventFieldData }) {
   const options = Array.isArray(field.options) ? (field.options as string[]) : [];
   const baseInputClasses =
-    "mt-2 w-full border-0 border-b border-light-gray bg-transparent pb-2 text-base text-graphite placeholder:text-slate/50 outline-none transition-colors focus:border-blue";
+    "mt-2 w-full border-0 border-b border-white/15 bg-transparent pb-2 text-base text-paper placeholder:text-paper/35 outline-none transition-colors focus:border-blue";
 
   if (field.fieldType === "CHECKBOX" && options.length === 0) {
     return (
-      <label className="flex items-center gap-2.5 text-sm text-graphite">
-        <input type="checkbox" name={field.id} required={field.required} className="h-4 w-4 rounded border-light-gray text-blue" />
+      <label className="flex items-center gap-2.5 text-sm text-paper/70">
+        <input type="checkbox" name={field.id} required={field.required} className="h-4 w-4 rounded border-white/20 bg-transparent text-blue" />
         {field.label}
       </label>
     );
@@ -80,7 +80,7 @@ function DynamicField({ field }: { field: EventFieldData }) {
 
   return (
     <label htmlFor={field.id} className="group block">
-      <span className="font-mono text-[11px] uppercase tracking-[0.15em] text-slate">{field.label}</span>
+      <span className="font-mono text-[11px] uppercase tracking-[0.15em] text-paper/50">{field.label}</span>
 
       {field.fieldType === "TEXTAREA" && (
         <textarea
@@ -107,8 +107,8 @@ function DynamicField({ field }: { field: EventFieldData }) {
       {field.fieldType === "CHECKBOX" && options.length > 0 && (
         <div className="mt-2 flex flex-col gap-2">
           {options.map((option) => (
-            <label key={option} className="flex items-center gap-2 text-sm text-graphite">
-              <input type="checkbox" name={field.id} value={option} className="h-4 w-4 rounded border-light-gray text-blue" />
+            <label key={option} className="flex items-center gap-2 text-sm text-paper/70">
+              <input type="checkbox" name={field.id} value={option} className="h-4 w-4 rounded border-white/20 bg-transparent text-blue" />
               {option}
             </label>
           ))}
