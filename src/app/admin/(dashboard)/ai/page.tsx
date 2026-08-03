@@ -1,11 +1,10 @@
-import { redirect } from "next/navigation";
-import { getCurrentUser } from "@/lib/auth";
+import { requireAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { PageHeader } from "@/components/admin/PageHeader";
 import { AiChatView } from "@/components/platform/AiChatView";
 
-export default async function TeqxureAiPage() {
-  const user = await getCurrentUser();
-  if (!user || !["STUDENT", "SUPER_ADMIN"].includes(user.role)) redirect("/dashboard");
+export default async function AdminAiPage() {
+  const user = await requireAdmin();
 
   const conversation = await db.aiConversation.upsert({
     where: { studentId: user.id },
@@ -16,10 +15,7 @@ export default async function TeqxureAiPage() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-xl font-medium tracking-tight text-graphite">Teqxure AI</h1>
-        <p className="mt-1 text-sm text-slate">Your assistant for curriculum questions and sprint feedback.</p>
-      </div>
+      <PageHeader title="Teqxure AI" description="The same assistant students use — ask it anything." />
       <AiChatView
         initialMessages={conversation.messages.map((m) => ({
           id: m.id,

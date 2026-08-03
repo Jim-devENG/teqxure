@@ -6,7 +6,7 @@ import { getStudentCohort } from "@/lib/platform";
 export async function getStudentAiContext(studentId: string): Promise<string> {
   const cohort = await getStudentCohort(studentId);
   if (!cohort) {
-    return "This student is not currently enrolled in an active cohort.";
+    return "This user is not currently enrolled in an active cohort.";
   }
 
   const submission = await db.sprintSubmission.findFirst({

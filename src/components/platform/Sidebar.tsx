@@ -32,7 +32,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: "/bootcamp", label: "Bootcamp", icon: BookOpen },
   { href: "/sprint-room", label: "Sprint Room", icon: Rocket },
   { href: "/my-product", label: "My Product", icon: Package, roles: ["STUDENT"] },
-  { href: "/ai", label: "Teqxure AI", icon: Sparkles, roles: ["STUDENT"] },
+  { href: "/ai", label: "Teqxure AI", icon: Sparkles, roles: ["STUDENT", "SUPER_ADMIN"] },
   { href: "/resources", label: "Resources", icon: FolderOpen },
   { href: "/community", label: "Community", icon: MessagesSquare },
   { href: "/messages", label: "Messages", icon: Mail },
