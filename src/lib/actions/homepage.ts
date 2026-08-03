@@ -6,6 +6,7 @@ import { requireAdmin } from "@/lib/auth";
 import { logActivity } from "@/lib/activity";
 import { sectionRegistry, type SectionKey, type FieldMeta } from "@/lib/sectionSchemas";
 import { formDataToContent } from "@/lib/formDataToContent";
+import { resolveSectionGroup } from "@/lib/sectionPages";
 
 export interface SectionFormState {
   success?: boolean;
@@ -33,9 +34,9 @@ export async function updateSectionAction(
   });
 
   await logActivity({ userId: user.id, action: "updated", entityType: "HomepageSection", entityId: key });
-  const isAbout = key.startsWith("ABOUT_");
-  revalidatePath(isAbout ? "/about" : "/");
-  revalidatePath(`/admin/${isAbout ? "about" : "homepage"}/${key}`);
+  const group = resolveSectionGroup(key);
+  revalidatePath(group.publicPath);
+  revalidatePath(`/admin${group.adminBasePath}/${key}`);
 
   return { success: true };
 }
@@ -46,9 +47,9 @@ export async function reorderSectionsAction(orderedKeys: string[]): Promise<void
     orderedKeys.map((key, index) => db.homepageSection.update({ where: { key }, data: { order: index } })),
   );
   await logActivity({ userId: user.id, action: "reordered", entityType: "HomepageSection" });
-  const isAbout = orderedKeys[0]?.startsWith("ABOUT_");
-  revalidatePath(isAbout ? "/about" : "/");
-  revalidatePath(isAbout ? "/admin/about" : "/admin/homepage");
+  const group = resolveSectionGroup(orderedKeys[0] ?? "");
+  revalidatePath(group.publicPath);
+  revalidatePath(`/admin${group.adminBasePath}`);
 }
 
 export async function toggleSectionVisibilityAction(key: string, visible: boolean): Promise<void> {
@@ -60,7 +61,7 @@ export async function toggleSectionVisibilityAction(key: string, visible: boolea
     entityType: "HomepageSection",
     entityId: key,
   });
-  const isAbout = key.startsWith("ABOUT_");
-  revalidatePath(isAbout ? "/about" : "/");
-  revalidatePath(isAbout ? "/admin/about" : "/admin/homepage");
+  const group = resolveSectionGroup(key);
+  revalidatePath(group.publicPath);
+  revalidatePath(`/admin${group.adminBasePath}`);
 }

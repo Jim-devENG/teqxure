@@ -10,11 +10,11 @@ import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
   { label: "About", href: "/about" },
-  { label: "Framework", href: "/#framework" },
-  { label: "Curriculum", href: "/#curriculum" },
-  { label: "Products", href: "/#products" },
+  { label: "Studio", href: "/studio" },
+  { label: "Academy", href: "/academy" },
+  { label: "Community", href: "/community" },
+  { label: "Research", href: "/research" },
   { label: "Events", href: "https://events.teqxure.xyz" },
-  { label: "FAQ", href: "/#faq" },
 ];
 
 export function Navbar() {

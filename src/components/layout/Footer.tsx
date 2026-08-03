@@ -5,11 +5,11 @@ import { normalizeSocialLinks, socialPlatformIcons, getSocialLabel } from "@/lib
 import { Globe } from "lucide-react";
 
 const FOOTER_LINKS = [
-  { label: "Framework", href: "/#framework" },
-  { label: "Curriculum", href: "/#curriculum" },
-  { label: "Products", href: "/#products" },
-  { label: "Outcomes", href: "/#outcomes" },
-  { label: "FAQ", href: "/#faq" },
+  { label: "About", href: "/about" },
+  { label: "Studio", href: "/studio" },
+  { label: "Academy", href: "/academy" },
+  { label: "Community", href: "/community" },
+  { label: "Research", href: "/research" },
   { label: "Events", href: "https://events.teqxure.xyz" },
 ];
 

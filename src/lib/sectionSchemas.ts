@@ -37,20 +37,57 @@ export const statSchema = z.object({
   label: z.string(),
 });
 
+/**
+ * Shared shapes reused across Home/About/Academy/Studio/Community/Research —
+ * extracted so every "hero"-shaped or "closing CTA"-shaped section validates
+ * and renders identically regardless of which page it lives on.
+ */
+export const heroSchema = z.object({
+  badge: z.string(),
+  headlineMuted: z.string(),
+  headlineEmphasis: z.string(),
+  headlineAccent: z.string(),
+  subhead: z.string(),
+  primaryCtaText: z.string(),
+  secondaryCtaText: z.string(),
+  trustLabel: z.string(),
+});
+
+export const pageHeroSchema = z.object({
+  pageTitle: z.string(),
+  headline: z.string(),
+  description: z.string(),
+  ctaText: z.string(),
+  ctaUrl: z.string(),
+  backgroundImage: z.string().optional().default(""),
+});
+
+export const finalCtaSchema = z.object({
+  badge: z.string(),
+  title: z.string(),
+  description: z.string(),
+  buttonText: z.string(),
+});
+
+export const showcaseIntroSchema = z.object({
+  eyebrow: z.string(),
+  title: z.string(),
+  description: z.string(),
+});
+
+export const pageSeoSchema = z.object({
+  pageTitle: z.string(),
+  metaDescription: z.string(),
+  ogImage: z.string().optional().default(""),
+  canonicalUrl: z.string().optional().default(""),
+  keywords: z.array(z.string()),
+});
+
 export const sectionRegistry = {
   HERO: {
     label: "Hero",
     description: "The first thing visitors see.",
-    schema: z.object({
-      badge: z.string(),
-      headlineMuted: z.string(),
-      headlineEmphasis: z.string(),
-      headlineAccent: z.string(),
-      subhead: z.string(),
-      primaryCtaText: z.string(),
-      secondaryCtaText: z.string(),
-      trustLabel: z.string(),
-    }),
+    schema: heroSchema,
     fields: [
       { key: "badge", label: "Eyebrow badge", type: "text" },
       { key: "headlineMuted", label: "Headline — muted first line", type: "text" },
@@ -113,7 +150,7 @@ export const sectionRegistry = {
   PRODUCT_SHOWCASE_INTRO: {
     label: "Product Showcase",
     description: "Intro copy above the product cards.",
-    schema: z.object({ eyebrow: z.string(), title: z.string(), description: z.string() }),
+    schema: showcaseIntroSchema,
     fields: [
       { key: "eyebrow", label: "Eyebrow", type: "text" },
       { key: "title", label: "Title", type: "text" },
@@ -190,13 +227,56 @@ export const sectionRegistry = {
   },
   FINAL_CTA: {
     label: "Final Call To Action",
-    description: "The closing section before the footer.",
+    description: "The closing section before the footer (Academy page).",
+    schema: finalCtaSchema,
+    fields: [
+      { key: "badge", label: "Eyebrow badge", type: "text" },
+      { key: "title", label: "Title", type: "text" },
+      { key: "description", label: "Description", type: "textarea" },
+      { key: "buttonText", label: "Button text", type: "text" },
+    ],
+  },
+
+  // ---------- Home page ----------
+  OFFERINGS_OVERVIEW: {
+    label: "Home — Offerings Overview",
+    description: "The four-tier teaser grid linking to Studio/Academy/Community/Research.",
     schema: z.object({
-      badge: z.string(),
+      eyebrow: z.string(),
       title: z.string(),
       description: z.string(),
-      buttonText: z.string(),
+      tiers: z.array(
+        z.object({
+          name: z.string(),
+          tagline: z.string(),
+          description: z.string(),
+          href: z.string(),
+          ctaText: z.string(),
+        }),
+      ),
     }),
+    fields: [
+      { key: "eyebrow", label: "Eyebrow", type: "text" },
+      { key: "title", label: "Title", type: "text" },
+      { key: "description", label: "Description", type: "textarea" },
+      {
+        key: "tiers",
+        label: "Tiers",
+        type: "list-object",
+        subFields: [
+          { key: "name", label: "Name", type: "text" },
+          { key: "tagline", label: "Tagline", type: "text" },
+          { key: "description", label: "Description", type: "textarea" },
+          { key: "href", label: "Link", type: "url" },
+          { key: "ctaText", label: "Button text", type: "text" },
+        ],
+      },
+    ],
+  },
+  HOME_CTA: {
+    label: "Home — Call To Action",
+    description: "Home's own closing section before the footer.",
+    schema: finalCtaSchema,
     fields: [
       { key: "badge", label: "Eyebrow badge", type: "text" },
       { key: "title", label: "Title", type: "text" },
@@ -209,14 +289,7 @@ export const sectionRegistry = {
   ABOUT_HERO: {
     label: "About — Hero",
     description: "The top of the About page.",
-    schema: z.object({
-      pageTitle: z.string(),
-      headline: z.string(),
-      description: z.string(),
-      ctaText: z.string(),
-      ctaUrl: z.string(),
-      backgroundImage: z.string().optional().default(""),
-    }),
+    schema: pageHeroSchema,
     fields: [
       { key: "pageTitle", label: "Eyebrow / page title", type: "text" },
       { key: "headline", label: "Headline", type: "text" },
@@ -335,19 +408,222 @@ export const sectionRegistry = {
   ABOUT_SEO: {
     label: "About — SEO",
     description: "Search engine metadata for the About page.",
-    schema: z.object({
-      pageTitle: z.string(),
-      metaDescription: z.string(),
-      ogImage: z.string().optional().default(""),
-      canonicalUrl: z.string().optional().default(""),
-      keywords: z.array(z.string()),
-    }),
+    schema: pageSeoSchema,
     fields: [
       { key: "pageTitle", label: "Page title", type: "text" },
       { key: "metaDescription", label: "Meta description", type: "textarea" },
       { key: "ogImage", label: "Open Graph image (optional)", type: "image" },
       { key: "canonicalUrl", label: "Canonical URL (optional)", type: "url" },
       { key: "keywords", label: "Keywords", type: "list-string" },
+    ],
+  },
+
+  // ---------- Academy page ----------
+  ACADEMY_SEO: {
+    label: "Academy — SEO",
+    description: "Search engine metadata for the Academy page.",
+    schema: pageSeoSchema,
+    fields: [
+      { key: "pageTitle", label: "Page title", type: "text" },
+      { key: "metaDescription", label: "Meta description", type: "textarea" },
+      { key: "ogImage", label: "Open Graph image (optional)", type: "image" },
+      { key: "canonicalUrl", label: "Canonical URL (optional)", type: "url" },
+      { key: "keywords", label: "Keywords", type: "list-string" },
+    ],
+  },
+  ACADEMY_HERO: {
+    label: "Academy — Hero",
+    description: "The top of the Academy page.",
+    schema: heroSchema,
+    fields: [
+      { key: "badge", label: "Eyebrow badge", type: "text" },
+      { key: "headlineMuted", label: "Headline — muted first line", type: "text" },
+      { key: "headlineEmphasis", label: "Headline — emphasis line", type: "text" },
+      { key: "headlineAccent", label: "Headline — accent phrase", type: "text" },
+      { key: "subhead", label: "Subheading", type: "textarea" },
+      { key: "primaryCtaText", label: "Primary button text", type: "text" },
+      { key: "secondaryCtaText", label: "Secondary button text", type: "text" },
+      { key: "trustLabel", label: "Trust strip label", type: "text" },
+    ],
+  },
+
+  // ---------- Studio page ----------
+  STUDIO_SEO: {
+    label: "Studio — SEO",
+    description: "Search engine metadata for the Studio page.",
+    schema: pageSeoSchema,
+    fields: [
+      { key: "pageTitle", label: "Page title", type: "text" },
+      { key: "metaDescription", label: "Meta description", type: "textarea" },
+      { key: "ogImage", label: "Open Graph image (optional)", type: "image" },
+      { key: "canonicalUrl", label: "Canonical URL (optional)", type: "url" },
+      { key: "keywords", label: "Keywords", type: "list-string" },
+    ],
+  },
+  STUDIO_HERO: {
+    label: "Studio — Hero",
+    description: "The top of the Studio page.",
+    schema: pageHeroSchema,
+    fields: [
+      { key: "pageTitle", label: "Eyebrow / page title", type: "text" },
+      { key: "headline", label: "Headline", type: "text" },
+      { key: "description", label: "Supporting description", type: "textarea" },
+      { key: "ctaText", label: "Call-to-action button text", type: "text" },
+      { key: "ctaUrl", label: "Call-to-action button link", type: "url" },
+      { key: "backgroundImage", label: "Background illustration (optional)", type: "image" },
+    ],
+  },
+  STUDIO_PROCESS: {
+    label: "Studio — Process",
+    description: "How a Studio engagement runs, step by step.",
+    schema: z.object({
+      eyebrow: z.string(),
+      title: z.string(),
+      description: z.string(),
+      steps: z.array(z.object({ title: z.string(), description: z.string() })),
+    }),
+    fields: [
+      { key: "eyebrow", label: "Eyebrow", type: "text" },
+      { key: "title", label: "Title", type: "text" },
+      { key: "description", label: "Description", type: "textarea" },
+      {
+        key: "steps",
+        label: "Process steps",
+        type: "list-object",
+        subFields: [
+          { key: "title", label: "Step title", type: "text" },
+          { key: "description", label: "Step description", type: "textarea" },
+        ],
+      },
+    ],
+  },
+  STUDIO_PROOF: {
+    label: "Studio — Proof",
+    description: "Intro copy above the Studio portfolio (reuses the Product Showcase grid).",
+    schema: showcaseIntroSchema,
+    fields: [
+      { key: "eyebrow", label: "Eyebrow", type: "text" },
+      { key: "title", label: "Title", type: "text" },
+      { key: "description", label: "Description", type: "textarea" },
+    ],
+  },
+  STUDIO_CTA: {
+    label: "Studio — Call To Action",
+    description: "The closing section on the Studio page.",
+    schema: finalCtaSchema,
+    fields: [
+      { key: "badge", label: "Eyebrow badge", type: "text" },
+      { key: "title", label: "Title", type: "text" },
+      { key: "description", label: "Description", type: "textarea" },
+      { key: "buttonText", label: "Button text", type: "text" },
+    ],
+  },
+
+  // ---------- Community page ----------
+  COMMUNITY_SEO: {
+    label: "Community — SEO",
+    description: "Search engine metadata for the Community page.",
+    schema: pageSeoSchema,
+    fields: [
+      { key: "pageTitle", label: "Page title", type: "text" },
+      { key: "metaDescription", label: "Meta description", type: "textarea" },
+      { key: "ogImage", label: "Open Graph image (optional)", type: "image" },
+      { key: "canonicalUrl", label: "Canonical URL (optional)", type: "url" },
+      { key: "keywords", label: "Keywords", type: "list-string" },
+    ],
+  },
+  COMMUNITY_HERO: {
+    label: "Community — Hero",
+    description: "The top of the Community page.",
+    schema: pageHeroSchema,
+    fields: [
+      { key: "pageTitle", label: "Eyebrow / page title", type: "text" },
+      { key: "headline", label: "Headline", type: "text" },
+      { key: "description", label: "Supporting description", type: "textarea" },
+      { key: "ctaText", label: "Call-to-action button text", type: "text" },
+      { key: "ctaUrl", label: "Call-to-action button link", type: "url" },
+      { key: "backgroundImage", label: "Background illustration (optional)", type: "image" },
+    ],
+  },
+  COMMUNITY_BENEFITS: {
+    label: "Community — Benefits",
+    description: "What members get, as a checklist.",
+    schema: z.object({
+      eyebrow: z.string(),
+      title: z.string(),
+      description: z.string(),
+      benefits: z.array(z.string()),
+    }),
+    fields: [
+      { key: "eyebrow", label: "Eyebrow", type: "text" },
+      { key: "title", label: "Title", type: "text" },
+      { key: "description", label: "Description", type: "textarea" },
+      { key: "benefits", label: "Benefit bullets", type: "list-string" },
+    ],
+  },
+  COMMUNITY_CTA: {
+    label: "Community — Call To Action",
+    description: "The closing section on the Community page.",
+    schema: finalCtaSchema,
+    fields: [
+      { key: "badge", label: "Eyebrow badge", type: "text" },
+      { key: "title", label: "Title", type: "text" },
+      { key: "description", label: "Description", type: "textarea" },
+      { key: "buttonText", label: "Button text", type: "text" },
+    ],
+  },
+
+  // ---------- Research page ----------
+  RESEARCH_SEO: {
+    label: "Research — SEO",
+    description: "Search engine metadata for the Research page.",
+    schema: pageSeoSchema,
+    fields: [
+      { key: "pageTitle", label: "Page title", type: "text" },
+      { key: "metaDescription", label: "Meta description", type: "textarea" },
+      { key: "ogImage", label: "Open Graph image (optional)", type: "image" },
+      { key: "canonicalUrl", label: "Canonical URL (optional)", type: "url" },
+      { key: "keywords", label: "Keywords", type: "list-string" },
+    ],
+  },
+  RESEARCH_HERO: {
+    label: "Research — Hero",
+    description: "The top of the Research page.",
+    schema: pageHeroSchema,
+    fields: [
+      { key: "pageTitle", label: "Eyebrow / page title", type: "text" },
+      { key: "headline", label: "Headline", type: "text" },
+      { key: "description", label: "Supporting description", type: "textarea" },
+      { key: "ctaText", label: "Call-to-action button text", type: "text" },
+      { key: "ctaUrl", label: "Call-to-action button link", type: "url" },
+      { key: "backgroundImage", label: "Background illustration (optional)", type: "image" },
+    ],
+  },
+  RESEARCH_AREAS: {
+    label: "Research — Areas",
+    description: "The forward-looking technology areas Teqxure is watching.",
+    schema: z.object({
+      eyebrow: z.string(),
+      title: z.string(),
+      description: z.string(),
+      areas: z.array(
+        z.object({ name: z.string(), description: z.string(), icon: z.string().optional().default("") }),
+      ),
+    }),
+    fields: [
+      { key: "eyebrow", label: "Eyebrow", type: "text" },
+      { key: "title", label: "Title", type: "text" },
+      { key: "description", label: "Description", type: "textarea" },
+      {
+        key: "areas",
+        label: "Research areas",
+        type: "list-object",
+        subFields: [
+          { key: "name", label: "Name", type: "text" },
+          { key: "description", label: "Description", type: "textarea" },
+          { key: "icon", label: "Icon (Lucide icon name, optional)", type: "text" },
+        ],
+      },
     ],
   },
 } as const satisfies Record<string, SectionDefinition>;

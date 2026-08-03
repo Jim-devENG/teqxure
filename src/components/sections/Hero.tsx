@@ -15,9 +15,10 @@ import { cn } from "@/lib/utils";
 interface HeroProps {
   section: SectionContent<"HERO">;
   productNames: string[];
+  secondaryCtaTarget?: string;
 }
 
-export function Hero({ section, productNames }: HeroProps) {
+export function Hero({ section, productNames, secondaryCtaTarget = "#framework" }: HeroProps) {
   const { openWaitlist } = useWaitlist();
   const lenis = useLenis();
 
@@ -70,7 +71,7 @@ export function Hero({ section, productNames }: HeroProps) {
                 </MagneticButton>
                 <MagneticButton
                   variant="ghost"
-                  onClick={() => lenis?.scrollTo("#framework")}
+                  onClick={() => lenis?.scrollTo(secondaryCtaTarget)}
                 >
                   {section.secondaryCtaText}
                   <ArrowDown className="h-4 w-4" strokeWidth={1.5} />

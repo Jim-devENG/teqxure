@@ -25,6 +25,10 @@ import {
   Tag,
   Handshake,
   Blocks,
+  GraduationCap,
+  Rocket,
+  Network,
+  Telescope,
 } from "lucide-react";
 import { logoutAction } from "@/lib/actions/auth";
 import { cn } from "@/lib/utils";
@@ -33,6 +37,10 @@ const NAV_ITEMS = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { href: "/homepage", label: "Homepage", icon: FileText },
   { href: "/about", label: "About Page", icon: Info },
+  { href: "/pages/studio", label: "Studio Page", icon: Rocket },
+  { href: "/pages/academy", label: "Academy Page", icon: GraduationCap },
+  { href: "/pages/community", label: "Community Page", icon: Network },
+  { href: "/pages/research", label: "Research Page", icon: Telescope },
   { href: "/core-values", label: "Core Values", icon: Gem },
   { href: "/differentiators", label: "Differentiators", icon: Sparkles },
   { href: "/team", label: "Team", icon: Users },

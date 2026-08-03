@@ -12,6 +12,7 @@ import { StudentOutcomes } from "@/components/sections/StudentOutcomes";
 import { InstructorPhilosophy } from "@/components/sections/InstructorPhilosophy";
 import { FAQ } from "@/components/sections/FAQ";
 import { FinalCTA } from "@/components/sections/FinalCTA";
+import { OfferingsOverview } from "@/components/sections/OfferingsOverview";
 
 export const revalidate = 0;
 
@@ -38,6 +39,7 @@ export default async function Home() {
                 key={row.id}
                 section={content as never}
                 productNames={products.map((p) => p.name)}
+                secondaryCtaTarget="#offerings"
               />
             );
           case "SOCIAL_PROOF":
@@ -58,6 +60,10 @@ export default async function Home() {
             return <InstructorPhilosophy key={row.id} />;
           case "FAQ_INTRO":
             return <FAQ key={row.id} section={content as never} items={faqItems} />;
+          case "OFFERINGS_OVERVIEW":
+            return <OfferingsOverview key={row.id} section={content as never} />;
+          case "HOME_CTA":
+            return <FinalCTA key={row.id} section={content as never} />;
           case "FINAL_CTA":
             return <FinalCTA key={row.id} section={content as never} />;
           default:
