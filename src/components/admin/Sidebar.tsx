@@ -29,6 +29,7 @@ import {
   Rocket,
   Network,
   Telescope,
+  Bot,
 } from "lucide-react";
 import { logoutAction } from "@/lib/actions/auth";
 import { cn } from "@/lib/utils";
@@ -51,6 +52,7 @@ const NAV_ITEMS = [
   { href: "/categories", label: "Event Categories", icon: Tag },
   { href: "/sponsors", label: "Sponsors", icon: Handshake },
   { href: "/block-templates", label: "Block Templates", icon: Blocks },
+  { href: "/ai-integrations", label: "AI Integrations", icon: Bot },
   { href: "/faq", label: "FAQ", icon: HelpCircle },
   { href: "/testimonials", label: "Testimonials", icon: MessageSquareQuote },
   { href: "/waitlist-form", label: "Waitlist Form", icon: ClipboardList },

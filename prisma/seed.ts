@@ -963,6 +963,27 @@ async function seedEmailTemplates() {
   }
 }
 
+async function seedAiIntegrations() {
+  const providers = [
+    { provider: "NVIDIA", label: "NVIDIA NIM", defaultModel: "meta/llama-3.1-70b-instruct", baseUrl: "https://integrate.api.nvidia.com/v1" },
+    { provider: "OPENAI", label: "OpenAI", defaultModel: "gpt-4o-mini", baseUrl: null },
+    { provider: "ANTHROPIC", label: "Anthropic", defaultModel: "claude-3-5-sonnet-20241022", baseUrl: null },
+  ];
+
+  for (const p of providers) {
+    await db.aiProvider.upsert({
+      where: { provider: p.provider },
+      update: {},
+      create: { provider: p.provider, label: p.label, defaultModel: p.defaultModel, baseUrl: p.baseUrl },
+    });
+  }
+
+  const existing = await db.aiSettings.findFirst();
+  if (!existing) {
+    await db.aiSettings.create({ data: {} });
+  }
+}
+
 async function main() {
   await seedAdmin();
   await seedSiteSettings();
@@ -975,6 +996,7 @@ async function main() {
   await seedFaq();
   await seedWaitlistFields();
   await seedEmailTemplates();
+  await seedAiIntegrations();
   console.log("Seed complete.");
 }
 
