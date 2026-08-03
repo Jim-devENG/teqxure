@@ -3,6 +3,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { getActiveProviderAdapter } from "@/lib/ai/settings";
 import { getStudentAiContext } from "@/lib/ai/context";
+import { getProductEngineeringKnowledge } from "@/lib/ai/knowledge";
 import type { ChatMessage } from "@/lib/ai/providers";
 
 export const maxDuration = 60;
@@ -63,8 +64,8 @@ export async function POST(request: NextRequest) {
     .filter((m) => m.role === "user" || m.role === "assistant")
     .map((m) => ({ role: m.role as "user" | "assistant", content: m.content }));
 
-  const context = await getStudentAiContext(user.id);
-  const system = `${active.systemPrompt}\n\nContext about this student: ${context}`;
+  const [knowledge, context] = await Promise.all([getProductEngineeringKnowledge(), getStudentAiContext(user.id)]);
+  const system = `${active.systemPrompt}\n\n${knowledge}\n\nContext about this student: ${context}`;
 
   const encoder = new TextEncoder();
   let fullText = "";
