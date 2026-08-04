@@ -8,6 +8,7 @@ import { SubmitButton } from "@/components/admin/SubmitButton";
 interface AiProviderFormProps {
   provider: {
     provider: string;
+    type: "CHAT" | "VIDEO";
     label: string;
     hasKey: boolean;
     baseUrl: string;
@@ -57,24 +58,32 @@ export function AiProviderForm({ provider }: AiProviderFormProps) {
         {state.error && <span className="text-sm text-red-500">{state.error}</span>}
       </div>
 
-      <div className="rounded-lg border border-light-gray bg-soft-white p-4">
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={handleTest}
-            disabled={isTesting}
-            className="cursor-pointer rounded-lg border border-light-gray px-3 py-2 text-sm text-graphite transition-colors hover:border-blue hover:text-blue disabled:opacity-60"
-          >
-            {isTesting ? "Sending…" : "Send test message"}
-          </button>
-          {testResult && (
-            <span className={`text-sm ${testResult.ok ? "text-emerald" : "text-red-500"}`}>
-              {testResult.ok ? `Ok — "${testResult.message}"` : testResult.message}
-            </span>
-          )}
+      {provider.type === "CHAT" ? (
+        <div className="rounded-lg border border-light-gray bg-soft-white p-4">
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={handleTest}
+              disabled={isTesting}
+              className="cursor-pointer rounded-lg border border-light-gray px-3 py-2 text-sm text-graphite transition-colors hover:border-blue hover:text-blue disabled:opacity-60"
+            >
+              {isTesting ? "Sending…" : "Send test message"}
+            </button>
+            {testResult && (
+              <span className={`text-sm ${testResult.ok ? "text-emerald" : "text-red-500"}`}>
+                {testResult.ok ? `Ok — "${testResult.message}"` : testResult.message}
+              </span>
+            )}
+          </div>
+          <p className="mt-2 text-xs text-slate">Uses the key currently saved above — save first if you just changed it.</p>
         </div>
-        <p className="mt-2 text-xs text-slate">Uses the key currently saved above — save first if you just changed it.</p>
-      </div>
+      ) : (
+        <div className="rounded-lg border border-light-gray bg-soft-white p-4">
+          <p className="text-xs text-slate">
+            This is a key-storage slot only — no video-generation feature is wired up to use it yet.
+          </p>
+        </div>
+      )}
     </form>
   );
 }

@@ -714,7 +714,8 @@ model Announcement {
 
 model AiProvider {
   id               String   @id @default(cuid())
-  provider         String   @unique // "NVIDIA" | "OPENAI" | "ANTHROPIC"
+  provider         String   @unique // "NVIDIA" | "OPENAI" | "ANTHROPIC" | "NVIDIA_COSMOS"
+  type             String   @default("CHAT") // "CHAT" | "VIDEO" — only CHAT providers can be picked as Teqxure AI's active provider
   label            String
   apiKeyCiphertext String?
   baseUrl          String?

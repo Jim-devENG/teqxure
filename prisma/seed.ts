@@ -965,16 +965,23 @@ async function seedEmailTemplates() {
 
 async function seedAiIntegrations() {
   const providers = [
-    { provider: "NVIDIA", label: "NVIDIA NIM", defaultModel: "meta/llama-3.1-70b-instruct", baseUrl: "https://integrate.api.nvidia.com/v1" },
-    { provider: "OPENAI", label: "OpenAI", defaultModel: "gpt-4o-mini", baseUrl: null },
-    { provider: "ANTHROPIC", label: "Anthropic", defaultModel: "claude-3-5-sonnet-20241022", baseUrl: null },
+    { provider: "NVIDIA", type: "CHAT", label: "NVIDIA NIM", defaultModel: "meta/llama-3.1-70b-instruct", baseUrl: "https://integrate.api.nvidia.com/v1" },
+    { provider: "OPENAI", type: "CHAT", label: "OpenAI", defaultModel: "gpt-4o-mini", baseUrl: null },
+    { provider: "ANTHROPIC", type: "CHAT", label: "Anthropic", defaultModel: "claude-3-5-sonnet-20241022", baseUrl: null },
+    {
+      provider: "NVIDIA_COSMOS",
+      type: "VIDEO",
+      label: "NVIDIA Cosmos (Video)",
+      defaultModel: "nvidia/cosmos3-generator",
+      baseUrl: "https://api.ngc.nvidia.com/v2/org/nim/team/nvidia/repos/cosmos3-generator",
+    },
   ];
 
   for (const p of providers) {
     await db.aiProvider.upsert({
       where: { provider: p.provider },
       update: {},
-      create: { provider: p.provider, label: p.label, defaultModel: p.defaultModel, baseUrl: p.baseUrl },
+      create: { provider: p.provider, type: p.type, label: p.label, defaultModel: p.defaultModel, baseUrl: p.baseUrl },
     });
   }
 

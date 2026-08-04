@@ -3,7 +3,7 @@ import { db } from "@/lib/db";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { AiProviderForm } from "@/components/admin/aiIntegrations/AiProviderForm";
 
-const VALID_PROVIDERS = ["NVIDIA", "OPENAI", "ANTHROPIC"];
+const VALID_PROVIDERS = ["NVIDIA", "OPENAI", "ANTHROPIC", "NVIDIA_COSMOS"];
 
 export function generateStaticParams() {
   return VALID_PROVIDERS.map((provider) => ({ provider }));
@@ -25,6 +25,7 @@ export default async function EditAiProviderPage({ params }: { params: Promise<{
       <AiProviderForm
         provider={{
           provider: row.provider,
+          type: row.type as "CHAT" | "VIDEO",
           label: row.label,
           hasKey: Boolean(row.apiKeyCiphertext),
           baseUrl: row.baseUrl ?? "",

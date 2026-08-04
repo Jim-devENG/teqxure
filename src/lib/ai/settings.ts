@@ -15,7 +15,7 @@ export async function getActiveProviderAdapter(): Promise<ActiveProviderResult> 
   }
 
   const provider = await db.aiProvider.findUnique({ where: { provider: settings.activeProvider } });
-  if (!provider || !provider.enabled) {
+  if (!provider || !provider.enabled || provider.type !== "CHAT") {
     return { ok: false, reason: "The active AI provider is not enabled." };
   }
   if (!provider.apiKeyCiphertext) {

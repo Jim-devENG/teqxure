@@ -94,6 +94,9 @@ export async function testAiProviderAction(provider: string): Promise<{ ok: bool
   if (!row?.apiKeyCiphertext) {
     return { ok: false, message: "No API key saved yet — save one first, then test." };
   }
+  if (row.type !== "CHAT") {
+    return { ok: false, message: "This provider isn't wired up to a calling feature yet — nothing to test." };
+  }
 
   try {
     const apiKey = decrypt(row.apiKeyCiphertext);
