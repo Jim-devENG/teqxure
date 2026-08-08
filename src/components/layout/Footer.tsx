@@ -95,7 +95,7 @@ export async function Footer() {
 
         <div className="mt-16 flex flex-col items-start justify-between gap-4 border-t border-white/10 pt-8 text-xs text-paper/35 sm:flex-row sm:items-center">
           <p>© {new Date().getFullYear()} Teqxure. All rights reserved.</p>
-          <p>Product Engineering, not tutorials.</p>
+          <p>Product Engineering for what's next.</p>
         </div>
       </div>
     </footer>

@@ -24,32 +24,32 @@ const siteUrl = "https://teqxure.com";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Teqxure — The Product Engineering Bootcamp",
+    default: "Teqxure — Africa's Product Engineering Company",
     template: "%s — Teqxure",
   },
   description:
-    "Stop building tutorials. Start building products people actually use. Teqxure teaches the exact Product Engineering system used to build production software across SaaS, marketplaces, education technology, cybersecurity, creator platforms, and AI products.",
+    "Artificial Intelligence changed what it means to build software. Teqxure prepares Africa's builders — engineers, designers, founders, and teams — to create products the world depends on, using Artificial Intelligence as an advantage, not a threat.",
   keywords: [
     "Product Engineering",
-    "coding bootcamp",
-    "AI engineering bootcamp",
-    "software engineering course",
-    "build a startup",
-    "product engineering system",
+    "Product Engineering Africa",
+    "Artificial Intelligence training",
+    "product building",
+    "AI-native builders",
+    "technology leaders Africa",
   ],
   openGraph: {
     type: "website",
     url: siteUrl,
-    title: "Teqxure — The Product Engineering Bootcamp",
+    title: "Teqxure — Africa's Product Engineering Company",
     description:
-      "Stop building tutorials. Start building products people actually use.",
+      "Artificial Intelligence changed what it means to build software. Teqxure prepares Africa's builders to create products the world depends on.",
     siteName: "Teqxure",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Teqxure — The Product Engineering Bootcamp",
+    title: "Teqxure — Africa's Product Engineering Company",
     description:
-      "Stop building tutorials. Start building products people actually use.",
+      "Artificial Intelligence changed what it means to build software. Teqxure prepares Africa's builders to create products the world depends on.",
   },
   robots: {
     index: true,
@@ -62,7 +62,7 @@ const jsonLd = {
   "@type": "EducationalOrganization",
   name: "Teqxure",
   description:
-    "The Product Engineering Bootcamp — a twelve-week cohort program teaching builders to turn ideas into production software using AI.",
+    "Africa's Product Engineering company. Teqxure prepares builders to create products the world depends on, through a Studio that builds, an Academy that trains, a Community that connects, and Research that looks ahead.",
   url: siteUrl,
   logo: `${siteUrl}/logo-icon.png`,
   sameAs: ["https://x.com", "https://linkedin.com", "https://github.com"],

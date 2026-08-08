@@ -24,7 +24,7 @@ export async function WhyProductEngineering() {
               <Reveal delay={0.15}>
                 <div className="rounded-2xl border border-light-gray bg-soft-white p-6">
                   <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-slate">
-                    Tutorials
+                    What Used To Make You Valuable
                   </p>
                   <ul className="mt-4 flex flex-col gap-3">
                     {section.tutorialTraits.map((trait) => (
@@ -40,7 +40,7 @@ export async function WhyProductEngineering() {
               <Reveal delay={0.25}>
                 <div className="rounded-2xl border border-blue/20 bg-blue/[0.03] p-6">
                   <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-blue">
-                    Product Engineering
+                    What Makes You Valuable Now
                   </p>
                   <ul className="mt-4 flex flex-col gap-3">
                     {section.productTraits.map((trait) => (
