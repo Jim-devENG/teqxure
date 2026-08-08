@@ -1,5 +1,6 @@
 import "server-only";
 import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { randomBytes } from "crypto";
 
 const s3 = new S3Client({
@@ -69,4 +70,34 @@ export async function getFromR2(key: string): Promise<StoredObject | null> {
 
 export async function deleteFromR2(key: string): Promise<void> {
   await s3.send(new DeleteObjectCommand({ Bucket: BUCKET, Key: key }));
+}
+
+export interface PresignedUpload {
+  key: string;
+  url: string;
+  uploadUrl: string;
+}
+
+/**
+ * A short-lived signed PUT URL so the browser can upload straight to R2,
+ * bypassing the Server Action body-size limit (10MB, tuned for images —
+ * see next.config.ts) entirely. Used for the assessment's video upload,
+ * which can easily exceed that.
+ */
+export async function getPresignedUploadUrl(
+  originalName: string,
+  mimeType: string,
+  folder = "uploads",
+  expiresInSeconds = 300,
+): Promise<PresignedUpload> {
+  const ext = originalName.includes(".") ? originalName.split(".").pop() : undefined;
+  const key = `${folder}/${Date.now()}-${randomBytes(6).toString("hex")}${ext ? `.${ext}` : ""}`;
+
+  const uploadUrl = await getSignedUrl(
+    s3,
+    new PutObjectCommand({ Bucket: BUCKET, Key: key, ContentType: mimeType }),
+    { expiresIn: expiresInSeconds },
+  );
+
+  return { key, url: publicUrlFor(key), uploadUrl };
 }

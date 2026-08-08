@@ -42,14 +42,19 @@ export default async function AcademyPage() {
 
   return (
     <>
-      <Hero section={hero} productNames={products.map((p) => p.name)} secondaryCtaTarget="#framework" />
+      <Hero
+        section={hero}
+        productNames={products.map((p) => p.name)}
+        secondaryCtaTarget="#framework"
+        primaryCtaHref="/apply"
+      />
       <Framework section={framework} stages={frameworkStages} />
       <Curriculum section={curriculum} weeks={curriculumWeeks} />
       <WhatYoullBuild />
       <StudentOutcomes />
       <InstructorPhilosophy />
       <FAQ section={faqIntro} items={faqItems} />
-      <FinalCTA section={finalCta} />
+      <FinalCTA section={finalCta} ctaHref="/apply" />
     </>
   );
 }

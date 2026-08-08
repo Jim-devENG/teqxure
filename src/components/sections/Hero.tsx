@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import type { MouseEvent } from "react";
+import { useRouter } from "next/navigation";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { ArrowDown, ArrowRight } from "lucide-react";
 import { useLenis } from "lenis/react";
@@ -16,10 +17,13 @@ interface HeroProps {
   section: SectionContent<"HERO">;
   productNames: string[];
   secondaryCtaTarget?: string;
+  /** When set, the primary CTA navigates here instead of opening the waitlist modal. */
+  primaryCtaHref?: string;
 }
 
-export function Hero({ section, productNames, secondaryCtaTarget = "#framework" }: HeroProps) {
+export function Hero({ section, productNames, secondaryCtaTarget = "#framework", primaryCtaHref }: HeroProps) {
   const { openWaitlist } = useWaitlist();
+  const router = useRouter();
   const lenis = useLenis();
 
   return (
@@ -65,7 +69,7 @@ export function Hero({ section, productNames, secondaryCtaTarget = "#framework" 
 
             <Reveal delay={0.65}>
               <div className="mt-9 flex flex-wrap items-center gap-4">
-                <MagneticButton onClick={openWaitlist}>
+                <MagneticButton onClick={() => (primaryCtaHref ? router.push(primaryCtaHref) : openWaitlist())}>
                   {section.primaryCtaText}
                   <ArrowRight className="h-4 w-4" strokeWidth={1.5} />
                 </MagneticButton>

@@ -31,6 +31,7 @@ import {
   Telescope,
   Bot,
   Sliders,
+  ClipboardCheck,
 } from "lucide-react";
 import { logoutAction } from "@/lib/actions/auth";
 import { cn } from "@/lib/utils";
@@ -43,6 +44,7 @@ const NAV_ITEMS = [
   { href: "/pages/academy", label: "Academy Page", icon: GraduationCap },
   { href: "/pages/community", label: "Community Page", icon: Network },
   { href: "/pages/research", label: "Research Page", icon: Telescope },
+  { href: "/applications", label: "Applications", icon: ClipboardCheck },
   { href: "/core-values", label: "Core Values", icon: Gem },
   { href: "/differentiators", label: "Differentiators", icon: Sparkles },
   { href: "/team", label: "Team", icon: Users },

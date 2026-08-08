@@ -1,4 +1,4 @@
-import type { InputHTMLAttributes, ReactNode, TextareaHTMLAttributes } from "react";
+import type { InputHTMLAttributes, ReactNode, SelectHTMLAttributes, TextareaHTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 
 interface FieldWrapperProps {
@@ -45,6 +45,23 @@ export function TextAreaField({ label, hint, wrapperClassName, className, ...pro
   return (
     <FieldWrapper label={label} hint={hint} className={wrapperClassName}>
       <textarea rows={4} className={cn(inputClasses, "resize-y", className)} {...props} />
+    </FieldWrapper>
+  );
+}
+
+interface SelectFieldProps extends SelectHTMLAttributes<HTMLSelectElement> {
+  label: string;
+  hint?: string;
+  wrapperClassName?: string;
+  children: ReactNode;
+}
+
+export function SelectField({ label, hint, wrapperClassName, className, children, ...props }: SelectFieldProps) {
+  return (
+    <FieldWrapper label={label} hint={hint} className={wrapperClassName}>
+      <select className={cn(inputClasses, className)} {...props}>
+        {children}
+      </select>
     </FieldWrapper>
   );
 }

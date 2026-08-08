@@ -22,31 +22,32 @@ enum Role {
 }
 
 model User {
-  id                     String        @id @default(cuid())
-  email                  String        @unique
+  id                     String                  @id @default(cuid())
+  email                  String                  @unique
   passwordHash           String
   name                   String?
-  role                   Role          @default(STUDENT)
-  createdAt              DateTime      @default(now())
+  role                   Role                    @default(STUDENT)
+  createdAt              DateTime                @default(now())
   lastLoginAt            DateTime?
-  failedLoginAttempts    Int           @default(0)
+  failedLoginAttempts    Int                     @default(0)
   lockedUntil            DateTime?
   sessions               Session[]
   activityLogs           ActivityLog[]
   invites                InviteToken[]
-  cohortEnrollments      CohortEnrollment[]       @relation("CohortEnrollmentStudent")
-  cohortStaffRoles       CohortStaffAssignment[]  @relation("CohortStaffUser")
-  sprintSubmissions      SprintSubmission[]       @relation("SprintSubmissionStudent")
-  reviewedSubmissions    SprintSubmission[]       @relation("SprintSubmissionReviewer")
-  studentProduct         StudentProduct?          @relation("StudentProductOwner")
-  communityMessages      CommunityMessage[]       @relation("CommunityMessageAuthor")
-  threadParticipations   ThreadParticipant[]      @relation("ThreadParticipantUser")
-  directMessages         DirectMessage[]          @relation("DirectMessageAuthor")
-  certificates           Certificate[]            @relation("CertificateStudent")
-  notifications          Notification[]           @relation("NotificationUser")
-  notificationPreference NotificationPreference?  @relation("NotificationPreferenceUser")
-  announcementsCreated   Announcement[]           @relation("AnnouncementCreatedBy")
-  aiConversation         AiConversation?          @relation("AiConversationStudent")
+  cohortEnrollments      CohortEnrollment[]      @relation("CohortEnrollmentStudent")
+  cohortStaffRoles       CohortStaffAssignment[] @relation("CohortStaffUser")
+  sprintSubmissions      SprintSubmission[]      @relation("SprintSubmissionStudent")
+  reviewedSubmissions    SprintSubmission[]      @relation("SprintSubmissionReviewer")
+  studentProduct         StudentProduct?         @relation("StudentProductOwner")
+  communityMessages      CommunityMessage[]      @relation("CommunityMessageAuthor")
+  threadParticipations   ThreadParticipant[]     @relation("ThreadParticipantUser")
+  directMessages         DirectMessage[]         @relation("DirectMessageAuthor")
+  certificates           Certificate[]           @relation("CertificateStudent")
+  notifications          Notification[]          @relation("NotificationUser")
+  notificationPreference NotificationPreference? @relation("NotificationPreferenceUser")
+  announcementsCreated   Announcement[]          @relation("AnnouncementCreatedBy")
+  aiConversation         AiConversation?         @relation("AiConversationStudent")
+  reviewerNotes          ReviewerNote[]          @relation("ReviewerNoteAuthor")
 }
 
 // ---------- Invites (admin-provisioned account activation) ----------
@@ -73,19 +74,19 @@ model Session {
 // ---------- Site-wide settings ----------
 
 model SiteSettings {
-  id              String   @id @default(cuid())
-  siteName        String   @default("Teqxure")
-  tagline         String?
-  logoUrl         String?
-  faviconUrl      String?
-  contactEmail    String?
+  id                String   @id @default(cuid())
+  siteName          String   @default("Teqxure")
+  tagline           String?
+  logoUrl           String?
+  faviconUrl        String?
+  contactEmail      String?
   notificationEmail String?
-  socialLinks     Json? // [{ label: string, href: string }]
-  seoTitle        String?
-  seoDescription  String?
-  seoImage        String?
-  analyticsId     String?
-  updatedAt       DateTime @updatedAt
+  socialLinks       Json? // [{ label: string, href: string }]
+  seoTitle          String?
+  seoDescription    String?
+  seoImage          String?
+  analyticsId       String?
+  updatedAt         DateTime @updatedAt
 }
 
 // ---------- Homepage sections (generic content engine) ----------
@@ -176,20 +177,20 @@ model FaqItem {
 // ---------- Testimonials ----------
 
 model Testimonial {
-  id             String    @id @default(cuid())
-  quote          String
-  authorName     String
-  authorRole     String?
-  authorCompany  String?
-  avatarUrl      String?
-  rating         Int?
-  pinned         Boolean   @default(false)
-  approved       Boolean   @default(true)
-  visible        Boolean   @default(true)
-  order          Int       @default(0)
-  deletedAt      DateTime?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  id            String    @id @default(cuid())
+  quote         String
+  authorName    String
+  authorRole    String?
+  authorCompany String?
+  avatarUrl     String?
+  rating        Int?
+  pinned        Boolean   @default(false)
+  approved      Boolean   @default(true)
+  visible       Boolean   @default(true)
+  order         Int       @default(0)
+  deletedAt     DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 }
 
 // ---------- About page: dedicated list collections ----------
@@ -272,26 +273,26 @@ model EmailTemplate {
 // ---------- Events (each event has its own registration form or an external link) ----------
 
 model Event {
-  id               String               @id @default(cuid())
-  slug             String               @unique
+  id               String              @id @default(cuid())
+  slug             String              @unique
   title            String
   description      String
   startsAt         DateTime
   endsAt           DateTime?
   location         String?
-  isVirtual        Boolean              @default(false)
+  isVirtual        Boolean             @default(false)
   coverImageUrl    String?
-  status           String               @default("DRAFT") // DRAFT | PUBLISHED
-  registrationMode String               @default("INTERNAL") // INTERNAL | EXTERNAL
+  status           String              @default("DRAFT") // DRAFT | PUBLISHED
+  registrationMode String              @default("INTERNAL") // INTERNAL | EXTERNAL
   externalUrl      String?
   capacity         Int?
-  reminder24hSent  Boolean              @default(false)
-  reminder1hSent   Boolean              @default(false)
-  order            Int                  @default(0)
-  visible          Boolean              @default(true)
+  reminder24hSent  Boolean             @default(false)
+  reminder1hSent   Boolean             @default(false)
+  order            Int                 @default(0)
+  visible          Boolean             @default(true)
   deletedAt        DateTime?
-  createdAt        DateTime             @default(now())
-  updatedAt        DateTime             @updatedAt
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
   fields           EventFormField[]
   registrations    EventRegistration[]
   blocks           EventBlock[]
@@ -315,13 +316,13 @@ model EventFormField {
 }
 
 model EventRegistration {
-  id             String   @id @default(cuid())
-  eventId        String
-  event          Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  data           Json
+  id              String   @id @default(cuid())
+  eventId         String
+  event           Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  data            Json
   registrantEmail String?
-  status         String   @default("NEW") // NEW | REVIEWED
-  createdAt      DateTime @default(now())
+  status          String   @default("NEW") // NEW | REVIEWED
+  createdAt       DateTime @default(now())
 }
 
 // ---------- Events: reusable entities (Speaker/Sponsor referenced through blocks;
@@ -370,9 +371,9 @@ model EventBlock {
   id        String   @id @default(cuid())
   eventId   String
   event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  type      String   // HERO | RICH_TEXT | IMAGE | VIDEO | AGENDA | TIMELINE | LEARNING_OUTCOMES |
-                      // WHO_SHOULD_ATTEND | CTA | FAQ | SPEAKERS | SPONSORS | TESTIMONIALS |
-                      // STATISTICS | GALLERY | DIVIDER | NEWSLETTER | RELATED_EVENTS
+  type      String // HERO | RICH_TEXT | IMAGE | VIDEO | AGENDA | TIMELINE | LEARNING_OUTCOMES |
+  // WHO_SHOULD_ATTEND | CTA | FAQ | SPEAKERS | SPONSORS | TESTIMONIALS |
+  // STATISTICS | GALLERY | DIVIDER | NEWSLETTER | RELATED_EVENTS
   content   Json
   order     Int      @default(0)
   visible   Boolean  @default(true)
@@ -456,22 +457,23 @@ model PlatformWeek {
 // ---------- Cohorts (a timed run of a Bootcamp) ----------
 
 model Cohort {
-  id            String                  @id @default(cuid())
-  bootcampId    String
-  bootcamp      Bootcamp                @relation(fields: [bootcampId], references: [id], onDelete: Cascade)
-  name          String
-  startDate     DateTime
-  endDate       DateTime?
-  status        String                  @default("UPCOMING") // UPCOMING | ACTIVE | COMPLETED
-  createdAt     DateTime                @default(now())
-  updatedAt     DateTime                @updatedAt
-  enrollments   CohortEnrollment[]
-  staff         CohortStaffAssignment[]
-  sprints       Sprint[]
-  liveSessions  LiveSession[]
-  channels      CommunityChannel[]
-  announcements Announcement[]
-  certificates  Certificate[]
+  id               String                  @id @default(cuid())
+  bootcampId       String
+  bootcamp         Bootcamp                @relation(fields: [bootcampId], references: [id], onDelete: Cascade)
+  name             String
+  startDate        DateTime
+  endDate          DateTime?
+  status           String                  @default("UPCOMING") // UPCOMING | ACTIVE | COMPLETED
+  createdAt        DateTime                @default(now())
+  updatedAt        DateTime                @updatedAt
+  enrollments      CohortEnrollment[]
+  staff            CohortStaffAssignment[]
+  sprints          Sprint[]
+  liveSessions     LiveSession[]
+  channels         CommunityChannel[]
+  announcements    Announcement[]
+  certificates     Certificate[]
+  admissionCohorts AdmissionCohort[]
 }
 
 model CohortEnrollment {
@@ -496,6 +498,155 @@ model CohortStaffAssignment {
   role     String // INSTRUCTOR | MENTOR | REVIEWER
 
   @@unique([cohortId, userId, role])
+}
+
+// ============================================================
+// ADMISSIONS: Cohort Application & Onboarding
+// ============================================================
+// Deliberately decoupled from Cohort/Bootcamp above — this describes an
+// *application cycle*, not a teaching schedule, and shouldn't require a
+// Bootcamp to exist before applications open. `cohortId` is filled in later,
+// once admitted applicants are actually turned into a real teaching Cohort.
+
+model AdmissionCohort {
+  id                  String        @id @default(cuid())
+  name                String
+  slug                String        @unique
+  applicationsOpenAt  DateTime
+  applicationsCloseAt DateTime?
+  capacity            Int?
+  status              String        @default("DRAFT") // DRAFT | OPEN | REVIEWING | CLOSED
+  cohortId            String?
+  cohort              Cohort?       @relation(fields: [cohortId], references: [id], onDelete: SetNull)
+  applications        Application[]
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+}
+
+model Applicant {
+  id           String        @id @default(cuid())
+  fullName     String
+  email        String        @unique
+  phone        String
+  country      String
+  occupation   String
+  linkedin     String?
+  github       String?
+  portfolio    String?
+  applications Application[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Application {
+  id                    String               @id @default(cuid())
+  referenceCode         String               @unique // e.g. "TQX-2026-0001"
+  applicantId           String
+  applicant             Applicant            @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  admissionCohortId     String
+  admissionCohort       AdmissionCohort      @relation(fields: [admissionCohortId], references: [id], onDelete: Cascade)
+  status                String               @default("PENDING_ONBOARDING")
+  // PENDING_ONBOARDING | ONBOARDING_IN_PROGRESS | ASSESSMENT_COMPLETED |
+  // UNDER_REVIEW | INTERVIEW_REQUIRED | ACCEPTED | WAITLISTED | REJECTED
+  submittedAt           DateTime             @default(now())
+  assessmentCompletedAt DateTime?
+  decisionAt            DateTime?
+  decisionBy            String?
+  token                 ApplicationToken?
+  responses             AssessmentResponse[]
+  reviewerNotes         ReviewerNote[]
+  emailLogs             EmailLog[]
+  createdAt             DateTime             @default(now())
+  updatedAt             DateTime             @updatedAt
+
+  @@unique([applicantId, admissionCohortId])
+  @@index([status])
+}
+
+model ApplicationToken {
+  id            String      @id @default(cuid())
+  token         String      @unique
+  applicationId String      @unique
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  expiresAt     DateTime
+  usedAt        DateTime?
+  createdAt     DateTime    @default(now())
+}
+
+// ---------- Assessment (admin-editable sections/questions, matching the
+// WaitlistField/EventFormField `options: Json` convention rather than a
+// separate answer-option table) ----------
+
+model AssessmentSection {
+  id          String               @id @default(cuid())
+  key         String               @unique
+  title       String
+  description String?
+  order       Int                  @default(0)
+  visible     Boolean              @default(true)
+  questions   AssessmentQuestion[]
+}
+
+model AssessmentQuestion {
+  id            String            @id @default(cuid())
+  sectionId     String
+  section       AssessmentSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  key           String            @unique
+  label         String
+  helpText      String?
+  fieldType     String // TEXT | TEXTAREA | SELECT | RADIO | CHECKBOX_GROUP | NUMBER | RATING | FILE | VIDEO
+  options       Json? // string[] for SELECT/RADIO/CHECKBOX_GROUP
+  required      Boolean           @default(false)
+  order         Int               @default(0)
+  visible       Boolean           @default(true)
+  conditionalOn Json? // { questionKey: string, equals: string } — render only if another answer matches
+}
+
+model AssessmentResponse {
+  id            String      @id @default(cuid())
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  questionKey   String
+  value         Json
+  updatedAt     DateTime    @updatedAt
+
+  @@unique([applicationId, questionKey])
+}
+
+model ReviewerNote {
+  id            String      @id @default(cuid())
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  authorId      String
+  author        User        @relation("ReviewerNoteAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  body          String
+  createdAt     DateTime    @default(now())
+}
+
+// ---------- Email delivery audit (used by admissions today; the sendEmail
+// helper logs every send here regardless of caller, so this benefits
+// waitlist/event/invite email too) ----------
+
+model EmailLog {
+  id            String       @id @default(cuid())
+  templateKey   String
+  to            String
+  subject       String
+  status        String // SENT | FAILED
+  errorMessage  String?
+  applicationId String?
+  application   Application? @relation(fields: [applicationId], references: [id], onDelete: SetNull)
+  createdAt     DateTime     @default(now())
+}
+
+// ---------- Lightweight IP-based rate limiting (no Redis in this stack) ----------
+
+model RateLimitHit {
+  id        String   @id @default(cuid())
+  key       String
+  createdAt DateTime @default(now())
+
+  @@index([key, createdAt])
 }
 
 // ---------- Sprints (the Sprint Room) ----------
@@ -725,10 +876,10 @@ model AiProvider {
 }
 
 model AiSettings {
-  id                String @id @default(cuid())
+  id                String  @id @default(cuid())
   activeProvider    String?
-  systemPrompt      String @default("You are Teqxure AI — the assistant embedded in the Teqxure Product Architect Platform, built on the philosophy and knowledge of Jimmy Enietan, Teqxure's founder. You channel his perspective and the Product Engineering system he built — reference \"Jimmy's approach\" or speak from Teqxure's collective experience naturally, the way a founder's chief-of-staff would. You are an AI assistant, not Jimmy himself — never claim to be human or imply this is a live conversation with him personally. Help students apply the Teqxure system — Problem, Pattern, Architecture, Engineering, Production, Users, Iteration — to their own sprint work. Give direct, specific, actionable guidance grounded in what the student is actually building. When you don't have enough context, ask a clarifying question rather than guessing. You are a mentor, not a code-writing service — push students toward their own judgment rather than doing the thinking for them.")
-  dailyMessageLimit Int    @default(50)
+  systemPrompt      String  @default("You are Teqxure AI — the assistant embedded in the Teqxure Product Architect Platform, built on the philosophy and knowledge of Jimmy Enietan, Teqxure's founder. You channel his perspective and the Product Engineering system he built — reference \"Jimmy's approach\" or speak from Teqxure's collective experience naturally, the way a founder's chief-of-staff would. You are an AI assistant, not Jimmy himself — never claim to be human or imply this is a live conversation with him personally. Help students apply the Teqxure system — Problem, Pattern, Architecture, Engineering, Production, Users, Iteration — to their own sprint work. Give direct, specific, actionable guidance grounded in what the student is actually building. When you don't have enough context, ask a clarifying question rather than guessing. You are a mentor, not a code-writing service — push students toward their own judgment rather than doing the thinking for them.")
+  dailyMessageLimit Int     @default(50)
 }
 
 model AiConversation {

@@ -991,6 +991,355 @@ async function seedAiIntegrations() {
   }
 }
 
+// ---------- Admissions: cohort application & onboarding assessment ----------
+
+interface SeedQuestion {
+  key: string;
+  label: string;
+  helpText?: string;
+  fieldType: string;
+  options?: string[];
+  required?: boolean;
+  conditionalOn?: { questionKey: string; equals: string };
+}
+
+interface SeedSection {
+  key: string;
+  title: string;
+  description?: string;
+  questions: SeedQuestion[];
+}
+
+const ASSESSMENT_SECTIONS: SeedSection[] = [
+  {
+    key: "PERSONAL_BACKGROUND",
+    title: "Personal Background",
+    description: "The basics — who you are and where you're starting from.",
+    questions: [
+      { key: "pb_occupation", label: "Current occupation", fieldType: "TEXT", required: true },
+      {
+        key: "pb_education_level",
+        label: "Highest level of education",
+        fieldType: "SELECT",
+        options: ["High School", "Undergraduate Degree", "Postgraduate Degree", "Bootcamp / Vocational Training", "Self-Taught", "Other"],
+        required: true,
+      },
+      { key: "pb_institution", label: "Institution or company", fieldType: "TEXT" },
+      {
+        key: "pb_worked_in_tech",
+        label: "Have you worked in technology before?",
+        fieldType: "RADIO",
+        options: ["Yes", "No"],
+        required: true,
+      },
+      { key: "pb_about_you", label: "Tell us a little about yourself.", fieldType: "TEXTAREA", required: true },
+    ],
+  },
+  {
+    key: "TECHNOLOGY_READINESS",
+    title: "Technology Readiness",
+    description: "What you'll be building with — device, connectivity, and power.",
+    questions: [
+      {
+        key: "tr_primary_device",
+        label: "What is your primary device?",
+        fieldType: "SELECT",
+        options: ["Windows Laptop", "MacBook", "Linux Laptop", "Desktop Computer", "Android Phone", "iPhone", "Tablet", "Other"],
+        required: true,
+      },
+      {
+        key: "tr_device_access",
+        label: "Do you currently have access to a laptop or desktop computer?",
+        fieldType: "RADIO",
+        options: ["Yes, I own one", "Yes, I can borrow one", "No"],
+        required: true,
+      },
+      {
+        key: "tr_spec_processor",
+        label: "Processor",
+        helpText: "What are the specifications of your device? It's fine to say \"I don't know.\"",
+        fieldType: "TEXT",
+        conditionalOn: { questionKey: "tr_device_access", equals: "Yes, I own one" },
+      },
+      {
+        key: "tr_spec_ram",
+        label: "Random Access Memory (RAM)",
+        fieldType: "SELECT",
+        options: ["4GB or less", "8GB", "16GB", "32GB or more", "I don't know"],
+        conditionalOn: { questionKey: "tr_device_access", equals: "Yes, I own one" },
+      },
+      {
+        key: "tr_spec_storage",
+        label: "Storage",
+        fieldType: "SELECT",
+        options: ["Less than 128GB", "128GB–256GB", "512GB", "1TB or more", "I don't know"],
+        conditionalOn: { questionKey: "tr_device_access", equals: "Yes, I own one" },
+      },
+      {
+        key: "tr_spec_os",
+        label: "Operating System",
+        fieldType: "TEXT",
+        conditionalOn: { questionKey: "tr_device_access", equals: "Yes, I own one" },
+      },
+      {
+        key: "tr_internet_reliability",
+        label: "How reliable is your internet connection?",
+        fieldType: "RADIO",
+        options: ["Very Reliable", "Usually Reliable", "Sometimes Unstable", "Poor"],
+        required: true,
+      },
+      {
+        key: "tr_internet_access",
+        label: "How do you usually access the internet?",
+        fieldType: "SELECT",
+        options: ["Home Wi-Fi", "Office Wi-Fi", "Mobile Data", "Public Wi-Fi", "Other"],
+        required: true,
+      },
+      {
+        key: "tr_data_budget",
+        label: "Approximately how much internet data can you comfortably use every month?",
+        fieldType: "TEXT",
+      },
+      {
+        key: "tr_electricity_reliability",
+        label: "How reliable is electricity where you live?",
+        fieldType: "RADIO",
+        options: ["Very Reliable", "Mostly Reliable", "Sometimes Available", "Frequently Unavailable"],
+        required: true,
+      },
+    ],
+  },
+  {
+    key: "TECHNICAL_BACKGROUND",
+    title: "Technical Background",
+    description: "No exam here — just a picture of where you're starting from technically.",
+    questions: [
+      { key: "tb_written_code", label: "Have you ever written code?", fieldType: "RADIO", options: ["Yes", "No"], required: true },
+      { key: "tb_built_software", label: "Have you built software before?", fieldType: "RADIO", options: ["Yes", "No"], required: true },
+      { key: "tb_used_ai_tools", label: "Have you used Artificial Intelligence tools?", fieldType: "RADIO", options: ["Yes", "No"], required: true },
+      {
+        key: "tb_technologies_explored",
+        label: "Which technologies have you explored?",
+        fieldType: "CHECKBOX_GROUP",
+        options: [
+          "JavaScript",
+          "Python",
+          "Java",
+          "HTML / CSS",
+          "SQL / Databases",
+          "React or another frontend framework",
+          "Node.js / backend",
+          "Cloud (AWS, GCP, Azure)",
+          "Mobile development",
+          "AI / ML tools",
+          "None yet",
+          "Other",
+        ],
+      },
+      { key: "tb_confidence_level", label: "Rate your confidence level.", fieldType: "RATING", required: true },
+    ],
+  },
+  {
+    key: "LEARNING_PROFILE",
+    title: "Learning Profile",
+    questions: [
+      {
+        key: "lp_learning_style",
+        label: "How do you learn best?",
+        fieldType: "SELECT",
+        options: ["Watching videos", "Reading documentation", "Hands-on practice", "Learning from a mentor or instructor", "Learning in a group or community", "Trial and error"],
+        required: true,
+      },
+      { key: "lp_problem_solving", label: "How do you normally solve difficult problems?", fieldType: "TEXTAREA", required: true },
+      { key: "lp_completed_online_programmes", label: "Have you completed online programmes before?", fieldType: "RADIO", options: ["Yes", "No"], required: true },
+      { key: "lp_course_dropoff_reasons", label: "What usually prevents you from completing courses?", fieldType: "TEXTAREA" },
+    ],
+  },
+  {
+    key: "COMMITMENT",
+    title: "Commitment",
+    questions: [
+      { key: "cm_why_applying", label: "Why are you applying?", fieldType: "TEXTAREA", required: true },
+      {
+        key: "cm_weekly_hours",
+        label: "How many hours each week can you dedicate?",
+        fieldType: "SELECT",
+        options: ["Less than 10 hours", "10–20 hours", "20–30 hours", "30+ hours"],
+        required: true,
+      },
+      { key: "cm_attend_live_sessions", label: "Can you attend live sessions?", fieldType: "RADIO", options: ["Yes", "Sometimes", "No"], required: true },
+      { key: "cm_weekly_assignments", label: "Are you willing to complete assignments every week?", fieldType: "RADIO", options: ["Yes", "No"], required: true },
+      { key: "cm_participation_challenges", label: "What challenges might affect your participation?", fieldType: "TEXTAREA" },
+    ],
+  },
+  {
+    key: "PRODUCT_THINKING",
+    title: "Product Thinking",
+    questions: [
+      { key: "pt_one_problem", label: "If you could solve one problem with technology, what would it be?", fieldType: "TEXTAREA", required: true },
+      { key: "pt_something_built", label: "Describe something you've built before.", fieldType: "TEXTAREA" },
+      { key: "pt_six_month_product", label: "If you had six months to build one product, what would you create?", fieldType: "TEXTAREA", required: true },
+      { key: "pt_exciting_technology", label: "What technology excites you most today?", fieldType: "TEXT" },
+    ],
+  },
+  {
+    key: "REFLECTION",
+    title: "Reflection",
+    questions: [
+      { key: "rf_why_admit_you", label: "Why should we admit you?", fieldType: "TEXTAREA", required: true },
+      { key: "rf_hoped_change", label: "What do you hope changes in your life after Teqxure?", fieldType: "TEXTAREA", required: true },
+      {
+        key: "rf_intro_video",
+        label: "Upload a one-minute introduction video (optional)",
+        helpText: "MP4, WebM, or MOV — up to 150MB.",
+        fieldType: "VIDEO",
+      },
+    ],
+  },
+];
+
+async function seedAssessment() {
+  const count = await db.assessmentSection.count();
+  if (count > 0) return;
+
+  for (let i = 0; i < ASSESSMENT_SECTIONS.length; i++) {
+    const section = ASSESSMENT_SECTIONS[i];
+    const createdSection = await db.assessmentSection.create({
+      data: { key: section.key, title: section.title, description: section.description, order: i },
+    });
+
+    for (let j = 0; j < section.questions.length; j++) {
+      const q = section.questions[j];
+      await db.assessmentQuestion.create({
+        data: {
+          sectionId: createdSection.id,
+          key: q.key,
+          label: q.label,
+          helpText: q.helpText,
+          fieldType: q.fieldType,
+          options: q.options,
+          required: q.required ?? false,
+          order: j,
+          conditionalOn: q.conditionalOn,
+        },
+      });
+    }
+  }
+  console.log(`Seeded ${ASSESSMENT_SECTIONS.length} assessment sections.`);
+}
+
+async function seedAdmissionCohort() {
+  const count = await db.admissionCohort.count();
+  if (count > 0) return;
+
+  await db.admissionCohort.create({
+    data: {
+      name: "Cohort 8",
+      slug: "cohort-8",
+      applicationsOpenAt: new Date(),
+      status: "OPEN",
+    },
+  });
+  console.log("Seeded starter admission cohort (Cohort 8, OPEN).");
+}
+
+async function seedAdmissionsEmailTemplates() {
+  const templates = [
+    {
+      key: "APPLICATION_WELCOME",
+      name: "Application received — begin onboarding (sent to the applicant)",
+      subject: "Welcome to Teqxure — Your Journey Begins Here",
+      body: `
+        <div style="font-family: -apple-system, Helvetica, Arial, sans-serif; max-width: 480px; margin: 0 auto; color: #1B1F29;">
+          <p style="font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: #1764FF; margin-bottom: 16px;">Cohort applications</p>
+          <h1 style="font-size: 22px; margin: 0 0 16px;">Hello {{firstName}},</h1>
+          <p style="font-size: 15px; line-height: 1.6; color: #4A5568;">
+            Thank you for applying to join {{cohortName}}. We're excited that you've taken the first step.
+          </p>
+          <p style="font-size: 15px; line-height: 1.6; color: #4A5568;">
+            Before we can review your application, we'd like to understand more about you. This is not an examination —
+            there are no right or wrong answers. The assessment simply helps us understand your current experience,
+            your learning style, your availability, your goals, and the tools you have available, so we can create the
+            best possible learning experience.
+          </p>
+          <p style="font-size: 15px; line-height: 1.6; color: #4A5568;">Please complete your onboarding assessment using the button below.</p>
+          <a href="{{onboardingUrl}}" style="display: inline-block; margin-top: 8px; padding: 10px 20px; background: #1764FF; color: #FFFFFF; font-size: 14px; font-weight: 500; border-radius: 8px; text-decoration: none;">Begin Your Onboarding</a>
+          <p style="font-size: 13px; color: #4A5568; margin-top: 20px;">Estimated completion time: 10–15 minutes.</p>
+          <p style="font-size: 15px; line-height: 1.6; color: #4A5568;">
+            We'll review your responses carefully before making admission decisions. We're excited to learn more about you.
+          </p>
+          <p style="font-size: 13px; color: #4A5568; margin-top: 24px;">— The Teqxure Team</p>
+        </div>
+      `.trim(),
+    },
+    {
+      key: "APPLICATION_ADMIN_NOTIFICATION",
+      name: "New application (sent to admissions)",
+      subject: "New application: {{fullName}}",
+      body: platformEmail("New Application", "{{fullName}} just applied", [
+        "Email: {{email}}",
+        "Cohort: {{cohortName}}",
+        "Reference: {{referenceCode}}",
+      ]),
+    },
+    {
+      key: "ASSESSMENT_COMPLETED_ADMIN_NOTIFICATION",
+      name: "Assessment completed (sent to admissions)",
+      subject: "Assessment completed: {{fullName}}",
+      body: platformEmail("Ready For Review", "{{fullName}} completed their assessment", [
+        "Email: {{email}}",
+        "Cohort: {{cohortName}}",
+        "Reference: {{referenceCode}}",
+        "Review the full application and assessment responses in the admin dashboard.",
+      ]),
+    },
+    {
+      key: "APPLICATION_ACCEPTED",
+      name: "Application accepted (sent to the applicant)",
+      subject: "You're in — welcome to {{cohortName}}",
+      body: platformEmail("Admission Decision", "Congratulations, {{firstName}}.", [
+        "You've been accepted into {{cohortName}}. We'll be in touch shortly with everything you need to get started.",
+        "Reference: {{referenceCode}}",
+      ]),
+    },
+    {
+      key: "APPLICATION_WAITLISTED",
+      name: "Application waitlisted (sent to the applicant)",
+      subject: "You're on the waitlist for {{cohortName}}",
+      body: platformEmail("Admission Decision", "Thank you, {{firstName}}.", [
+        "{{cohortName}} is currently at capacity, and we've placed your application on the waitlist. We'll reach out the moment a spot opens up.",
+        "Reference: {{referenceCode}}",
+      ]),
+    },
+    {
+      key: "APPLICATION_REJECTED",
+      name: "Application not accepted (sent to the applicant)",
+      subject: "Your application to {{cohortName}}",
+      body: platformEmail("Admission Decision", "Thank you, {{firstName}}.", [
+        "After careful review, we're not able to offer you a place in {{cohortName}} at this time. We'd genuinely encourage you to apply again for a future cohort.",
+        "Reference: {{referenceCode}}",
+      ]),
+    },
+    {
+      key: "APPLICATION_INTERVIEW_REQUIRED",
+      name: "Interview requested (sent to the applicant)",
+      subject: "Next step: a short interview for {{cohortName}}",
+      body: platformEmail("Admission Decision", "Thank you, {{firstName}}.", [
+        "We'd like to speak with you before making a final decision on {{cohortName}}. Our team will reach out shortly to schedule a short interview.",
+        "Reference: {{referenceCode}}",
+      ]),
+    },
+  ];
+
+  for (const template of templates) {
+    await db.emailTemplate.upsert({
+      where: { key: template.key },
+      update: {},
+      create: template,
+    });
+  }
+}
+
 async function main() {
   await seedAdmin();
   await seedSiteSettings();
@@ -1004,6 +1353,9 @@ async function main() {
   await seedWaitlistFields();
   await seedEmailTemplates();
   await seedAiIntegrations();
+  await seedAssessment();
+  await seedAdmissionCohort();
+  await seedAdmissionsEmailTemplates();
   console.log("Seed complete.");
 }
 

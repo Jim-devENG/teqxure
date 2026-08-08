@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/ui/Reveal";
 import { MagneticButton } from "@/components/ui/MagneticButton";
@@ -10,10 +11,13 @@ import type { SectionContent } from "@/lib/sectionSchemas";
 
 interface FinalCTAProps {
   section: SectionContent<"FINAL_CTA">;
+  /** When set, the button navigates here instead of opening the waitlist modal. */
+  ctaHref?: string;
 }
 
-export function FinalCTA({ section }: FinalCTAProps) {
+export function FinalCTA({ section, ctaHref }: FinalCTAProps) {
   const { openWaitlist } = useWaitlist();
+  const router = useRouter();
 
   return (
     <section className="relative overflow-hidden py-28 sm:py-36">
@@ -50,7 +54,10 @@ export function FinalCTA({ section }: FinalCTAProps) {
 
         <Reveal delay={0.3}>
           <div className="mt-9 flex justify-center">
-            <MagneticButton onClick={openWaitlist} className="px-8 py-4 text-base">
+            <MagneticButton
+              onClick={() => (ctaHref ? router.push(ctaHref) : openWaitlist())}
+              className="px-8 py-4 text-base"
+            >
               {section.buttonText}
               <ArrowRight className="h-4 w-4" strokeWidth={1.5} />
             </MagneticButton>
