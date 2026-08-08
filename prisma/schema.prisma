@@ -556,6 +556,8 @@ model Application {
   responses             AssessmentResponse[]
   reviewerNotes         ReviewerNote[]
   emailLogs             EmailLog[]
+  aiAnalyses            AiAnalysis[]
+  preparationPlans      PreparationPlan[]
   createdAt             DateTime             @default(now())
   updatedAt             DateTime             @updatedAt
 
@@ -608,6 +610,13 @@ model AssessmentResponse {
   application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
   questionKey   String
   value         Json
+  // Snapshot of the question at the moment this was answered — questionKey
+  // is a loose reference to the live, admin-editable AssessmentQuestion, so
+  // if a question's wording changes later, historical responses stay
+  // interpretable in their original context instead of silently inheriting
+  // the edited text.
+  questionLabel String?
+  fieldType     String?
   updatedAt     DateTime    @updatedAt
 
   @@unique([applicationId, questionKey])
@@ -899,4 +908,61 @@ model AiMessage {
   role           String // "user" | "assistant"
   content        String
   createdAt      DateTime       @default(now())
+}
+
+// ---------- Teqxure AI: Admissions Intelligence ----------
+// A second, distinct use of the same provider infrastructure above
+// (getActiveProviderAdapter) — an internal readiness-profile assistant for
+// admissions review, deliberately not sharing AiSettings.systemPrompt (the
+// student-mentor persona) or AiConversation (one-per-student) with the
+// student-facing chat. Never decides admission; human review stays final.
+
+model AiAnalysis {
+  id            String               @id @default(cuid())
+  applicationId String
+  application   Application          @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  version       Int
+  status        String               @default("PENDING") // PENDING | PROCESSING | COMPLETE | FAILED
+  modelProvider String?
+  modelId       String?
+  promptVersion String?
+  result        Json? // Zod-validated readiness profile (dimensions, overall, strengths, concerns, reviewer attention, video note)
+  errorMessage  String?
+  requestedBy   String? // admin userId if manually retried; null when auto-triggered on assessment completion
+  startedAt     DateTime?
+  completedAt   DateTime?
+  createdAt     DateTime             @default(now())
+  evidence      AiAnalysisEvidence[]
+
+  @@unique([applicationId, version])
+  @@index([applicationId])
+}
+
+model AiAnalysisEvidence {
+  id          String     @id @default(cuid())
+  analysisId  String
+  analysis    AiAnalysis @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+  dimension   String // TECHNICAL_READINESS | PRODUCT_THINKING | LEARNING_READINESS | COMMITMENT_READINESS | INFRASTRUCTURE_READINESS | COMMUNICATION | OVERALL
+  questionKey String? // loose reference to AssessmentQuestion.key, same convention as AssessmentResponse.questionKey
+  excerpt     String
+  order       Int        @default(0)
+}
+
+model PreparationPlan {
+  id                String      @id @default(cuid())
+  applicationId     String
+  application       Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  version           Int
+  status            String      @default("PENDING") // PENDING | PROCESSING | COMPLETE | FAILED
+  basedOnAnalysisId String?
+  modelProvider     String?
+  modelId           String?
+  result            Json? // { summary, focusAreas: [{ title, reason, recommendations: string[] }] }
+  errorMessage      String?
+  requestedBy       String?
+  startedAt         DateTime?
+  completedAt       DateTime?
+  createdAt         DateTime    @default(now())
+
+  @@unique([applicationId, version])
 }

@@ -9,12 +9,20 @@ export interface ChatMessage {
   content: string;
 }
 
+export interface ChatOptions {
+  signal?: AbortSignal;
+  /** Defaults to 1024 (sized for the admin connectivity test) — pass a higher value for longer structured output. */
+  maxTokens?: number;
+}
+
 export interface ProviderAdapter {
-  /** One-shot call — used for the admin "send test message" diagnostic. */
-  chat(messages: ChatMessage[], system: string, options?: { signal?: AbortSignal }): Promise<string>;
+  /** One-shot call — used for the admin "send test message" diagnostic and admissions AI analysis. */
+  chat(messages: ChatMessage[], system: string, options?: ChatOptions): Promise<string>;
   /** Token-by-token streaming — used by the student chat route. */
   chatStream(messages: ChatMessage[], system: string, options?: { signal?: AbortSignal }): AsyncIterable<string>;
 }
+
+const DEFAULT_MAX_TOKENS = 1024;
 
 interface OpenAiCompatibleConfig {
   apiKey: string;
@@ -28,7 +36,11 @@ function createOpenAiCompatibleAdapter({ apiKey, baseUrl, model }: OpenAiCompati
   return {
     async chat(messages, system, options) {
       const response = await client.chat.completions.create(
-        { model, messages: [{ role: "system", content: system }, ...messages] },
+        {
+          model,
+          messages: [{ role: "system", content: system }, ...messages],
+          max_tokens: options?.maxTokens ?? DEFAULT_MAX_TOKENS,
+        },
         { signal: options?.signal },
       );
       return response.choices[0]?.message?.content ?? "";
@@ -53,19 +65,18 @@ interface AnthropicConfig {
 
 function createAnthropicAdapter({ apiKey, model }: AnthropicConfig): ProviderAdapter {
   const client = new Anthropic({ apiKey });
-  const MAX_TOKENS = 1024;
 
   return {
     async chat(messages, system, options) {
       const stream = client.messages.stream(
-        { model, system, max_tokens: MAX_TOKENS, messages },
+        { model, system, max_tokens: options?.maxTokens ?? DEFAULT_MAX_TOKENS, messages },
         { signal: options?.signal },
       );
       return stream.finalText();
     },
     async *chatStream(messages, system, options) {
       const stream = client.messages.stream(
-        { model, system, max_tokens: MAX_TOKENS, messages },
+        { model, system, max_tokens: DEFAULT_MAX_TOKENS, messages },
         { signal: options?.signal },
       );
       for await (const event of stream) {

@@ -3,6 +3,10 @@ import { OnboardingFlow } from "@/components/onboarding/OnboardingFlow";
 import { CompletionScreen } from "@/components/onboarding/CompletionScreen";
 import { ErrorScreen } from "@/components/onboarding/ErrorScreen";
 
+// Gives the AI readiness analysis scheduled via after() in
+// completeAssessmentAction room to finish before the function is recycled.
+export const maxDuration = 60;
+
 export default async function OnboardingPage({
   searchParams,
 }: {

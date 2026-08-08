@@ -40,7 +40,11 @@ export default async function ApplicationsPage({ searchParams }: PageProps) {
   const [applications, total, cohorts] = await Promise.all([
     db.application.findMany({
       where: where as never,
-      include: { applicant: true, admissionCohort: true },
+      include: {
+        applicant: true,
+        admissionCohort: true,
+        aiAnalyses: { orderBy: { version: "desc" }, take: 1, select: { status: true } },
+      },
       orderBy: { createdAt: "desc" },
       skip: (page - 1) * PAGE_SIZE,
       take: PAGE_SIZE,
@@ -142,6 +146,7 @@ export default async function ApplicationsPage({ searchParams }: PageProps) {
           applicantName: a.applicant.fullName,
           applicantEmail: a.applicant.email,
           cohortName: a.admissionCohort.name,
+          aiAnalysisStatus: a.aiAnalyses[0]?.status ?? null,
         }))}
       />
 

@@ -7,6 +7,14 @@ import { DecisionPanel } from "@/components/admin/applications/DecisionPanel";
 import { ReviewerNotesPanel } from "@/components/admin/applications/ReviewerNotesPanel";
 import { ApplicationResponses } from "@/components/admin/applications/ApplicationResponses";
 import { EmailLogPanel } from "@/components/admin/applications/EmailLogPanel";
+import { AiReadinessProfilePanel } from "@/components/admin/applications/AiReadinessProfilePanel";
+import { AskAboutApplicantPanel } from "@/components/admin/applications/AskAboutApplicantPanel";
+import { PreparationPlanPanel } from "@/components/admin/applications/PreparationPlanPanel";
+import { reapStaleAiJobs } from "@/lib/ai/admissions";
+
+// Gives schedulePreparationPlan's after() call (triggered from
+// decideApplicationAction on this page) room to finish.
+export const maxDuration = 60;
 
 export default async function ApplicationDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -25,10 +33,28 @@ export default async function ApplicationDetailPage({ params }: { params: Promis
 
   if (!application) notFound();
 
+  // Self-heals any job stuck at PROCESSING from a dead after() callback into
+  // a retryable "Failed" state before we read it for display below.
+  await reapStaleAiJobs(id);
+
   const sections = await db.assessmentSection.findMany({
     orderBy: { order: "asc" },
     include: { questions: { orderBy: { order: "asc" } } },
   });
+
+  const decidedByUser = application.decisionBy
+    ? await db.user.findUnique({ where: { id: application.decisionBy }, select: { name: true, email: true } })
+    : null;
+
+  const [latestAnalysis, latestPlan] = await Promise.all([
+    db.aiAnalysis.findFirst({
+      where: { applicationId: id },
+      orderBy: { version: "desc" },
+      include: { evidence: { orderBy: { order: "asc" } } },
+    }),
+    db.preparationPlan.findFirst({ where: { applicationId: id }, orderBy: { version: "desc" } }),
+  ]);
+  const hasCompleteAnalysis = latestAnalysis?.status === "COMPLETE";
 
   const { applicant } = application;
 
@@ -67,8 +93,62 @@ export default async function ApplicationDetailPage({ params }: { params: Promis
                 label="Assessment completed"
                 value={application.assessmentCompletedAt ? application.assessmentCompletedAt.toLocaleString() : "Not yet"}
               />
+              {application.decisionAt && (
+                <>
+                  <Field
+                    label="Decided by"
+                    value={decidedByUser ? (decidedByUser.name ?? decidedByUser.email) : "Unknown reviewer"}
+                  />
+                  <Field label="Decision date" value={application.decisionAt.toLocaleString()} />
+                </>
+              )}
             </dl>
           </div>
+
+          <AiReadinessProfilePanel
+            applicationId={application.id}
+            assessmentCompleted={Boolean(application.assessmentCompletedAt)}
+            analysis={
+              latestAnalysis
+                ? {
+                    id: latestAnalysis.id,
+                    version: latestAnalysis.version,
+                    status: latestAnalysis.status,
+                    errorMessage: latestAnalysis.errorMessage,
+                    modelProvider: latestAnalysis.modelProvider,
+                    modelId: latestAnalysis.modelId,
+                    promptVersion: latestAnalysis.promptVersion,
+                    completedAt: latestAnalysis.completedAt ? latestAnalysis.completedAt.toISOString() : null,
+                    result: latestAnalysis.result as never,
+                    evidence: latestAnalysis.evidence.map((e) => ({
+                      dimension: e.dimension,
+                      questionKey: e.questionKey,
+                      excerpt: e.excerpt,
+                    })),
+                  }
+                : null
+            }
+          />
+
+          <AskAboutApplicantPanel applicationId={application.id} />
+
+          {application.status === "ACCEPTED" && (
+            <PreparationPlanPanel
+              applicationId={application.id}
+              hasCompleteAnalysis={hasCompleteAnalysis}
+              plan={
+                latestPlan
+                  ? {
+                      status: latestPlan.status,
+                      errorMessage: latestPlan.errorMessage,
+                      result: latestPlan.result as never,
+                      completedAt: latestPlan.completedAt ? latestPlan.completedAt.toISOString() : null,
+                      version: latestPlan.version,
+                    }
+                  : null
+              }
+            />
+          )}
 
           <ApplicationResponses
             sections={sections.map((s) => ({

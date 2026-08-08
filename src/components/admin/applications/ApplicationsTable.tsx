@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { useState, useTransition } from "react";
+import { Sparkles, Loader2 } from "lucide-react";
 import { changeApplicationStatusAction } from "@/lib/actions/applications";
 import { StatusBadge, statusLabel } from "@/components/admin/StatusBadge";
+import { cn } from "@/lib/utils";
 
 const STATUSES = [
   "PENDING_ONBOARDING",
@@ -25,6 +27,33 @@ interface ApplicationRow {
   applicantName: string;
   applicantEmail: string;
   cohortName: string;
+  aiAnalysisStatus: string | null;
+}
+
+function AiStatusIndicator({ status }: { status: string | null }) {
+  if (!status) return <span className="text-xs text-slate/40">—</span>;
+  if (status === "PENDING" || status === "PROCESSING") {
+    return (
+      <span className="inline-flex items-center gap-1 text-xs text-blue" title="AI analysis in progress">
+        <Loader2 className="h-3 w-3 animate-spin" strokeWidth={2} />
+      </span>
+    );
+  }
+  if (status === "FAILED") {
+    return (
+      <span className="inline-flex items-center gap-1 text-xs text-red-500" title="AI analysis failed">
+        <Sparkles className="h-3 w-3" strokeWidth={1.5} />
+      </span>
+    );
+  }
+  return (
+    <span
+      className={cn("inline-flex items-center gap-1 text-xs text-emerald")}
+      title="AI readiness profile ready"
+    >
+      <Sparkles className="h-3 w-3" strokeWidth={1.5} />
+    </span>
+  );
 }
 
 export function ApplicationsTable({ applications }: { applications: ApplicationRow[] }) {
@@ -52,6 +81,7 @@ export function ApplicationsTable({ applications }: { applications: ApplicationR
             <th className="px-4 py-3 font-medium">Cohort</th>
             <th className="px-4 py-3 font-medium">Submitted</th>
             <th className="px-4 py-3 font-medium">Completed</th>
+            <th className="px-4 py-3 font-medium">AI</th>
             <th className="px-4 py-3 font-medium">Status</th>
           </tr>
         </thead>
@@ -73,6 +103,9 @@ export function ApplicationsTable({ applications }: { applications: ApplicationR
               <td className="px-4 py-3 text-slate">{new Date(row.submittedAt).toLocaleDateString()}</td>
               <td className="px-4 py-3 text-slate">
                 {row.assessmentCompletedAt ? new Date(row.assessmentCompletedAt).toLocaleDateString() : "—"}
+              </td>
+              <td className="px-4 py-3">
+                <AiStatusIndicator status={row.aiAnalysisStatus} />
               </td>
               <td className="px-4 py-3">
                 <div className="flex items-center gap-2">

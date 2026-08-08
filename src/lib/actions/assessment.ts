@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { sendTemplatedEmail } from "@/lib/email";
 import { getPresignedUploadUrl } from "@/lib/r2";
 import { checkRateLimit, getClientIp } from "@/lib/rateLimit";
+import { scheduleAiAnalysis } from "@/lib/ai/admissions";
 
 // Video is the only upload type the spec actually calls for (the Section 7
 // intro video); a handful of document/image types are allowed too so a
@@ -83,10 +84,24 @@ export async function saveAssessmentResponseAction(
 
   const { application } = validation.record;
 
+  // Snapshot the question's current label/type alongside the answer, so
+  // this response stays interpretable even if the question is edited or
+  // removed later through the assessment builder.
+  const question = await db.assessmentQuestion.findUnique({
+    where: { key: questionKey },
+    select: { label: true, fieldType: true },
+  });
+
   await db.assessmentResponse.upsert({
     where: { applicationId_questionKey: { applicationId: application.id, questionKey } },
-    update: { value: value as never },
-    create: { applicationId: application.id, questionKey, value: value as never },
+    update: { value: value as never, questionLabel: question?.label, fieldType: question?.fieldType },
+    create: {
+      applicationId: application.id,
+      questionKey,
+      value: value as never,
+      questionLabel: question?.label,
+      fieldType: question?.fieldType,
+    },
   });
 
   if (application.status === "PENDING_ONBOARDING") {
@@ -182,6 +197,10 @@ export async function completeAssessmentAction(token: string): Promise<CompleteA
     }),
     db.applicationToken.update({ where: { id: record.id }, data: { usedAt: new Date() } }),
   ]);
+
+  // Schedule the AI readiness analysis to run after this response is sent —
+  // the applicant should never wait on it (see src/lib/ai/admissions.ts).
+  await scheduleAiAnalysis(application.id, null);
 
   const settings = await db.siteSettings.findFirst();
   const notificationEmail = settings?.notificationEmail || process.env.ADMIN_EMAIL || "";

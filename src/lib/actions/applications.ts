@@ -9,6 +9,7 @@ import { logActivity } from "@/lib/activity";
 import { sendTemplatedEmail } from "@/lib/email";
 import { checkRateLimit, getClientIp } from "@/lib/rateLimit";
 import { generateReferenceCode } from "@/lib/referenceCode";
+import { schedulePreparationPlan } from "@/lib/ai/admissions";
 
 const TOKEN_FALLBACK_TTL_MS = 1000 * 60 * 60 * 24 * 90; // 90 days, when a cohort has no close date
 
@@ -170,6 +171,12 @@ export async function decideApplicationAction(
     data: { status: decision, decisionAt: new Date(), decisionBy: user.id },
     include: { applicant: true, admissionCohort: true },
   });
+
+  if (decision === "ACCEPTED") {
+    // No-ops internally if no completed readiness analysis exists yet —
+    // an admin can trigger it later from the applicant's detail page.
+    await schedulePreparationPlan(application.id, user.id);
+  }
 
   const templateKey = DECISION_TEMPLATES[decision];
   await sendTemplatedEmail(
