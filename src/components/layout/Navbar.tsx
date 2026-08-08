@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { MagneticButton } from "@/components/ui/MagneticButton";
-import { useWaitlist } from "@/components/waitlist/WaitlistProvider";
 import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
@@ -20,7 +20,7 @@ const NAV_LINKS = [
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { openWaitlist } = useWaitlist();
+  const router = useRouter();
 
   useEffect(() => {
     function handleScroll() {
@@ -74,8 +74,8 @@ export function Navbar() {
         </ul>
 
         <div className="hidden md:block">
-          <MagneticButton variant="secondary" className="text-sm" onClick={openWaitlist}>
-            Join Waitlist
+          <MagneticButton variant="secondary" className="text-sm" onClick={() => router.push("/apply")}>
+            Apply Now
           </MagneticButton>
         </div>
 
@@ -117,10 +117,10 @@ export function Navbar() {
                 className="w-full"
                 onClick={() => {
                   setIsMenuOpen(false);
-                  openWaitlist();
+                  router.push("/apply");
                 }}
               >
-                Join Waitlist
+                Apply Now
               </MagneticButton>
             </div>
           </motion.div>

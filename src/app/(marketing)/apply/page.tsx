@@ -41,7 +41,7 @@ export default async function ApplyPage() {
           <p className="mt-5 text-base leading-relaxed text-paper/60">
             {cohort
               ? "This is the beginning, not the whole thing. Tell us who you are — we'll email you a short onboarding assessment next, so we can understand where you're starting from before we make a decision."
-              : "We're not reviewing applications for a new cohort at the moment. Join the waitlist from the homepage and we'll let you know the moment applications open again."}
+              : "We're not reviewing applications for a new cohort at the moment. Check back soon, or reach out and we'll let you know the moment applications open again."}
           </p>
         </Reveal>
 
